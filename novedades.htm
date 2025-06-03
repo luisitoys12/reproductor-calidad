@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Novedades - EKUSFM</title>
+  <link rel="stylesheet" href="ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="icon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="header">
+    <div class="logo">
+      EKUSMEDIOS
+    </div>
+    <a href="index.htm" class="back-btn">
+      <i class="fas fa-arrow-left"></i> Volver
+    </a>
+  </div>
+
+  <div class="novedades-container">
+    <h1 class="page-title">Novedades</h1>
+    
+    <div class="tab-menu">
+      <button class="tab-link active" data-tab="programas">
+        <i class="fas fa-microphone"></i> Programas
+      </button>
+      <button class="tab-link" data-tab="eventos">
+        <i class="fas fa-calendar-alt"></i> Eventos
+      </button>
+      <button class="tab-link" data-tab="concursos">
+        <i class="fas fa-trophy"></i> Concursos
+      </button>
+    </div>
+
+    <div class="tab-content active" id="programas">
+      <div class="section-banner">
+        <img src="https://images.pexels.com/photos/3082341/pexels-photo-3082341.jpeg" alt="Programas">
+      </div>
+      <div class="content-section">
+        <h2>Nuestros Programas</h2>
+        <div class="cards-grid">
+          <!-- Programa 1 -->
+          <div class="card">
+            <div class="card-content">
+              <h3>Mañanas con Energía</h3>
+              <p class="schedule"><i class="far fa-clock"></i> Lunes a Viernes 6:00 - 9:00</p>
+              <p class="description">Comienza tu día con la mejor música y las noticias más relevantes.</p>
+            </div>
+          </div>
+          
+          <!-- Programa 2 -->
+          <div class="card">
+            <div class="card-content">
+              <h3>Tarde de Éxitos</h3>
+              <p class="schedule"><i class="far fa-clock"></i> Lunes a Viernes 14:00 - 17:00</p>
+              <p class="description">Los mejores hits de todos los tiempos.</p>
+            </div>
+          </div>
+          
+          <!-- Programa 3 -->
+          <div class="card">
+            <div class="card-content">
+              <h3>Noche de Jazz</h3>
+              <p class="schedule"><i class="far fa-clock"></i> Sábados 20:00 - 22:00</p>
+              <p class="description">Dos horas de jazz suave para relajarte.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="eventos">
+      <div class="section-banner">
+        <img src="https://images.pexels.com/photos/2263436/pexels-photo-2263436.jpeg" alt="Eventos">
+      </div>
+      <div class="content-section">
+        <h2>Próximos Eventos</h2>
+        <div class="events-list">
+          <!-- Evento 1 -->
+          <div class="event-card">
+            <div class="event-date">
+              <span class="day">15</span>
+              <span class="month">JUN</span>
+            </div>
+            <div class="event-details">
+              <h3>Festival de Verano</h3>
+              <p class="location"><i class="fas fa-map-marker-alt"></i> Plaza Principal</p>
+              <p class="time"><i class="far fa-clock"></i> 18:00 - 23:00</p>
+              <p class="description">Gran festival con artistas locales e internacionales.</p>
+            </div>
+          </div>
+
+          <!-- Evento 2 -->
+          <div class="event-card">
+            <div class="event-date">
+              <span class="day">22</span>
+              <span class="month">JUN</span>
+            </div>
+            <div class="event-details">
+              <h3>Concierto Acústico</h3>
+              <p class="location"><i class="fas fa-map-marker-alt"></i> Teatro Municipal</p>
+              <p class="time"><i class="far fa-clock"></i> 20:00 - 22:00</p>
+              <p class="description">Una noche íntima con música unplugged.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="concursos">
+      <div class="section-banner">
+        <img src="https://images.pexels.com/photos/2698519/pexels-photo-2698519.jpeg" alt="Concursos">
+      </div>
+      <div class="content-section">
+        <h2>Concursos Activos</h2>
+        <div class="contests-grid">
+          <!-- Concurso 1 -->
+          <div class="contest-card">
+            <div class="contest-content">
+              <h3>¡Gana Entradas VIP!</h3>
+              <p class="deadline"><i class="fas fa-hourglass-end"></i> Finaliza: 20 de Junio</p>
+              <p class="description">Participa por entradas VIP para el Festival de Verano.</p>
+              <div class="contest-steps">
+                <h4>Cómo participar:</h4>
+                <ol>
+                  <li>Sigue nuestra página</li>
+                  <li>Comparte la publicación</li>
+                  <li>Comenta #FestivalDeVerano</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+
+          <!-- Concurso 2 -->
+          <div class="contest-card">
+            <div class="contest-content">
+              <h3>Concurso de Talentos</h3>
+              <p class="deadline"><i class="fas fa-hourglass-end"></i> Finaliza: 30 de Junio</p>
+              <p class="description">¡Muestra tu talento y gana increíbles premios!</p>
+              <div class="contest-steps">
+                <h4>Cómo participar:</h4>
+                <ol>
+                  <li>Graba tu presentación</li>
+                  <li>Envíala por WhatsApp</li>
+                  <li>¡Espera los resultados!</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="novedades.js"></script>
+</body>
+</html>
