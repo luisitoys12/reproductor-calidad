@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EKUSFM by ESTACIONKUSMEDIOS</title>
+  <link rel="stylesheet" href="ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1e293b">
+  <link rel="icon" type="image/png" href="icon.png">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <img id="background" class="background" src="/placeholder.svg" alt="Background">
+  <div class="overlay"></div>
+
+  <div class="header">
+    <div class="logo" id="radio-name">
+      EKUSMEDIOS
+    </div>
+    <button class="menu-btn" id="menuBtn">
+      <i class="fas fa-bars"></i>
+    </button>
+  </div>
+
+  <div class="main-content">
+    <div class="status-badge status-live" id="status-badge">
+      <i class="fas fa-broadcast-tower"></i>
+      <span id="status-text">Transmitiendo en vivo desde nuestra cabina central 🎙️ en digital</span></div>
+
+    <div class="cover-container">
+      <img src="/placeholder.svg" alt="Album Cover" width="250%" height="108%" class="cover-img" id="cover-img">
+    </div>
+
+    <div class="song-info">
+      <div class="song-title" id="song-title">Cargando...</div>
+      <div class="artist-name" id="artist-name">Espere un momento</div>
+      <div class="now-playing" id="now-playing-text">Actualmente escuchas 🎶</div>
+    </div>
+
+    <div class="controls">
+      <button class="control-btn" id="prevBtn">
+        <i class="fas fa-step-backward"></i>
+      </button>
+      <button class="play-btn" id="playPauseBtn">
+        <i class="fas fa-play"></i>
+      </button>
+      <button class="control-btn" id="nextBtn">
+        <i class="fas fa-step-forward"></i>
+      </button>
+    </div>
+
+    <div class="volume-container">
+      <div class="volume-icon">
+        <i class="fas fa-volume-up" id="volumeIcon"></i>
+      </div>
+      <input type="range" class="volume-control" id="volumeControl" min="0" max="1" step="0.01" value="1">
+    </div>
+
+    <div class="status-indicator" id="statusIndicator"></div>
+
+    <div class="social-buttons" id="social-buttons">
+      <!-- Social buttons will be added dynamically -->
+    </div>
+  </div>
+
+  <!-- Maintenance Mode Template -->
+  <div class="maintenance-mode" id="maintenanceMode" style="display: none; text-align: center; padding: 20px;">
+    <h1>Sitio en Mantenimiento</h1>
+    <p>Estamos realizando algunas actualizaciones. Volveremos pronto.</p>
+    <img src="maintenance.png" alt="Maintenance" style="width: 200px; margin-top: 20px;">
+  </div>
+
+  <!-- Disabled Template -->
+  <div class="disabled-mode" id="disabledMode" style="display: none; text-align: center; padding: 20px;">
+    <h1>Sitio Desactivado</h1>
+    <p>Este sitio web ha sido desactivado.</p>
+  </div>
+
+  <!-- Desactivated Template -->
+  <div class="desactivated-mode" id="desactivatedMode" style="display: none; text-align: center; padding: 20px;">
+    <h1>Servicio No Disponible</h1>
+    <p>Este servicio ya no está disponible.</p>
+  </div>
+
+  <div class="menu" id="menu">
+    <div class="menu-header">
+      <div class="menu-title" id="menu-title"></div>
+      <button class="close-menu" id="close-menu">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="menu-section">
+      <h3 class="menu-section-title">Opciones</h3>
+      <ul class="menu-links">
+        <li><a href="#" class="menu-link" id="historyLink"><i class="fas fa-history"></i> Historial de canciones</a></li>
+        <li><a href="#" class="menu-link" id="aboutLink"><i class="fas fa-info-circle"></i> Acerca de</a></li>
+        <li><a href="#" class="menu-link" id="shareLink"><i class="fas fa-share-alt"></i> Compartir</a></li>
+        <li><a href="novedades.htm" class="menu-link"><i class="fas fa-newspaper"></i> Novedades</a></li>
+      </ul>
+    </div>
+
+    
+
+    <div class="menu-section">
+      <h3 class="menu-section-title">Redes Sociales</h3>
+      <ul class="menu-links" id="menu-social-links">
+        <!-- Social links will be added dynamically -->
+      </ul>
+    </div>
+  </div>
+
+  <!-- Modal de Historial -->
+  <div class="modal" id="historyModal">
+    <div class="modal-content">
+      <button class="modal-close" id="closeHistoryModal">&times;</button>
+      <h3 class="modal-title">Historial de canciones</h3>
+      <div id="historyModalContent">
+        <!-- El historial se llenará dinámicamente -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Acerca de -->
+  <div class="modal" id="aboutModal">
+    <div class="modal-content">
+      <button class="modal-close" id="closeAboutModal">&times;</button>
+      <h3 class="modal-title">Acerca de</h3>
+      <div class="about-content">
+        <img id="aboutLogo" class="about-logo" src="/placeholder.svg" alt="Logo">
+        <p class="about-text" id="aboutDescription">Cargando...</p>
+        <p class="about-text">Versión: 1.0.0</p>
+        <p class="about-text">Desarrollado con ❤️ por <span id="aboutDeveloper">ESTACIONKUSMEDIOS</span></p>
+        <p class="about-text">Powered by: <strong>ESTACIONKUSMEDIOS</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Compartir -->
+  <div class="modal" id="shareModal">
+    <div class="modal-content">
+      <button class="modal-close" id="closeShareModal">&times;</button>
+      <h3 class="modal-title">Compartir</h3>
+      <div id="shareOptions">
+        <div class="share-option" id="shareWhatsapp">
+          <div class="share-icon" style="background-color: #25D366;">
+            <i class="fab fa-whatsapp"></i>
+          </div>
+          <div class="share-text">Compartir en WhatsApp</div>
+        </div>
+        <div class="share-option" id="shareFacebook">
+          <div class="share-icon" style="background-color: #1877F2;">
+            <i class="fab fa-facebook-f"></i>
+          </div>
+          <div class="share-text">Compartir en Facebook</div>
+        </div>
+        <div class="share-option" id="shareTwitter">
+          <div class="share-icon" style="background-color: #1DA1F2;">
+            <i class="fab fa-twitter"></i>
+          </div>
+          <div class="share-text">Compartir en Twitter</div>
+        </div>
+        <div class="share-url-container">
+          <input type="text" id="shareUrl" class="share-url" readonly="">
+          <button id="copyLink" class="copy-btn">Copiar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="offline-alert" id="offlineAlert">
+    Sin conexión a internet. Algunas funciones pueden no estar disponibles.
+  </div>
+
+  <div class="watermark">Powered by: ESTACIONKUSMEDIOS</div>
+
+  <audio id="audio" preload="auto"></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
