@@ -1,0 +1,279 @@
+/* Novedades Page Styles */
+.novedades-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Poppins', sans-serif;
+  background: white;
+  min-height: 100vh;
+  color: var(--primary-color);
+}
+
+.page-title {
+  text-align: center;
+  font-size: 2.5rem;
+  color: var(--primary-color);
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--primary-color);
+  font-size: 1rem;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+}
+
+.back-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Tab Navigation */
+.tab-menu {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #f1f5f9;
+  padding-bottom: 1rem;
+}
+
+.tab-link {
+  background: none;
+  border: none;
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.3s;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tab-link:hover {
+  color: var(--primary-color);
+  background: #f1f5f9;
+}
+
+.tab-link.active {
+  color: var(--primary-color);
+  font-weight: 600;
+  background: #f1f5f9;
+}
+
+/* Tab Content */
+.tab-content {
+  display: none;
+  animation: fadeIn 0.5s ease;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Section Banner */
+.section-banner {
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  border-radius: 16px;
+  margin-bottom: 2rem;
+}
+
+.section-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Content Section */
+.content-section {
+  padding: 2rem;
+}
+
+.content-section h2 {
+  font-size: 2rem;
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+}
+
+/* Cards Grid */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-content {
+  padding: 1.5rem;
+}
+
+.card h3 {
+  font-size: 1.25rem;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+}
+
+.schedule {
+  color: #64748b;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+/* Events List */
+.events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.event-card {
+  display: flex;
+  gap: 1.5rem;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.event-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 80px;
+  padding: 1rem;
+  background: var(--primary-color);
+  color: white;
+  border-radius: 8px;
+}
+
+.event-date .day {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.event-date .month {
+  font-size: 0.9rem;
+}
+
+.event-details h3 {
+  font-size: 1.25rem;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+}
+
+.location, .time {
+  color: #64748b;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Contest Cards */
+.contests-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.contest-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.contest-content {
+  padding: 1.5rem;
+}
+
+.contest-content h3 {
+  font-size: 1.25rem;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.deadline {
+  color: #dc2626;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.contest-steps {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 8px;
+}
+
+.contest-steps h4 {
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+}
+
+.contest-steps ol {
+  padding-left: 1.5rem;
+  color: #64748b;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .tab-menu {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .tab-link {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .event-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .event-date {
+    margin-bottom: 1rem;
+  }
+  
+  .section-banner {
+    height: 200px;
+  }
+  
+  .content-section {
+    padding: 1rem;
+  }
+}
