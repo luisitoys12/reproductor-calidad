@@ -4,10 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EKUSFM by ESTACIONKUSMEDIOS</title>
-  <link rel="stylesheet" href="ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- FontAwesome CDN para iconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-  <link href="css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#1e293b">
   <link rel="icon" type="image/png" href="icon.png">
@@ -30,7 +31,8 @@
   <div class="main-content">
     <div class="status-badge status-live" id="status-badge">
       <i class="fas fa-broadcast-tower"></i>
-      <span id="status-text">Transmitiendo en vivo desde nuestra cabina central 🎙️ en digital</span></div>
+      <span id="status-text">Transmitiendo en vivo desde nuestra cabina central 🎙️ en digital</span>
+    </div>
 
     <div class="cover-container">
       <img src="/placeholder.svg" alt="Album Cover" width="250%" height="108%" class="cover-img" id="cover-img">
@@ -164,7 +166,7 @@
           <div class="share-text">Compartir en Twitter</div>
         </div>
         <div class="share-url-container">
-          <input type="text" id="shareUrl" class="share-url" readonly="">
+          <input type="text" id="shareUrl" class="share-url" readonly>
           <button id="copyLink" class="copy-btn">Copiar</button>
         </div>
       </div>
@@ -180,10 +182,11 @@
   <audio id="audio" preload="auto"></audio>
 
   <script>
-    // --- CONFIGURA AQUÍ ---
+    // Configuración AzuraCast
     const AZURACAST_URL = "https://radio.trabullnetwork.pro";
-const STATION = "esmerosound";
-const AUDIO_STREAM_URL = "https://radio.trabullnetwork.pro/listen/esmerosound/radio.mp3";
+    const STATION = "esmerosound";
+    const AUDIO_STREAM_URL = "https://radio.trabullnetwork.pro/listen/esmerosound/radio.mp3";
+
     // Elementos DOM
     const audio = document.getElementById('audio');
     const playPauseBtn = document.getElementById('playPauseBtn');
@@ -192,7 +195,6 @@ const AUDIO_STREAM_URL = "https://radio.trabullnetwork.pro/listen/esmerosound/ra
     const artistName = document.getElementById('artist-name');
     const coverImg = document.getElementById('cover-img');
     const background = document.getElementById('background');
-    // Botones next/prev deshabilitados porque es radio, pero si quieres puedes ocultar o customizar
 
     // Inicializa audio
     audio.src = AUDIO_STREAM_URL;
@@ -200,7 +202,6 @@ const AUDIO_STREAM_URL = "https://radio.trabullnetwork.pro/listen/esmerosound/ra
     audio.volume = volumeControl.value;
 
     // Play/Pause
-    let isPlaying = false;
     playPauseBtn.addEventListener('click', () => {
       if (audio.paused) {
         audio.play();
@@ -209,11 +210,9 @@ const AUDIO_STREAM_URL = "https://radio.trabullnetwork.pro/listen/esmerosound/ra
       }
     });
     audio.addEventListener('play', () => {
-      isPlaying = true;
       playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
     });
     audio.addEventListener('pause', () => {
-      isPlaying = false;
       playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
     });
 
@@ -255,6 +254,7 @@ const AUDIO_STREAM_URL = "https://radio.trabullnetwork.pro/listen/esmerosound/ra
       audio.load();
     });
   </script>
+  <!-- Tu script.js personalizado para menú, modales, etc -->
   <script src="script.js"></script>
 </body>
 </html>
