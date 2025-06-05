@@ -11,8 +11,38 @@
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" href="icon.png">
   <link rel="stylesheet" href="style.css">
+
+  <!-- Reproductor pequeño fijo arriba -->
+  <style>
+    #mini-reproductor {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      width: 220px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px #0002;
+      z-index: 10000;
+      padding: 7px 10px 7px 10px;
+      display: flex;
+      align-items: center;
+    }
+    #mini-reproductor audio {
+      width: 100%;
+      height: 32px;
+    }
+    /* Opcional: para que no se oculte algo bajo el reproductor */
+    body {
+      padding-top: 60px;
+    }
+  </style>
 </head>
 <body>
+  <!-- Reproductor pequeño y fijo arriba -->
+  <div id="mini-reproductor">
+    <audio id="audio-mini" controls preload="auto"></audio>
+  </div>
+
   <div class="header">
     <div class="logo">
       EKUSMEDIOS
@@ -157,6 +187,14 @@
     </div>
   </div>
 
+  <script>
+    // Configura la URL del stream igual que en index.htm
+    const AUDIO_STREAM_URL = "https://radio.trabullnetwork.pro/listen/esmerosound/radio.mp3";
+    const audioMini = document.getElementById('audio-mini');
+    audioMini.src = AUDIO_STREAM_URL;
+    audioMini.crossOrigin = "anonymous";
+    audioMini.volume = 1;
+  </script>
   <script src="novedades.js"></script>
 </body>
 </html>
