@@ -43,13 +43,13 @@
     </div>
 
     <div class="controls">
-      <button class="control-btn" id="prevBtn">
+      <button class="control-btn" id="prevBtn" disabled>
         <i class="fas fa-step-backward"></i>
       </button>
       <button class="play-btn" id="playPauseBtn">
         <i class="fas fa-play"></i>
       </button>
-      <button class="control-btn" id="nextBtn">
+      <button class="control-btn" id="nextBtn" disabled>
         <i class="fas fa-step-forward"></i>
       </button>
     </div>
@@ -104,8 +104,6 @@
         <li><a href="novedades.htm" class="menu-link"><i class="fas fa-newspaper"></i> Novedades</a></li>
       </ul>
     </div>
-
-    
 
     <div class="menu-section">
       <h3 class="menu-section-title">Redes Sociales</h3>
@@ -181,6 +179,83 @@
 
   <audio id="audio" preload="auto"></audio>
 
+  <script>
+    // --- CONFIGURA AQUÍ ---
+    const AZURACAST_URL = "https://TU_AZURACAST"; // URL base de tu servidor AzuraCast (sin / al final)
+    const STATION = "NOMBRE_DE_ESTACION"; // Nombre corto (slug) de tu estación en AzuraCast
+    const AUDIO_STREAM_URL = AZURACAST_URL + "/radio/8000/radio.mp3"; // Cambia según tu stream (puedes copiar el correcto de AzuraCast)
+
+    // Elementos DOM
+    const audio = document.getElementById('audio');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const volumeControl = document.getElementById('volumeControl');
+    const songTitle = document.getElementById('song-title');
+    const artistName = document.getElementById('artist-name');
+    const coverImg = document.getElementById('cover-img');
+    const background = document.getElementById('background');
+    // Botones next/prev deshabilitados porque es radio, pero si quieres puedes ocultar o customizar
+
+    // Inicializa audio
+    audio.src = AUDIO_STREAM_URL;
+    audio.crossOrigin = "anonymous";
+    audio.volume = volumeControl.value;
+
+    // Play/Pause
+    let isPlaying = false;
+    playPauseBtn.addEventListener('click', () => {
+      if (audio.paused) {
+        audio.play();
+      } else {
+        audio.pause();
+      }
+    });
+    audio.addEventListener('play', () => {
+      isPlaying = true;
+      playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+    });
+    audio.addEventListener('pause', () => {
+      isPlaying = false;
+      playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+    });
+
+    // Control de volumen
+    volumeControl.addEventListener('input', (e) => {
+      audio.volume = e.target.value;
+    });
+
+    // Carga metadatos desde AzuraCast API
+    async function updateMetadata() {
+      try {
+        const res = await fetch(`${AZURACAST_URL}/api/nowplaying/${STATION}`);
+        if (!res.ok) throw new Error("No se pudo obtener metadatos");
+        const data = await res.json();
+
+        songTitle.textContent = data.now_playing.song.title || "Desconocido";
+        artistName.textContent = data.now_playing.song.artist || "Desconocido";
+        // Portada
+        let artUrl = data.now_playing.song.art;
+        if (artUrl && artUrl.startsWith('/')) {
+          artUrl = AZURACAST_URL + artUrl;
+        }
+        coverImg.src = artUrl || "/placeholder.svg";
+        background.src = artUrl || "/placeholder.svg";
+      } catch (e) {
+        songTitle.textContent = "Error obteniendo metadatos";
+        artistName.textContent = "";
+        coverImg.src = "/placeholder.svg";
+        background.src = "/placeholder.svg";
+      }
+    }
+
+    // Actualiza metadatos cada 10 segundos
+    setInterval(updateMetadata, 10000);
+    updateMetadata();
+
+    // Opcional: auto-play al cargar
+    window.addEventListener('DOMContentLoaded', () => {
+      audio.load();
+    });
+  </script>
   <script src="script.js"></script>
 </body>
 </html>
