@@ -258,3 +258,22 @@
   <script src="script.js"></script>
 </body>
 </html>
+.overlay {
+  display: none;
+  /* ... más estilos ... */
+  transition: opacity 0.3s;
+  opacity: 0;
+}
+.overlay.active {
+  display: block;
+  opacity: 1;
+}
+.menu {
+  /* ... tu estilo ... */
+  /* por ejemplo: */
+  transform: translateX(-100%);
+  transition: transform 0.3s;
+}
+.menu.open {
+  transform: translateX(0);
+}
