@@ -1,0 +1,299 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AzuraCast Audio Player</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
+    .font-montserrat {
+      font-family: 'Montserrat', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-[#2a5a7f] min-h-screen flex items-center justify-center p-6">
+  <div class="flex flex-col sm:flex-row gap-8 max-w-5xl w-full justify-center items-center">
+    <!-- Left Speaker -->
+    <div id="left-speaker" class="bg-[#1a1a1a] rounded-xl w-48 h-72 flex flex-col items-center justify-center relative shadow-[0_0_15px_#00ff00] transition-shadow duration-300" style="box-shadow: 0 0 15px 3px #00ff00;">
+      <div class="relative w-28 h-28 rounded-full bg-[#2f2f2f] flex items-center justify-center">
+        <div id="left-glow" class="w-20 h-20 rounded-full border-4 border-[#00ff00] shadow-[0_0_10px_#00ff00] animate-pulse transition-shadow duration-300" style="box-shadow: 0 0 10px 3px #00ff00;"></div>
+      </div>
+      <p class="font-montserrat text-gray-400 text-lg tracking-widest mt-6 select-none" style="letter-spacing: 0.15em;">
+        SONY
+      </p>
+    </div>
+
+    <!-- Center Player -->
+    <div class="bg-[#1a1a1a] rounded-xl w-[360px] h-72 p-6 flex flex-col justify-between shadow-lg" style="box-shadow: 0 0 15px 1px #000000cc;">
+      <!-- Top bar -->
+      <div class="flex justify-between items-center border-b border-gray-600 pb-2">
+        <p class="text-gray-400 text-xs tracking-widest font-semibold select-none">
+          STREAMING
+        </p>
+        <div class="flex items-center gap-1 select-none">
+          <div id="live-indicator" class="w-2 h-2 rounded-full bg-red-600"></div>
+          <p id="live-text" class="text-gray-200 font-semibold text-sm">Fuera del aire</p>
+        </div>
+      </div>
+
+      <!-- Song info -->
+      <div class="flex items-center gap-3 mt-4">
+        <img id="cover-art" alt="Cover art placeholder" class="rounded-md w-12 h-12 object-cover" src="https://placehold.co/48x48/png?text=Cover" width="48" height="48" />
+        <div class="flex flex-col max-w-[180px]">
+          <p id="song-title" class="text-[#3ea1d6] font-semibold text-sm leading-5 truncate select-text">-</p>
+          <p id="artist-name" class="text-gray-500 text-xs truncate select-text">-</p>
+        </div>
+        <div id="time-elapsed" class="ml-auto text-gray-400 text-xs select-none">00:00</div>
+      </div>
+
+      <!-- Controls -->
+      <div class="flex items-center gap-4 mt-6">
+        <button id="prev-btn" disabled aria-label="Previous" class="bg-gray-700 rounded-full w-10 h-10 flex items-center justify-center text-gray-300 cursor-not-allowed">
+          <i class="fas fa-backward"></i>
+        </button>
+        <button id="play-pause-btn" aria-label="Play" class="bg-[#5a9edb] rounded-full w-12 h-12 flex items-center justify-center text-white">
+          <i id="play-pause-icon" class="fas fa-play"></i>
+        </button>
+        <button id="next-btn" disabled aria-label="Next" class="bg-gray-700 rounded-full w-10 h-10 flex items-center justify-center text-gray-300 cursor-not-allowed">
+          <i class="fas fa-forward"></i>
+        </button>
+      </div>
+
+      <!-- Bottom controls and equalizer -->
+      <div class="flex items-center gap-4 mt-6">
+        <div class="flex gap-2">
+          <button aria-label="FM" class="bg-[#00ff00] text-black text-xs font-semibold rounded px-2 py-1 select-none">FM</button>
+          <button aria-label="CD" class="bg-gray-800 text-gray-500 text-xs font-semibold rounded px-2 py-1 select-none">CD</button>
+          <button aria-label="AUX" class="bg-gray-800 text-gray-500 text-xs font-semibold rounded px-2 py-1 select-none">AUX</button>
+        </div>
+
+        <!-- Equalizer bars -->
+        <div id="equalizer" class="flex items-end gap-[2px] h-10">
+          <div class="w-1.5 rounded-sm bg-green-500 h-6"></div>
+          <div class="w-1.5 rounded-sm bg-green-500 h-8"></div>
+          <div class="w-1.5 rounded-sm bg-yellow-400 h-7"></div>
+          <div class="w-1.5 rounded-sm bg-yellow-400 h-9"></div>
+          <div class="w-1.5 rounded-sm bg-red-600 h-6"></div>
+          <div class="w-1.5 rounded-sm bg-yellow-400 h-7"></div>
+          <div class="w-1.5 rounded-sm bg-yellow-400 h-9"></div>
+          <div class="w-1.5 rounded-sm bg-green-500 h-8"></div>
+          <div class="w-1.5 rounded-sm bg-green-500 h-6"></div>
+        </div>
+
+        <!-- Volume icon -->
+        <div class="text-gray-400 ml-2 select-none">
+          <i class="fas fa-volume-up"></i>
+        </div>
+
+        <!-- Volume bar -->
+        <input id="volume-slider" type="range" min="0" max="1" step="0.01" value="0.5" aria-label="Volume" class="flex-1 h-1 rounded bg-[#5a9edb] cursor-pointer" />
+      </div>
+    </div>
+
+    <!-- Right Speaker -->
+    <div id="right-speaker" class="bg-[#1a1a1a] rounded-xl w-48 h-72 flex flex-col items-center justify-center relative shadow-[0_0_15px_#00ff00] transition-shadow duration-300" style="box-shadow: 0 0 15px 3px #00ff00;">
+      <div class="relative w-28 h-28 rounded-full bg-[#2f2f2f] flex items-center justify-center">
+        <div id="right-glow" class="w-20 h-20 rounded-full border-4 border-[#00ff00] shadow-[0_0_10px_#00ff00] animate-pulse transition-shadow duration-300" style="box-shadow: 0 0 10px 3px #00ff00;"></div>
+      </div>
+      <p class="font-montserrat text-gray-400 text-lg tracking-widest mt-6 select-none" style="letter-spacing: 0.15em;">
+        SONY
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // AzuraCast stream and metadata URLs
+    const streamUrl = "https://radio.trabullnetwork.pro/radio/estacionkusfm"; // AzuraCast stream URL
+    const metadataUrl = "https://radio.trabullnetwork.pro/api/nowplaying/1"; // AzuraCast API for station ID 1 (adjust if needed)
+
+    // Elements
+    const liveIndicator = document.getElementById("live-indicator");
+    const liveText = document.getElementById("live-text");
+    const songTitle = document.getElementById("song-title");
+    const artistName = document.getElementById("artist-name");
+    const coverArt = document.getElementById("cover-art");
+    const timeElapsed = document.getElementById("time-elapsed");
+    const playPauseBtn = document.getElementById("play-pause-btn");
+    const playPauseIcon = document.getElementById("play-pause-icon");
+    const volumeSlider = document.getElementById("volume-slider");
+    const leftGlow = document.getElementById("left-glow");
+    const rightGlow = document.getElementById("right-glow");
+    const leftSpeaker = document.getElementById("left-speaker");
+    const rightSpeaker = document.getElementById("right-speaker");
+    const equalizer = document.getElementById("equalizer");
+
+    // Audio element
+    const audio = new Audio(streamUrl);
+    audio.crossOrigin = "anonymous";
+    audio.volume = 0.5;
+
+    // State
+    let isPlaying = false;
+    let startTime = 0;
+    let timerInterval;
+    let metadataInterval;
+    let analyser, audioContext, source, dataArray;
+
+    // Setup Web Audio API for visualizer
+    function setupAudioVisualizer() {
+      try {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        source = audioContext.createMediaElementSource(audio);
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 64;
+        const bufferLength = analyser.frequencyBinCount;
+        dataArray = new Uint8Array(bufferLength);
+        source.connect(analyser);
+        analyser.connect(audioContext.destination);
+      } catch (e) {
+        // Web Audio API not supported or error
+        analyser = null;
+      }
+    }
+
+    // Animate equalizer bars and speaker glow based on audio data
+    function animateVisualizer() {
+      if (!analyser) return;
+      analyser.getByteFrequencyData(dataArray);
+      const bars = equalizer.children;
+      let avg = 0;
+      for (let i = 0; i < bars.length; i++) {
+        const val = dataArray[i] || 0;
+        avg += val;
+        // Map val (0-255) to height (6-36 px)
+        const height = Math.min(36, Math.max(6, (val / 255) * 36));
+        bars[i].style.height = `${height}px`;
+        // Color gradient from green to red based on val
+        if (val > 180) {
+          bars[i].className = "w-1.5 rounded-sm bg-red-600";
+        } else if (val > 100) {
+          bars[i].className = "w-1.5 rounded-sm bg-yellow-400";
+        } else {
+          bars[i].className = "w-1.5 rounded-sm bg-green-500";
+        }
+      }
+      avg = avg / bars.length;
+
+      // Glow effect on speakers based on avg volume
+      if (avg > 40) {
+        leftGlow.style.boxShadow = "0 0 20px 6px #00ff00";
+        rightGlow.style.boxShadow = "0 0 20px 6px #00ff00";
+        leftSpeaker.style.boxShadow = "0 0 20px 6px #00ff00";
+        rightSpeaker.style.boxShadow = "0 0 20px 6px #00ff00";
+      } else {
+        leftGlow.style.boxShadow = "0 0 10px 3px #00ff00";
+        rightGlow.style.boxShadow = "0 0 10px 3px #00ff00";
+        leftSpeaker.style.boxShadow = "0 0 15px 3px #00ff00";
+        rightSpeaker.style.boxShadow = "0 0 15px 3px #00ff00";
+      }
+
+      requestAnimationFrame(animateVisualizer);
+    }
+
+    // Update live status and metadata from AzuraCast API
+    async function updateMetadata() {
+      try {
+        const response = await fetch(metadataUrl);
+        if (!response.ok) throw new Error("Network response was not ok");
+        const data = await response.json();
+
+        // AzuraCast nowplaying structure:
+        // data.now_playing.playing (bool)
+        // data.now_playing.song.title, artist, art
+        // data.now_playing.elapsed, length
+
+        if (data.now_playing && data.now_playing.playing) {
+          liveIndicator.classList.remove("bg-red-600");
+          liveIndicator.classList.add("bg-[#00ff00]");
+          liveText.textContent = "En vivo";
+
+          const song = data.now_playing.song || {};
+          songTitle.textContent = song.title || "-";
+          artistName.textContent = song.artist || "-";
+
+          if (song.art && song.art !== "") {
+            coverArt.src = song.art;
+            coverArt.alt = `Cover art for ${song.title}`;
+          } else {
+            coverArt.src = "https://placehold.co/48x48/png?text=Cover";
+            coverArt.alt = "Cover art placeholder";
+          }
+
+          // Reset start time for elapsed timer
+          startTime = Date.now() - (data.now_playing.elapsed * 1000);
+        } else {
+          liveIndicator.classList.remove("bg-[#00ff00]");
+          liveIndicator.classList.add("bg-red-600");
+          liveText.textContent = "Fuera del aire";
+          songTitle.textContent = "-";
+          artistName.textContent = "-";
+          coverArt.src = "https://placehold.co/48x48/png?text=Cover";
+          coverArt.alt = "Cover art placeholder";
+          startTime = 0;
+          timeElapsed.textContent = "00:00";
+        }
+      } catch (error) {
+        liveIndicator.classList.remove("bg-[#00ff00]");
+        liveIndicator.classList.add("bg-red-600");
+        liveText.textContent = "Fuera del aire";
+        songTitle.textContent = "-";
+        artistName.textContent = "-";
+        coverArt.src = "https://placehold.co/48x48/png?text=Cover";
+        coverArt.alt = "Cover art placeholder";
+        startTime = 0;
+        timeElapsed.textContent = "00:00";
+      }
+    }
+
+    // Update elapsed time display
+    function updateTime() {
+      if (!isPlaying || startTime === 0) return;
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      const minutes = String(Math.floor(elapsed / 60)).padStart(2, "0");
+      const seconds = String(elapsed % 60).padStart(2, "0");
+      timeElapsed.textContent = `${minutes}:${seconds}`;
+    }
+
+    // Play/pause toggle
+    playPauseBtn.addEventListener("click", () => {
+      if (isPlaying) {
+        audio.pause();
+        isPlaying = false;
+        playPauseIcon.classList.remove("fa-pause");
+        playPauseIcon.classList.add("fa-play");
+        clearInterval(timerInterval);
+        if (audioContext && audioContext.state !== "closed") {
+          audioContext.suspend();
+        }
+      } else {
+        audio.play().catch(() => {
+          // Play error (e.g. user gesture required)
+        });
+        isPlaying = true;
+        if (startTime === 0) startTime = Date.now();
+        playPauseIcon.classList.remove("fa-play");
+        playPauseIcon.classList.add("fa-pause");
+        timerInterval = setInterval(updateTime, 1000);
+        if (audioContext && audioContext.state === "suspended") {
+          audioContext.resume();
+        }
+      }
+    });
+
+    // Volume control
+    volumeSlider.addEventListener("input", (e) => {
+      audio.volume = e.target.value;
+    });
+
+    // Initialize
+    setupAudioVisualizer();
+    animateVisualizer();
+    updateMetadata();
+    metadataInterval = setInterval(updateMetadata, 15000);
+  </script>
+</body>
+</html>
