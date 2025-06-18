@@ -1,283 +1,287 @@
-<html lang="en">
+<html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>EKUSFM Player</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-  />
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
+<meta charset="UTF-8" />
+<meta name="theme-color" content="#000010" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Player para Zeno Radio</title>
+<meta name="description" content="Player para Zeno Radio" />
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  rel="stylesheet"
+/>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
+  body {
+    margin: 0;
+    padding: 0;
+    background: #2a5a7f;
+    font-family: 'Montserrat', sans-serif;
+    color: #d1d5db;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .font-montserrat {
+    font-family: 'Montserrat', sans-serif;
+  }
+  .speaker {
+    background: #1a1a1a;
+    width: 12rem;
+    height: 18rem;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 15px 3px #00ff00;
+    transition: box-shadow 0.3s ease;
+  }
+  .speaker-glow {
+    width: 7rem;
+    height: 7rem;
+    border-radius: 9999px;
+    background: #2f2f2f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .speaker-glow-inner {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 9999px;
+    border: 4px solid #00ff00;
+    box-shadow: 0 0 10px 3px #00ff00;
+    transition: box-shadow 0.3s ease;
+  }
+  .speaker-text {
+    color: #9ca3af;
+    font-weight: 600;
+    font-size: 1.125rem;
+    letter-spacing: 0.15em;
+    margin-top: 1.5rem;
+    user-select: none;
+  }
+  .player {
+    background: #1a1a1a;
+    width: 22.5rem;
+    height: 18rem;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 0 15px 1px #000000cc;
+    color: #d1d5db;
+  }
+  .top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #4b5563;
+    padding-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    user-select: none;
+  }
+  .live-status {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: #e5e7eb;
+  }
+  .live-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: #dc2626; /* red offline */
+    transition: background-color 0.3s ease;
+  }
+  .live-dot.live {
+    background: #00ff00;
+  }
+  .song-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    color: #3ea1d6;
+  }
+  .cover-container {
+    flex-shrink: 0;
+    width: 96px;
+    height: 96px;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 0 10px 2px #00ff00;
+  }
+  .cover-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .metadata {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.25rem;
+    overflow: hidden;
+  }
+  .artist, .song {
+    font-weight: 600;
+    font-size: 1.1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    user-select: text;
+  }
+  .artist {
+    color: #3ea1d6;
+  }
+  .time-elapsed {
+    font-variant-numeric: tabular-nums;
+    font-size: 0.9rem;
+    color: #9ca3af;
+    text-align: right;
+    user-select: none;
+    width: 3.5rem;
+  }
+  .controls {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    justify-content: center;
+    align-items: center;
+  }
+  .btn-circle {
+    background: #374151;
+    border-radius: 9999px;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #d1d5db;
+    cursor: not-allowed;
+    user-select: none;
+  }
+  .btn-circle.play-pause {
+    background: #3b82f6;
+    width: 3rem;
+    height: 3rem;
+    cursor: pointer;
+    color: white;
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+  .btn-circle.play-pause:hover {
+    background: #2563eb;
+  }
+  .bottom-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  .source-buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .source-btn {
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    user-select: none;
+    cursor: default;
+  }
+  .source-btn.fm {
+    background: #00ff00;
+    color: black;
+  }
+  .source-btn.cd,
+  .source-btn.aux {
+    background: #111827;
+    color: #6b7280;
+  }
+  .equalizer {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.125rem;
+    height: 2.5rem;
+    flex-grow: 1;
+    margin-left: 1rem;
+    margin-right: 0.5rem;
+  }
+  .bar {
+    width: 0.375rem;
+    border-radius: 0.125rem;
+    background-color: #22c55e; /* green */
+    height: 1.5rem;
+    transition: height 0.1s ease, background-color 0.1s ease;
+  }
+  .bar.yellow {
+    background-color: #eab308;
+  }
+  .bar.red {
+    background-color: #dc2626;
+  }
+  .volume-icon {
+    color: #9ca3af;
+    user-select: none;
+  }
+  .volume-slider {
+    flex-grow: 1;
+    height: 0.25rem;
+    border-radius: 9999px;
+    background: #3b82f6;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1rem;
+    height: 1rem;
+    background: white;
+    border-radius: 9999px;
+    cursor: pointer;
+    border: none;
+    margin-top: -0.375rem;
+  }
+  .volume-slider::-moz-range-thumb {
+    width: 1rem;
+    height: 1rem;
+    background: white;
+    border-radius: 9999px;
+    cursor: pointer;
+    border: none;
+  }
+  @media (max-width: 640px) {
     body {
-      font-family: 'Montserrat', sans-serif;
-      background: #2a5a7f;
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 1.5rem;
+      padding: 1rem;
     }
-    .font-montserrat {
-      font-family: 'Montserrat', sans-serif;
-    }
-    .speaker {
-      background: #1a1a1a;
-      width: 12rem;
-      height: 18rem;
-      border-radius: 1rem;
-      display: flex;
+    .container {
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 15px 3px #00ff00;
-      transition: box-shadow 0.3s ease;
-    }
-    .speaker-glow {
-      width: 7rem;
-      height: 7rem;
-      border-radius: 9999px;
-      background: #2f2f2f;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-    .speaker-glow-inner {
-      width: 5rem;
-      height: 5rem;
-      border-radius: 9999px;
-      border: 4px solid #00ff00;
-      box-shadow: 0 0 10px 3px #00ff00;
-      transition: box-shadow 0.3s ease;
-    }
-    .speaker-text {
-      color: #9ca3af;
-      font-weight: 600;
-      font-size: 1.125rem;
-      letter-spacing: 0.15em;
-      margin-top: 1.5rem;
-      user-select: none;
+      gap: 2rem;
     }
     .player {
-      background: #1a1a1a;
-      width: 22.5rem;
+      width: 100%;
+      max-width: 360px;
+    }
+    .speaker {
+      width: 12rem;
       height: 18rem;
-      border-radius: 1rem;
-      padding: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      box-shadow: 0 0 15px 1px #000000cc;
-      color: #d1d5db;
     }
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid #4b5563;
-      padding-bottom: 0.5rem;
-      font-weight: 600;
-      font-size: 0.75rem;
-      letter-spacing: 0.1em;
-      user-select: none;
-    }
-    .live-status {
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-      font-weight: 700;
-      font-size: 0.875rem;
-      color: #e5e7eb;
-    }
-    .live-dot {
-      width: 0.5rem;
-      height: 0.5rem;
-      border-radius: 9999px;
-      background: #dc2626; /* red offline */
-      transition: background-color 0.3s ease;
-    }
-    .live-dot.live {
-      background: #00ff00;
-    }
-    .song-info {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-top: 1rem;
-      color: #3ea1d6;
-    }
-    .cover-art {
-      width: 3rem;
-      height: 3rem;
-      border-radius: 0.375rem;
-      object-fit: cover;
-      background: #5a5a5a;
-      flex-shrink: 0;
-    }
-    .song-texts {
-      display: flex;
-      flex-direction: column;
-      max-width: 11rem;
-      overflow: hidden;
-    }
-    .song-title {
-      font-weight: 600;
-      font-size: 0.875rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      user-select: text;
-    }
-    .artist-name {
-      font-size: 0.75rem;
-      color: #6b7280;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      user-select: text;
-    }
-    .time-elapsed {
-      margin-left: auto;
-      font-size: 0.75rem;
-      color: #9ca3af;
-      user-select: none;
-      width: 3.5rem;
-      text-align: right;
-      font-variant-numeric: tabular-nums;
-    }
-    .controls {
-      display: flex;
-      gap: 1rem;
-      margin-top: 1.5rem;
-      justify-content: center;
-      align-items: center;
-    }
-    .btn-circle {
-      background: #374151;
-      border-radius: 9999px;
-      width: 2.5rem;
-      height: 2.5rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #d1d5db;
-      cursor: not-allowed;
-      user-select: none;
-    }
-    .btn-circle.play-pause {
-      background: #3b82f6;
-      width: 3rem;
-      height: 3rem;
-      cursor: pointer;
-      color: white;
-      user-select: none;
-      transition: background-color 0.3s ease;
-    }
-    .btn-circle.play-pause:hover {
-      background: #2563eb;
-    }
-    .bottom-controls {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-top: 1.5rem;
-    }
-    .source-buttons {
-      display: flex;
-      gap: 0.5rem;
-    }
-    .source-btn {
-      font-size: 0.75rem;
-      font-weight: 600;
-      border-radius: 0.25rem;
-      padding: 0.25rem 0.5rem;
-      user-select: none;
-      cursor: default;
-    }
-    .source-btn.fm {
-      background: #00ff00;
-      color: black;
-    }
-    .source-btn.cd,
-    .source-btn.aux {
-      background: #111827;
-      color: #6b7280;
-    }
-    .equalizer {
-      display: flex;
-      align-items: flex-end;
-      gap: 0.125rem;
-      height: 2.5rem;
-      flex-grow: 1;
-      margin-left: 1rem;
-      margin-right: 0.5rem;
-    }
-    .bar {
-      width: 0.375rem;
-      border-radius: 0.125rem;
-      background-color: #22c55e; /* green */
-      height: 1.5rem;
-      transition: height 0.1s ease, background-color 0.1s ease;
-    }
-    .bar.yellow {
-      background-color: #eab308;
-    }
-    .bar.red {
-      background-color: #dc2626;
-    }
-    .volume-icon {
-      color: #9ca3af;
-      user-select: none;
-    }
-    .volume-slider {
-      flex-grow: 1;
-      height: 0.25rem;
-      border-radius: 9999px;
-      background: #3b82f6;
-      cursor: pointer;
-      -webkit-appearance: none;
-      appearance: none;
-    }
-    .volume-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 1rem;
-      height: 1rem;
-      background: white;
-      border-radius: 9999px;
-      cursor: pointer;
-      border: none;
-      margin-top: -0.375rem;
-    }
-    .volume-slider::-moz-range-thumb {
-      width: 1rem;
-      height: 1rem;
-      background: white;
-      border-radius: 9999px;
-      cursor: pointer;
-      border: none;
-    }
-    @media (max-width: 640px) {
-      body {
-        padding: 1rem;
-      }
-      .container {
-        flex-direction: column;
-        gap: 2rem;
-      }
-      .player {
-        width: 100%;
-        max-width: 360px;
-      }
-      .speaker {
-        width: 12rem;
-        height: 18rem;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
   <div class="container flex gap-8 max-w-5xl w-full justify-center items-center flex-wrap">
@@ -300,10 +304,12 @@
       </div>
 
       <div class="song-info">
-        <img id="cover-img" class="cover-art" src="https://aventura.estacionkusmedios.com/img/default.jpg" alt="Cover art" />
-        <div class="song-texts">
-          <div id="song-title" class="song-title">-</div>
-          <div id="artist-name" class="artist-name">-</div>
+        <div class="cover-container">
+          <img id="cover-img" src="https://aventura.estacionkusmedios.com/img/default.jpg" alt="Cover art" />
+        </div>
+        <div class="metadata">
+          <div id="artist-name" class="artist">-</div>
+          <div id="song-title" class="song">-</div>
         </div>
         <div id="time-elapsed" class="time-elapsed">00:00</div>
       </div>
@@ -347,40 +353,40 @@
 
   <audio id="audio" crossorigin="anonymous"></audio>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lazysizes/lazysizes.min.js" async></script>
+
   <script>
     const config = {
-      nombreRadio: "EKUSFM",
-      nombreDesarrollador: "ESTACIONKUSMEDIOS",
-      logoURL: "https://aventura.estacionkusmedios.com/img/default.jpg",
-      fondoURL: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cmFkaW98ZW58MHx8MHx8fDA%3D",
-      streamURL: "https://radio.estacionkusmedios.com/listen/esmerosound/radio.mp3",
-      azuracastURL: "https://radio.estacionkusmedios.com",
-      azuracastStation: "esmerosound",
-      albumCover: "https://aventura.estacionkusmedios.com/img/default.jpg",
-      textoCompartir: "¡Escucha la mejor música en ESTACIONKUSFM! 🎵🔥"
+      streamURL: "https://stream.zeno.fm/7mk2bzwy5x8uv.aac",
+      idZeno: "7mk2bzwy5x8uv",
+      defaultCover: "https://aventura.estacionkusmedios.com/img/default.jpg"
     };
 
     const audio = document.getElementById('audio');
     const playPauseBtn = document.getElementById('playPauseBtn');
     const volumeControl = document.getElementById('volumeControl');
-    const songTitle = document.getElementById('song-title');
     const artistName = document.getElementById('artist-name');
+    const songTitle = document.getElementById('song-title');
     const coverImg = document.getElementById('cover-img');
     const liveIndicator = document.getElementById('live-indicator');
     const liveText = document.getElementById('live-text');
     const timeElapsed = document.getElementById('time-elapsed');
-    const leftGlow = document.getElementById('left-glow');
-    const rightGlow = document.getElementById('right-glow');
     const equalizer = document.getElementById('equalizer');
     const bars = equalizer.querySelectorAll('.bar');
+    const leftGlow = document.getElementById('left-glow');
+    const rightGlow = document.getElementById('right-glow');
+    const leftSpeaker = document.getElementById('left-speaker');
+    const rightSpeaker = document.getElementById('right-speaker');
 
     audio.src = config.streamURL;
     audio.crossOrigin = "anonymous";
     audio.volume = volumeControl.value;
 
-    let startTime = 0;
+    let isPlaying = false;
     let elapsedSeconds = 0;
-    let timerInterval;
+    let timerStart = null;
+    let timerInterval = null;
     let audioContext, analyser, source, dataArray;
 
     // Play/Pause toggle
@@ -401,22 +407,24 @@
     });
 
     audio.addEventListener('play', () => {
+      isPlaying = true;
       playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
-      if (startTime === 0) startTime = Date.now() - elapsedSeconds * 1000;
-      timerInterval = setInterval(updateTime, 1000);
+      if (!timerStart) timerStart = Date.now() - elapsedSeconds * 1000;
+      startTimer();
     });
 
     audio.addEventListener('pause', () => {
+      isPlaying = false;
       playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
-      clearInterval(timerInterval);
+      stopTimer();
     });
 
     volumeControl.addEventListener('input', (e) => {
       audio.volume = e.target.value;
     });
 
-    function setLiveStatus(isLive) {
-      if (isLive) {
+    function setLiveStatus(live) {
+      if (live) {
         liveIndicator.classList.add('live');
         liveIndicator.classList.remove('bg-red-600');
         liveText.textContent = 'En vivo';
@@ -463,84 +471,80 @@
       if (avg > 40) {
         leftGlow.style.boxShadow = '0 0 20px 6px #00ff00';
         rightGlow.style.boxShadow = '0 0 20px 6px #00ff00';
-        document.getElementById('left-speaker').style.boxShadow = '0 0 20px 6px #00ff00';
-        document.getElementById('right-speaker').style.boxShadow = '0 0 20px 6px #00ff00';
+        leftSpeaker.style.boxShadow = '0 0 20px 6px #00ff00';
+        rightSpeaker.style.boxShadow = '0 0 20px 6px #00ff00';
       } else {
         leftGlow.style.boxShadow = '0 0 10px 3px #00ff00';
         rightGlow.style.boxShadow = '0 0 10px 3px #00ff00';
-        document.getElementById('left-speaker').style.boxShadow = '0 0 15px 3px #00ff00';
-        document.getElementById('right-speaker').style.boxShadow = '0 0 15px 3px #00ff00';
+        leftSpeaker.style.boxShadow = '0 0 15px 3px #00ff00';
+        rightSpeaker.style.boxShadow = '0 0 15px 3px #00ff00';
       }
       requestAnimationFrame(animateVisualizer);
     }
 
-    async function updateMetadata() {
-      try {
-        const res = await fetch(`${config.azuracastURL}/api/nowplaying/${config.azuracastStation}`);
-        if (!res.ok) throw new Error("No se pudo obtener metadatos");
-        const data = await res.json();
-
-        if (data.now_playing && data.now_playing.playing) {
-          setLiveStatus(true);
-
-          const song = data.now_playing.song || {};
-          songTitle.textContent = song.title || "Desconocido";
-          artistName.textContent = song.artist || "Desconocido";
-
-          let artUrl = song.art;
-          if (artUrl && artUrl.startsWith('/')) {
-            artUrl = config.azuracastURL + artUrl;
-          }
-          coverImg.src = artUrl || config.albumCover;
-          coverImg.alt = `Cover art for ${song.title || "unknown song"}`;
-
-          elapsedSeconds = data.now_playing.elapsed || 0;
-          startTime = Date.now() - elapsedSeconds * 1000;
-        } else {
-          setLiveStatus(false);
-          songTitle.textContent = "-";
-          artistName.textContent = "-";
-          coverImg.src = config.albumCover;
-          coverImg.alt = "Cover art placeholder";
-          elapsedSeconds = 0;
-          startTime = 0;
-          timeElapsed.textContent = "00:00";
-        }
-      } catch (e) {
-        setLiveStatus(false);
-        songTitle.textContent = "Error obteniendo metadatos";
-        artistName.textContent = "";
-        coverImg.src = config.albumCover;
-        coverImg.alt = "Cover art placeholder";
-        elapsedSeconds = 0;
-        startTime = 0;
-        timeElapsed.textContent = "00:00";
-      }
-    }
-
-    function updateTime() {
-      if (!audio.paused && startTime !== 0) {
-        const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    function startTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        if (!isPlaying) return;
+        const elapsed = Math.floor((Date.now() - timerStart) / 1000);
+        elapsedSeconds = elapsed;
         const minutes = String(Math.floor(elapsed / 60)).padStart(2, '0');
         const seconds = String(elapsed % 60).padStart(2, '0');
         timeElapsed.textContent = `${minutes}:${seconds}`;
-      } else if (audio.paused) {
-        // Keep showing current elapsedSeconds if paused
-        const minutes = String(Math.floor(elapsedSeconds / 60)).padStart(2, '0');
-        const seconds = String(elapsedSeconds % 60).padStart(2, '0');
-        timeElapsed.textContent = `${minutes}:${seconds}`;
-      }
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+    }
+
+    // Metadata and cover update
+    let songNow = "";
+
+    function fetchMetadata() {
+      $.getJSON(`https://zenoplay.zenomedia.com/api/zenofm/nowplaying/${config.idZeno}?ra=${Math.random()}`, data => {
+        const currentSong = data.title || "Error de Api - revise los datos";
+        if (currentSong === songNow) return;
+        songNow = currentSong;
+
+        const [artist, song] = currentSong.split(" - ");
+        artistName.textContent = artist || "Desconocido";
+        songTitle.textContent = song || "Desconocido";
+        setLiveStatus(true);
+        elapsedSeconds = 0;
+        timerStart = Date.now();
+        startTimer();
+
+        // Fetch cover from iTunes API
+        if (artist) {
+          $.getJSON(`https://itunes.apple.com/search?term=${encodeURIComponent(artist)}&media=music&limit=1`, coverData => {
+            const image = coverData.results[0]?.artworkUrl100?.replace("100x100bb", "600x600bb") || config.defaultCover;
+            const newImg = new Image();
+            newImg.src = image;
+            newImg.alt = currentSong;
+            newImg.className = "lazyload";
+            newImg.onload = () => {
+              coverImg.src = image;
+              coverImg.alt = currentSong;
+            };
+          });
+        } else {
+          coverImg.src = config.defaultCover;
+          coverImg.alt = "Cover art placeholder";
+        }
+      });
     }
 
     setupAudioVisualizer();
     animateVisualizer();
-    updateMetadata();
-    setInterval(updateMetadata, 10000);
-    setInterval(updateTime, 1000);
+    fetchMetadata();
+    setInterval(fetchMetadata, 5000);
 
     window.addEventListener('DOMContentLoaded', () => {
       audio.load();
     });
   </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lazysizes/lazysizes.min.js" async></script>
 </body>
 </html>
