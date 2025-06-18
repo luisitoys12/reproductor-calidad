@@ -2,7 +2,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AzuraCast Audio Player</title>
+  <title>EKUSFM Player</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link
     rel="stylesheet"
@@ -10,135 +10,423 @@
   />
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #2a5a7f;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5rem;
+    }
     .font-montserrat {
       font-family: 'Montserrat', sans-serif;
     }
+    .speaker {
+      background: #1a1a1a;
+      width: 12rem;
+      height: 18rem;
+      border-radius: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 15px 3px #00ff00;
+      transition: box-shadow 0.3s ease;
+    }
+    .speaker-glow {
+      width: 7rem;
+      height: 7rem;
+      border-radius: 9999px;
+      background: #2f2f2f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .speaker-glow-inner {
+      width: 5rem;
+      height: 5rem;
+      border-radius: 9999px;
+      border: 4px solid #00ff00;
+      box-shadow: 0 0 10px 3px #00ff00;
+      transition: box-shadow 0.3s ease;
+    }
+    .speaker-text {
+      color: #9ca3af;
+      font-weight: 600;
+      font-size: 1.125rem;
+      letter-spacing: 0.15em;
+      margin-top: 1.5rem;
+      user-select: none;
+    }
+    .player {
+      background: #1a1a1a;
+      width: 22.5rem;
+      height: 18rem;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 0 15px 1px #000000cc;
+      color: #d1d5db;
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #4b5563;
+      padding-bottom: 0.5rem;
+      font-weight: 600;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      user-select: none;
+    }
+    .live-status {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-weight: 700;
+      font-size: 0.875rem;
+      color: #e5e7eb;
+    }
+    .live-dot {
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 9999px;
+      background: #dc2626; /* red offline */
+      transition: background-color 0.3s ease;
+    }
+    .live-dot.live {
+      background: #00ff00;
+    }
+    .song-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 1rem;
+      color: #3ea1d6;
+    }
+    .cover-art {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 0.375rem;
+      object-fit: cover;
+      background: #5a5a5a;
+      flex-shrink: 0;
+    }
+    .song-texts {
+      display: flex;
+      flex-direction: column;
+      max-width: 11rem;
+      overflow: hidden;
+    }
+    .song-title {
+      font-weight: 600;
+      font-size: 0.875rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      user-select: text;
+    }
+    .artist-name {
+      font-size: 0.75rem;
+      color: #6b7280;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      user-select: text;
+    }
+    .time-elapsed {
+      margin-left: auto;
+      font-size: 0.75rem;
+      color: #9ca3af;
+      user-select: none;
+      width: 3.5rem;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    .controls {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      justify-content: center;
+      align-items: center;
+    }
+    .btn-circle {
+      background: #374151;
+      border-radius: 9999px;
+      width: 2.5rem;
+      height: 2.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #d1d5db;
+      cursor: not-allowed;
+      user-select: none;
+    }
+    .btn-circle.play-pause {
+      background: #3b82f6;
+      width: 3rem;
+      height: 3rem;
+      cursor: pointer;
+      color: white;
+      user-select: none;
+      transition: background-color 0.3s ease;
+    }
+    .btn-circle.play-pause:hover {
+      background: #2563eb;
+    }
+    .bottom-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .source-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .source-btn {
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 0.25rem;
+      padding: 0.25rem 0.5rem;
+      user-select: none;
+      cursor: default;
+    }
+    .source-btn.fm {
+      background: #00ff00;
+      color: black;
+    }
+    .source-btn.cd,
+    .source-btn.aux {
+      background: #111827;
+      color: #6b7280;
+    }
+    .equalizer {
+      display: flex;
+      align-items: flex-end;
+      gap: 0.125rem;
+      height: 2.5rem;
+      flex-grow: 1;
+      margin-left: 1rem;
+      margin-right: 0.5rem;
+    }
+    .bar {
+      width: 0.375rem;
+      border-radius: 0.125rem;
+      background-color: #22c55e; /* green */
+      height: 1.5rem;
+      transition: height 0.1s ease, background-color 0.1s ease;
+    }
+    .bar.yellow {
+      background-color: #eab308;
+    }
+    .bar.red {
+      background-color: #dc2626;
+    }
+    .volume-icon {
+      color: #9ca3af;
+      user-select: none;
+    }
+    .volume-slider {
+      flex-grow: 1;
+      height: 0.25rem;
+      border-radius: 9999px;
+      background: #3b82f6;
+      cursor: pointer;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 1rem;
+      height: 1rem;
+      background: white;
+      border-radius: 9999px;
+      cursor: pointer;
+      border: none;
+      margin-top: -0.375rem;
+    }
+    .volume-slider::-moz-range-thumb {
+      width: 1rem;
+      height: 1rem;
+      background: white;
+      border-radius: 9999px;
+      cursor: pointer;
+      border: none;
+    }
+    @media (max-width: 640px) {
+      body {
+        padding: 1rem;
+      }
+      .container {
+        flex-direction: column;
+        gap: 2rem;
+      }
+      .player {
+        width: 100%;
+        max-width: 360px;
+      }
+      .speaker {
+        width: 12rem;
+        height: 18rem;
+      }
+    }
   </style>
 </head>
-<body class="bg-[#2a5a7f] min-h-screen flex items-center justify-center p-6">
-  <div class="flex flex-col sm:flex-row gap-8 max-w-5xl w-full justify-center items-center">
+<body>
+  <div class="container flex gap-8 max-w-5xl w-full justify-center items-center flex-wrap">
     <!-- Left Speaker -->
-    <div id="left-speaker" class="bg-[#1a1a1a] rounded-xl w-48 h-72 flex flex-col items-center justify-center relative shadow-[0_0_15px_#00ff00] transition-shadow duration-300" style="box-shadow: 0 0 15px 3px #00ff00;">
-      <div class="relative w-28 h-28 rounded-full bg-[#2f2f2f] flex items-center justify-center">
-        <div id="left-glow" class="w-20 h-20 rounded-full border-4 border-[#00ff00] shadow-[0_0_10px_#00ff00] animate-pulse transition-shadow duration-300" style="box-shadow: 0 0 10px 3px #00ff00;"></div>
+    <div id="left-speaker" class="speaker">
+      <div class="speaker-glow">
+        <div id="left-glow" class="speaker-glow-inner"></div>
       </div>
-      <p class="font-montserrat text-gray-400 text-lg tracking-widest mt-6 select-none" style="letter-spacing: 0.15em;">
-        SONY
-      </p>
+      <p class="speaker-text">SONY</p>
     </div>
 
-    <!-- Center Player -->
-    <div class="bg-[#1a1a1a] rounded-xl w-[360px] h-72 p-6 flex flex-col justify-between shadow-lg" style="box-shadow: 0 0 15px 1px #000000cc;">
-      <!-- Top bar -->
-      <div class="flex justify-between items-center border-b border-gray-600 pb-2">
-        <p class="text-gray-400 text-xs tracking-widest font-semibold select-none">
-          STREAMING
-        </p>
-        <div class="flex items-center gap-1 select-none">
-          <div id="live-indicator" class="w-2 h-2 rounded-full bg-red-600"></div>
-          <p id="live-text" class="text-gray-200 font-semibold text-sm">Fuera del aire</p>
+    <!-- Player -->
+    <div class="player">
+      <div class="top-bar">
+        <div>STREAMING</div>
+        <div class="live-status">
+          <div id="live-indicator" class="live-dot"></div>
+          <div id="live-text">Fuera del aire</div>
         </div>
       </div>
 
-      <!-- Song info -->
-      <div class="flex items-center gap-3 mt-4">
-        <img id="cover-art" alt="Cover art placeholder" class="rounded-md w-12 h-12 object-cover" src="https://placehold.co/48x48/png?text=Cover" width="48" height="48" />
-        <div class="flex flex-col max-w-[180px]">
-          <p id="song-title" class="text-[#3ea1d6] font-semibold text-sm leading-5 truncate select-text">-</p>
-          <p id="artist-name" class="text-gray-500 text-xs truncate select-text">-</p>
+      <div class="song-info">
+        <img id="cover-img" class="cover-art" src="https://aventura.estacionkusmedios.com/img/default.jpg" alt="Cover art" />
+        <div class="song-texts">
+          <div id="song-title" class="song-title">-</div>
+          <div id="artist-name" class="artist-name">-</div>
         </div>
-        <div id="time-elapsed" class="ml-auto text-gray-400 text-xs select-none">00:00</div>
+        <div id="time-elapsed" class="time-elapsed">00:00</div>
       </div>
 
-      <!-- Controls -->
-      <div class="flex items-center gap-4 mt-6">
-        <button id="prev-btn" disabled aria-label="Previous" class="bg-gray-700 rounded-full w-10 h-10 flex items-center justify-center text-gray-300 cursor-not-allowed">
-          <i class="fas fa-backward"></i>
-        </button>
-        <button id="play-pause-btn" aria-label="Play" class="bg-[#5a9edb] rounded-full w-12 h-12 flex items-center justify-center text-white">
-          <i id="play-pause-icon" class="fas fa-play"></i>
-        </button>
-        <button id="next-btn" disabled aria-label="Next" class="bg-gray-700 rounded-full w-10 h-10 flex items-center justify-center text-gray-300 cursor-not-allowed">
-          <i class="fas fa-forward"></i>
-        </button>
+      <div class="controls">
+        <button class="btn-circle" disabled aria-label="Previous"><i class="fas fa-backward"></i></button>
+        <button id="playPauseBtn" class="btn-circle play-pause" aria-label="Play"><i class="fas fa-play"></i></button>
+        <button class="btn-circle" disabled aria-label="Next"><i class="fas fa-forward"></i></button>
       </div>
 
-      <!-- Bottom controls and equalizer -->
-      <div class="flex items-center gap-4 mt-6">
-        <div class="flex gap-2">
-          <button aria-label="FM" class="bg-[#00ff00] text-black text-xs font-semibold rounded px-2 py-1 select-none">FM</button>
-          <button aria-label="CD" class="bg-gray-800 text-gray-500 text-xs font-semibold rounded px-2 py-1 select-none">CD</button>
-          <button aria-label="AUX" class="bg-gray-800 text-gray-500 text-xs font-semibold rounded px-2 py-1 select-none">AUX</button>
+      <div class="bottom-controls">
+        <div class="source-buttons">
+          <button class="source-btn fm">FM</button>
+          <button class="source-btn cd">CD</button>
+          <button class="source-btn aux">AUX</button>
         </div>
-
-        <!-- Equalizer bars -->
-        <div id="equalizer" class="flex items-end gap-[2px] h-10">
-          <div class="w-1.5 rounded-sm bg-green-500 h-6"></div>
-          <div class="w-1.5 rounded-sm bg-green-500 h-8"></div>
-          <div class="w-1.5 rounded-sm bg-yellow-400 h-7"></div>
-          <div class="w-1.5 rounded-sm bg-yellow-400 h-9"></div>
-          <div class="w-1.5 rounded-sm bg-red-600 h-6"></div>
-          <div class="w-1.5 rounded-sm bg-yellow-400 h-7"></div>
-          <div class="w-1.5 rounded-sm bg-yellow-400 h-9"></div>
-          <div class="w-1.5 rounded-sm bg-green-500 h-8"></div>
-          <div class="w-1.5 rounded-sm bg-green-500 h-6"></div>
+        <div id="equalizer" class="equalizer" aria-hidden="true">
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
         </div>
-
-        <!-- Volume icon -->
-        <div class="text-gray-400 ml-2 select-none">
-          <i class="fas fa-volume-up"></i>
-        </div>
-
-        <!-- Volume bar -->
-        <input id="volume-slider" type="range" min="0" max="1" step="0.01" value="0.5" aria-label="Volume" class="flex-1 h-1 rounded bg-[#5a9edb] cursor-pointer" />
+        <div class="volume-icon"><i class="fas fa-volume-up"></i></div>
+        <input id="volumeControl" type="range" min="0" max="1" step="0.01" value="0.5" class="volume-slider" aria-label="Volume control" />
       </div>
     </div>
 
     <!-- Right Speaker -->
-    <div id="right-speaker" class="bg-[#1a1a1a] rounded-xl w-48 h-72 flex flex-col items-center justify-center relative shadow-[0_0_15px_#00ff00] transition-shadow duration-300" style="box-shadow: 0 0 15px 3px #00ff00;">
-      <div class="relative w-28 h-28 rounded-full bg-[#2f2f2f] flex items-center justify-center">
-        <div id="right-glow" class="w-20 h-20 rounded-full border-4 border-[#00ff00] shadow-[0_0_10px_#00ff00] animate-pulse transition-shadow duration-300" style="box-shadow: 0 0 10px 3px #00ff00;"></div>
+    <div id="right-speaker" class="speaker">
+      <div class="speaker-glow">
+        <div id="right-glow" class="speaker-glow-inner"></div>
       </div>
-      <p class="font-montserrat text-gray-400 text-lg tracking-widest mt-6 select-none" style="letter-spacing: 0.15em;">
-        SONY
-      </p>
+      <p class="speaker-text">SONY</p>
     </div>
   </div>
 
+  <audio id="audio" crossorigin="anonymous"></audio>
+
   <script>
-    // AzuraCast stream and metadata URLs
-    const streamUrl = "https://radio.trabullnetwork.pro/radio/estacionkusfm"; // AzuraCast stream URL
-    const metadataUrl = "https://radio.trabullnetwork.pro/api/nowplaying/1"; // AzuraCast API for station ID 1 (adjust if needed)
+    const config = {
+      nombreRadio: "EKUSFM",
+      nombreDesarrollador: "ESTACIONKUSMEDIOS",
+      logoURL: "https://aventura.estacionkusmedios.com/img/default.jpg",
+      fondoURL: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cmFkaW98ZW58MHx8MHx8fDA%3D",
+      streamURL: "https://radio.estacionkusmedios.com/listen/esmerosound/radio.mp3",
+      azuracastURL: "https://radio.estacionkusmedios.com",
+      azuracastStation: "esmerosound",
+      albumCover: "https://aventura.estacionkusmedios.com/img/default.jpg",
+      textoCompartir: "¡Escucha la mejor música en ESTACIONKUSFM! 🎵🔥"
+    };
 
-    // Elements
-    const liveIndicator = document.getElementById("live-indicator");
-    const liveText = document.getElementById("live-text");
-    const songTitle = document.getElementById("song-title");
-    const artistName = document.getElementById("artist-name");
-    const coverArt = document.getElementById("cover-art");
-    const timeElapsed = document.getElementById("time-elapsed");
-    const playPauseBtn = document.getElementById("play-pause-btn");
-    const playPauseIcon = document.getElementById("play-pause-icon");
-    const volumeSlider = document.getElementById("volume-slider");
-    const leftGlow = document.getElementById("left-glow");
-    const rightGlow = document.getElementById("right-glow");
-    const leftSpeaker = document.getElementById("left-speaker");
-    const rightSpeaker = document.getElementById("right-speaker");
-    const equalizer = document.getElementById("equalizer");
+    const audio = document.getElementById('audio');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const volumeControl = document.getElementById('volumeControl');
+    const songTitle = document.getElementById('song-title');
+    const artistName = document.getElementById('artist-name');
+    const coverImg = document.getElementById('cover-img');
+    const liveIndicator = document.getElementById('live-indicator');
+    const liveText = document.getElementById('live-text');
+    const timeElapsed = document.getElementById('time-elapsed');
+    const leftGlow = document.getElementById('left-glow');
+    const rightGlow = document.getElementById('right-glow');
+    const equalizer = document.getElementById('equalizer');
+    const bars = equalizer.querySelectorAll('.bar');
 
-    // Audio element
-    const audio = new Audio(streamUrl);
+    audio.src = config.streamURL;
     audio.crossOrigin = "anonymous";
-    audio.volume = 0.5;
+    audio.volume = volumeControl.value;
 
-    // State
-    let isPlaying = false;
     let startTime = 0;
+    let elapsedSeconds = 0;
     let timerInterval;
-    let metadataInterval;
-    let analyser, audioContext, source, dataArray;
+    let audioContext, analyser, source, dataArray;
 
-    // Setup Web Audio API for visualizer
+    // Play/Pause toggle
+    playPauseBtn.addEventListener('click', () => {
+      if (audio.paused) {
+        audio.play().then(() => {
+          setLiveStatus(true);
+          if (audioContext && audioContext.state === 'suspended') {
+            audioContext.resume();
+          }
+        }).catch(() => {
+          // play error (e.g. user gesture required)
+        });
+      } else {
+        audio.pause();
+        setLiveStatus(false);
+      }
+    });
+
+    audio.addEventListener('play', () => {
+      playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+      if (startTime === 0) startTime = Date.now() - elapsedSeconds * 1000;
+      timerInterval = setInterval(updateTime, 1000);
+    });
+
+    audio.addEventListener('pause', () => {
+      playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+      clearInterval(timerInterval);
+    });
+
+    volumeControl.addEventListener('input', (e) => {
+      audio.volume = e.target.value;
+    });
+
+    function setLiveStatus(isLive) {
+      if (isLive) {
+        liveIndicator.classList.add('live');
+        liveIndicator.classList.remove('bg-red-600');
+        liveText.textContent = 'En vivo';
+      } else {
+        liveIndicator.classList.remove('live');
+        liveIndicator.classList.add('bg-red-600');
+        liveText.textContent = 'Fuera del aire';
+      }
+    }
+
     function setupAudioVisualizer() {
       try {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -150,150 +438,109 @@
         source.connect(analyser);
         analyser.connect(audioContext.destination);
       } catch (e) {
-        // Web Audio API not supported or error
         analyser = null;
       }
     }
 
-    // Animate equalizer bars and speaker glow based on audio data
     function animateVisualizer() {
       if (!analyser) return;
       analyser.getByteFrequencyData(dataArray);
-      const bars = equalizer.children;
       let avg = 0;
-      for (let i = 0; i < bars.length; i++) {
+      bars.forEach((bar, i) => {
         const val = dataArray[i] || 0;
         avg += val;
-        // Map val (0-255) to height (6-36 px)
         const height = Math.min(36, Math.max(6, (val / 255) * 36));
-        bars[i].style.height = `${height}px`;
-        // Color gradient from green to red based on val
+        bar.style.height = `${height}px`;
         if (val > 180) {
-          bars[i].className = "w-1.5 rounded-sm bg-red-600";
+          bar.className = 'bar red';
         } else if (val > 100) {
-          bars[i].className = "w-1.5 rounded-sm bg-yellow-400";
+          bar.className = 'bar yellow';
         } else {
-          bars[i].className = "w-1.5 rounded-sm bg-green-500";
+          bar.className = 'bar';
         }
-      }
+      });
       avg = avg / bars.length;
-
-      // Glow effect on speakers based on avg volume
       if (avg > 40) {
-        leftGlow.style.boxShadow = "0 0 20px 6px #00ff00";
-        rightGlow.style.boxShadow = "0 0 20px 6px #00ff00";
-        leftSpeaker.style.boxShadow = "0 0 20px 6px #00ff00";
-        rightSpeaker.style.boxShadow = "0 0 20px 6px #00ff00";
+        leftGlow.style.boxShadow = '0 0 20px 6px #00ff00';
+        rightGlow.style.boxShadow = '0 0 20px 6px #00ff00';
+        document.getElementById('left-speaker').style.boxShadow = '0 0 20px 6px #00ff00';
+        document.getElementById('right-speaker').style.boxShadow = '0 0 20px 6px #00ff00';
       } else {
-        leftGlow.style.boxShadow = "0 0 10px 3px #00ff00";
-        rightGlow.style.boxShadow = "0 0 10px 3px #00ff00";
-        leftSpeaker.style.boxShadow = "0 0 15px 3px #00ff00";
-        rightSpeaker.style.boxShadow = "0 0 15px 3px #00ff00";
+        leftGlow.style.boxShadow = '0 0 10px 3px #00ff00';
+        rightGlow.style.boxShadow = '0 0 10px 3px #00ff00';
+        document.getElementById('left-speaker').style.boxShadow = '0 0 15px 3px #00ff00';
+        document.getElementById('right-speaker').style.boxShadow = '0 0 15px 3px #00ff00';
       }
-
       requestAnimationFrame(animateVisualizer);
     }
 
-    // Update live status and metadata from AzuraCast API
     async function updateMetadata() {
       try {
-        const response = await fetch(metadataUrl);
-        if (!response.ok) throw new Error("Network response was not ok");
-        const data = await response.json();
-
-        // AzuraCast nowplaying structure:
-        // data.now_playing.playing (bool)
-        // data.now_playing.song.title, artist, art
-        // data.now_playing.elapsed, length
+        const res = await fetch(`${config.azuracastURL}/api/nowplaying/${config.azuracastStation}`);
+        if (!res.ok) throw new Error("No se pudo obtener metadatos");
+        const data = await res.json();
 
         if (data.now_playing && data.now_playing.playing) {
-          liveIndicator.classList.remove("bg-red-600");
-          liveIndicator.classList.add("bg-[#00ff00]");
-          liveText.textContent = "En vivo";
+          setLiveStatus(true);
 
           const song = data.now_playing.song || {};
-          songTitle.textContent = song.title || "-";
-          artistName.textContent = song.artist || "-";
+          songTitle.textContent = song.title || "Desconocido";
+          artistName.textContent = song.artist || "Desconocido";
 
-          if (song.art && song.art !== "") {
-            coverArt.src = song.art;
-            coverArt.alt = `Cover art for ${song.title}`;
-          } else {
-            coverArt.src = "https://placehold.co/48x48/png?text=Cover";
-            coverArt.alt = "Cover art placeholder";
+          let artUrl = song.art;
+          if (artUrl && artUrl.startsWith('/')) {
+            artUrl = config.azuracastURL + artUrl;
           }
+          coverImg.src = artUrl || config.albumCover;
+          coverImg.alt = `Cover art for ${song.title || "unknown song"}`;
 
-          // Reset start time for elapsed timer
-          startTime = Date.now() - (data.now_playing.elapsed * 1000);
+          elapsedSeconds = data.now_playing.elapsed || 0;
+          startTime = Date.now() - elapsedSeconds * 1000;
         } else {
-          liveIndicator.classList.remove("bg-[#00ff00]");
-          liveIndicator.classList.add("bg-red-600");
-          liveText.textContent = "Fuera del aire";
+          setLiveStatus(false);
           songTitle.textContent = "-";
           artistName.textContent = "-";
-          coverArt.src = "https://placehold.co/48x48/png?text=Cover";
-          coverArt.alt = "Cover art placeholder";
+          coverImg.src = config.albumCover;
+          coverImg.alt = "Cover art placeholder";
+          elapsedSeconds = 0;
           startTime = 0;
           timeElapsed.textContent = "00:00";
         }
-      } catch (error) {
-        liveIndicator.classList.remove("bg-[#00ff00]");
-        liveIndicator.classList.add("bg-red-600");
-        liveText.textContent = "Fuera del aire";
-        songTitle.textContent = "-";
-        artistName.textContent = "-";
-        coverArt.src = "https://placehold.co/48x48/png?text=Cover";
-        coverArt.alt = "Cover art placeholder";
+      } catch (e) {
+        setLiveStatus(false);
+        songTitle.textContent = "Error obteniendo metadatos";
+        artistName.textContent = "";
+        coverImg.src = config.albumCover;
+        coverImg.alt = "Cover art placeholder";
+        elapsedSeconds = 0;
         startTime = 0;
         timeElapsed.textContent = "00:00";
       }
     }
 
-    // Update elapsed time display
     function updateTime() {
-      if (!isPlaying || startTime === 0) return;
-      const elapsed = Math.floor((Date.now() - startTime) / 1000);
-      const minutes = String(Math.floor(elapsed / 60)).padStart(2, "0");
-      const seconds = String(elapsed % 60).padStart(2, "0");
-      timeElapsed.textContent = `${minutes}:${seconds}`;
+      if (!audio.paused && startTime !== 0) {
+        const elapsed = Math.floor((Date.now() - startTime) / 1000);
+        const minutes = String(Math.floor(elapsed / 60)).padStart(2, '0');
+        const seconds = String(elapsed % 60).padStart(2, '0');
+        timeElapsed.textContent = `${minutes}:${seconds}`;
+      } else if (audio.paused) {
+        // Keep showing current elapsedSeconds if paused
+        const minutes = String(Math.floor(elapsedSeconds / 60)).padStart(2, '0');
+        const seconds = String(elapsedSeconds % 60).padStart(2, '0');
+        timeElapsed.textContent = `${minutes}:${seconds}`;
+      }
     }
 
-    // Play/pause toggle
-    playPauseBtn.addEventListener("click", () => {
-      if (isPlaying) {
-        audio.pause();
-        isPlaying = false;
-        playPauseIcon.classList.remove("fa-pause");
-        playPauseIcon.classList.add("fa-play");
-        clearInterval(timerInterval);
-        if (audioContext && audioContext.state !== "closed") {
-          audioContext.suspend();
-        }
-      } else {
-        audio.play().catch(() => {
-          // Play error (e.g. user gesture required)
-        });
-        isPlaying = true;
-        if (startTime === 0) startTime = Date.now();
-        playPauseIcon.classList.remove("fa-play");
-        playPauseIcon.classList.add("fa-pause");
-        timerInterval = setInterval(updateTime, 1000);
-        if (audioContext && audioContext.state === "suspended") {
-          audioContext.resume();
-        }
-      }
-    });
-
-    // Volume control
-    volumeSlider.addEventListener("input", (e) => {
-      audio.volume = e.target.value;
-    });
-
-    // Initialize
     setupAudioVisualizer();
     animateVisualizer();
     updateMetadata();
-    metadataInterval = setInterval(updateMetadata, 15000);
+    setInterval(updateMetadata, 10000);
+    setInterval(updateTime, 1000);
+
+    window.addEventListener('DOMContentLoaded', () => {
+      audio.load();
+    });
   </script>
 </body>
 </html>
