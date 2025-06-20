@@ -139,3 +139,78 @@
     <div class="menu-section">
       <h3 class="menu-section-title">Opciones</h3>
       <ul class="menu-links">
+        <li><a href="#" class="menu-link" id="historyLink"><i class="fas fa-history"></i> Historial de canciones</a></li>
+        <li><a href="#" class="menu-link" id="aboutLink"><i class="fas fa-info-circle"></i> Acerca de</a></li>
+        <li><a href="#" class="menu-link" id="shareLink"><i class="fas fa-share-alt"></i> Compartir</a></li>
+        <li><a href="novedades.htm" class="menu-link"><i class="fas fa-newspaper"></i> Novedades</a></li>
+      </ul>
+    </div>
+    <div class="menu-section">
+      <h3 class="menu-section-title">Basta de Bullying</h3>
+      <ul class="menu-links">
+        <li>
+          <a href="#" class="menu-link" id="bastaBullyingLink"><i class="fas fa-hand-paper"></i> Firma el pacto</a>
+        </li>
+      </ul>
+    </div>
+    <div class="menu-section">
+      <h3 class="menu-section-title">Redes Sociales</h3>
+      <ul class="menu-links" id="menu-social-links"></ul>
+    </div>
+  </div>
+  <!-- Modal Basta de Bullying -->
+  <div id="modalBasta" style="display:none;position:fixed;z-index:9999;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;">
+    <div class="panelbox" style="background:#fff;color:#222;padding:23px 18px 18px 18px;border-radius:18px;max-width:360px;width:90vw;position:relative;">
+      <button class="modal-close" id="closeBastaModal" style="position:absolute;top:12px;right:13px;font-size:1.4em;border:none;background:none;color:#222;cursor:pointer;">&times;</button>
+      <h2>Firma el Pacto: Basta de Bullying</h2>
+      <p>¡Únete y haz la diferencia! El bullying es un problema real que debemos erradicar. No te quedes callado. Firma el pacto y sé parte de la solución.</p>
+      <ul>
+        <li>No te quedes callado si eres testigo.</li>
+        <li>Apoya a las personas que lo sufren.</li>
+        <li>Habla con un adulto de confianza.</li>
+        <li>Denuncia cualquier caso.</li>
+      </ul>
+      <p><b>FAQ:</b><br>
+      <b>¿Qué debo hacer?</b><br>
+      - Si ves bullying, informa de inmediato.<br>
+      - Apoya a la persona afectada.<br>
+      - No seas cómplice ni espectador.<br>
+      - Recuerda: ¡Tu voz cuenta!</p>
+      <button class="basta-btn"
+        onclick="window.open('https://estacionkusmedios.org','_blank')"
+        style="background:#38bdf8;color:#222;font-weight:bold;padding:9px 19px;border:none;border-radius:9px;font-size:1.09em;cursor:pointer;">
+        Firma el pacto
+      </button>
+    </div>
+  </div>
+  <audio id="audio" preload="auto" crossorigin="anonymous"></audio>
+  <script src="script.js"></script>
+  <script>
+  // Botón "Restaurar original"
+  if(document.getElementById('resetCustomizationBtn')) {
+    document.getElementById('resetCustomizationBtn').onclick = () => {
+      localStorage.removeItem('radioBgColor');
+      localStorage.removeItem('radioAnimation');
+      localStorage.removeItem('radioStickers');
+      document.body.style.background = '#1e293b';
+      document.body.style.animation = '';
+      if(document.getElementById('customStickersArea')) document.getElementById('customStickersArea').innerHTML = '';
+      if(document.getElementById('bgColorPicker')) document.getElementById('bgColorPicker').value = '#1e293b';
+      if(document.getElementById('animationSelect')) document.getElementById('animationSelect').value = '';
+    };
+  }
+  // Modal Basta de Bullying
+  if(document.getElementById('bastaBullyingLink')) {
+    document.getElementById('bastaBullyingLink').onclick = function(e){
+      e.preventDefault();
+      document.getElementById('modalBasta').style.display = 'flex';
+    };
+  }
+  if(document.getElementById('closeBastaModal')) {
+    document.getElementById('closeBastaModal').onclick = function(){
+      document.getElementById('modalBasta').style.display = 'none';
+    };
+  }
+  </script>
+</body>
+</html>
