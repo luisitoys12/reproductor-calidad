@@ -9,16 +9,9 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     body { font-family: 'Poppins', sans-serif; margin:0; background:#0f172a; color:#fff;}
-    .overlay { position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:100;display:none;background:rgba(30,41,59,0.7);}
-    .overlay.active { display:block;}
     .header {display:flex;align-items:center;justify-content:space-between;padding:12px 22px 4px 22px;}
     .logo {font-size:1.8rem;font-weight:bold;}
-    .menu-btn { background:none;border:none;font-size:1.7rem;color:#fff;cursor:pointer;}
     .main-content { position:relative; max-width:370px; margin:30px auto 0 auto; padding:22px 15px; background:#1e293b;border-radius:18px;box-shadow:0 2px 12px #0003; overflow:hidden;}
-    .status-badge { background:#334155;padding:7px 12px;border-radius:7px;margin-bottom:13px;display:flex;align-items:center;gap:10px;}
-    .status-badge i { color:#38bdf8;}
-    #live-announcer-btn { margin:10px 0 5px 0; display:none; background: #ff1744; color:#fff; border:none; border-radius:8px; padding:8px 16px; font-size:1.08rem; font-weight:bold; cursor:pointer; box-shadow:0 2px 8px #0005;}
-    #live-announcer-btn i { margin-right:7px;}
     .cover-container { display:flex;justify-content:center;margin-bottom:13px;}
     .cover-img { width:160px;height:160px;border-radius:15px;box-shadow:0 3px 16px #0008;object-fit:cover;}
     .song-info { text-align:center;margin-bottom:8px;}
@@ -32,68 +25,25 @@
     .volume-icon i { font-size:1.1rem;}
     .volume-control { width:100px;}
     .service-btns { display:flex;gap:8px;margin:13px 0 0 0;justify-content:center;}
-    .service-btn { background:#222d;color:#fff;padding:6px 13px;border:none;border-radius:7px;cursor:pointer;font-size:.97rem;}
-    .service-btn.spotify { background:#1db954;}
-    .service-btn.apple { background:#333;}
+    .service-btn.spotify { background:#1db954; color:#fff;}
+    .service-btn.apple { background:#333; color:#fff;}
     .social-buttons { display:flex;gap:13px;margin:20px 0 0 0;justify-content:center;}
     .social-buttons a { color:#fff;font-size:1.4rem;transition:.2s;}
     .social-buttons a:hover { color:#0ff;}
     .radio-clock-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 11px;
-      margin: 16px 0 8px 0;
-      font-size: 1.07rem;
-      background: #222d;
-      border-radius: 8px;
-      padding: 7px 15px;
-      color: #fff;
+      display: flex; justify-content: center; align-items: center; gap: 11px;
+      margin: 16px 0 8px 0; font-size: 1.07rem; background: #222d; border-radius: 8px; padding: 7px 15px; color: #fff;
     }
-    .radio-clock-container i {
-      color: #facc15;
-      font-size: 1.5em;
-    }
-    .watermark {position:fixed;right:10px;bottom:8px;font-size:.93rem;color:#64748b;}
-    #fixBtn {position:fixed;left:10px;bottom:10px;background:#facc15;color:#222;border:none;border-radius:50%;font-size:1.22rem;width:42px;height:42px;cursor:pointer;box-shadow:0 2px 12px #0005;}
-    #fixAlert { position:fixed;left:50%;bottom:62px;transform:translateX(-50%);background:#222d;color:#fff;padding:10px 22px;border-radius:8px;display:none; }
-    .offline-alert { position:fixed;top:0;left:0;width:100vw;background:#f87171;color:#fff;padding:8px;text-align:center;display:none;z-index:300;}
-    .menu { position:fixed;top:0;left:0;height:100vh;width:320px;max-width:94vw;background:#1e293b;box-shadow:1px 0 9px #0008;z-index:150;transform:translateX(-100%);transition:.2s;display:flex;flex-direction:column; }
-    .menu.open { transform:translateX(0);}
-    .menu-header { display:flex;align-items:center;justify-content:space-between;padding:15px 22px 6px 22px;}
-    .menu-title { font-size:1.3rem;font-weight:bold;}
-    .close-menu { background:none;border:none;font-size:1.5rem;color:#fff;cursor:pointer;}
-    .menu-section {margin:0 0 23px 0;}
-    .menu-section-title {margin:8px 22px 5px 22px;font-size:1.02rem;color:#38bdf8;}
-    .menu-links { list-style:none;padding:0 22px;margin:0;}
-    .menu-links li {margin:11px 0;}
-    .menu-link { color:#fff;text-decoration:none;font-size:1.06rem;transition:.2s;}
-    .menu-link i {margin-right:9px;}
-    .menu-link:hover { color:#38bdf8;}
-    #menu-social-links li { display:flex;align-items:center;gap:10px;}
-    #menu-status {display:flex;align-items:center;gap:12px;margin:18px 22px 0 22px;font-size:1.08rem;}
-    #menu-status-icon {font-size:1.2em;}
-    .modal { display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.7);z-index:250;align-items:center;justify-content:center;}
-    .modal-content {background:#1e293b;padding:25px 18px 18px 18px;border-radius:15px;max-width:370px;width:94vw;box-shadow:0 2px 19px #000a;position:relative;}
-    .modal-title {font-size:1.08rem;font-weight:bold;margin-bottom:13px;}
-    .modal-close {position:absolute;top:11px;right:13px;font-size:1.5rem;background:none;border:none;color:#fff;cursor:pointer;}
-    .about-logo {width:70px;height:70px;border-radius:14px;margin-bottom:8px;object-fit:cover;}
-    .share-option {display:flex;align-items:center;gap:12px;margin-bottom:12px;cursor:pointer;}
-    .share-icon {width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;border-radius:50%;}
-    .share-url-container {display:flex;gap:5px;margin-top:7px;}
-    .share-url {flex:1;background:#222d;color:#fff;padding:7px 10px;border-radius:6px;border:none;}
-    .copy-btn {background:#38bdf8;color:#222;border:none;border-radius:6px;padding:7px 15px;cursor:pointer;}
+    .radio-clock-container i { color: #facc15; font-size: 1.5em; }
     #customizeBtn {position:fixed;bottom:60px;right:12px;z-index:300;font-size:1.5em;background:#38bdf8;color:#222;border-radius:50%;border:none;padding:12px 16px;box-shadow:0 2px 10px #0006;}
     #customizePanel {display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:400;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;}
     #customizePanel .panelbox {background:#fff;color:#222;padding:26px 24px;border-radius:22px;max-width:330px;width:95vw;position:relative;}
-    #customizePanel h2 {font-size:1.25em;}
     #stickerCatalog {display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:410;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;}
     #stickerCatalog .panelbox {background:#fff;padding:14px;border-radius:12px;max-width:260px;}
     #stickerCatalog .sticker-option {cursor:pointer;}
     #customStickersArea {position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:50;}
     @keyframes confetti {0%{filter:hue-rotate(0);}100%{filter:hue-rotate(360deg);}}
     @keyframes wave {0%{filter:brightness(1);}50%{filter:brightness(1.2);}100%{filter:brightness(1);}}
-    /* Basta de Bullying Modal */
     #modalBasta {display:none;position:fixed;z-index:9999;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;}
     #modalBasta .panelbox {background:#fff;color:#222;padding:23px 18px 18px 18px;border-radius:18px;max-width:360px;width:90vw;position:relative;}
     #modalBasta .modal-close {position:absolute;top:12px;right:13px;font-size:1.4em;border:none;background:none;color:#222;cursor:pointer;}
@@ -105,18 +55,12 @@
   </style>
 </head>
 <body>
-  <div class="overlay"></div>
   <div class="header">
     <div class="logo" id="radio-name">EKUSFM</div>
     <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
   </div>
   <div class="main-content">
     <div id="customStickersArea"></div>
-    <div class="status-badge" id="status-badge">
-      <i class="fas fa-broadcast-tower"></i>
-      <span id="status-text">Transmitiendo en vivo desde nuestra cabina central 🎙️ en digital</span>
-    </div>
-    <button id="live-announcer-btn"><i class="fas fa-microphone"></i> Locutor en vivo</button>
     <div class="cover-container">
       <img src="/placeholder.svg" alt="Album Cover" class="cover-img" id="cover-img">
     </div>
@@ -135,8 +79,12 @@
       <input type="range" class="volume-control" id="volumeControl" min="0" max="1" step="0.01" value="1">
     </div>
     <div class="service-btns" id="service-btns"></div>
-    <div class="status-indicator" id="statusIndicator"></div>
-    <div class="social-buttons" id="social-buttons"></div>
+    <div class="social-buttons" id="social-buttons">
+      <a href="https://web.facebook.com/ekusfm" target="_blank"><i class="fab fa-facebook"></i></a>
+      <a href="https://www.instagram.com/estacionkusfm/" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.youtube.com/estacionkusfm" target="_blank"><i class="fab fa-youtube"></i></a>
+      <a href="https://chat.whatsapp.com/JSk9LFoclGrFxY7rb4TFWu" target="_blank"><i class="fab fa-whatsapp"></i></a>
+    </div>
     <div class="radio-clock-container">
       <i class="fas fa-clock"></i>
       <div>
@@ -206,63 +154,6 @@
     <div class="menu-section">
       <h3 class="menu-section-title">Redes Sociales</h3>
       <ul class="menu-links" id="menu-social-links"></ul>
-      <div id="menu-status">
-        <i id="menu-status-icon" class="fas fa-circle" style="color:limegreen;"></i>
-        <span id="menu-status-text">Transmisión Online</span>
-      </div>
-    </div>
-    <div class="menu-section" id="menu-stats-section">
-      <h3 class="menu-section-title">Estadísticas</h3>
-      <ul class="menu-links" id="menu-stats">
-        <li><span><i class="fas fa-users"></i> Oyentes ahora: <b id="stat-listeners">-</b></span></li>
-        <li><span><i class="fas fa-music"></i> Canciones hoy: <b id="stat-today">-</b></span></li>
-        <li><span><i class="fas fa-history"></i> Historial total: <b id="stat-history">-</b></span></li>
-        <li><span><i class="fas fa-clock"></i> Uptime: <b id="stat-uptime">-</b></span></li>
-      </ul>
-    </div>
-  </div>
-  <div class="modal" id="historyModal">
-    <div class="modal-content">
-      <button class="modal-close" id="closeHistoryModal">&times;</button>
-      <h3 class="modal-title">Historial de canciones</h3>
-      <div id="historyModalContent" style="margin-bottom:10px;">Cargando historial...</div>
-    </div>
-  </div>
-  <div class="modal" id="aboutModal">
-    <div class="modal-content">
-      <button class="modal-close" id="closeAboutModal">&times;</button>
-      <h3 class="modal-title">Acerca de</h3>
-      <div class="about-content">
-        <img id="aboutLogo" class="about-logo" src="/placeholder.svg" alt="Logo">
-        <p class="about-text" id="aboutDescription">Cargando...</p>
-        <p class="about-text">Versión: 1.0.0</p>
-        <p class="about-text">Desarrollado con ❤️ por <span id="aboutDeveloper">ESTACIONKUSMEDIOS</span></p>
-        <p class="about-text">Powered by: <strong>ESTACIONKUSMEDIOS</strong></p>
-      </div>
-    </div>
-  </div>
-  <div class="modal" id="shareModal">
-    <div class="modal-content">
-      <button class="modal-close" id="closeShareModal">&times;</button>
-      <h3 class="modal-title">Compartir</h3>
-      <div id="shareOptions">
-        <div class="share-option" id="shareWhatsapp">
-          <div class="share-icon" style="background-color: #25D366;"><i class="fab fa-whatsapp"></i></div>
-          <div class="share-text">Compartir en WhatsApp</div>
-        </div>
-        <div class="share-option" id="shareFacebook">
-          <div class="share-icon" style="background-color: #1877F2;"><i class="fab fa-facebook-f"></i></div>
-          <div class="share-text">Compartir en Facebook</div>
-        </div>
-        <div class="share-option" id="shareTwitter">
-          <div class="share-icon" style="background-color: #1DA1F2;"><i class="fab fa-twitter"></i></div>
-          <div class="share-text">Compartir en Twitter</div>
-        </div>
-        <div class="share-url-container">
-          <input type="text" id="shareUrl" class="share-url" readonly>
-          <button id="copyLink" class="copy-btn">Copiar</button>
-        </div>
-      </div>
     </div>
   </div>
   <div id="modalBasta">
@@ -285,66 +176,30 @@
       <button class="basta-btn" onclick="window.open('https://estacionkusmedios.org','_blank')">Firma el pacto</button>
     </div>
   </div>
-  <div class="offline-alert" id="offlineAlert">Sin conexión a internet. Algunas funciones pueden no estar disponibles.</div>
-  <div class="watermark">Powered by: ESTACIONKUSMEDIOS</div>
-  <audio id="audio" preload="auto"></audio>
-  <button id="fixBtn" title="Solucionar problemas"><i class="fas fa-wrench"></i></button>
-  <div id="fixAlert"></div>
+  <audio id="audio" preload="auto" crossorigin="anonymous"></audio>
   <script src="script.js"></script>
   <script>
-  function updateRadioClock() {
-    const now = new Date();
-    const mexicoTime = now.toLocaleTimeString('es-MX', {
-      timeZone: 'America/Mexico_City',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
-    });
-    const mexicoDate = now.toLocaleDateString('es-MX', {
-      timeZone: 'America/Mexico_City',
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-    document.getElementById('radio-clock-date').textContent =
-      mexicoDate.charAt(0).toUpperCase() + mexicoDate.slice(1);
-    document.getElementById('radio-clock').textContent = mexicoTime;
-  }
-  setInterval(updateRadioClock, 1000);
-  updateRadioClock();
-
+  // Solo funciones de interfaz para personalización y basta de bullying.
   document.getElementById('customizeBtn').onclick = () => {
     document.getElementById('customizePanel').style.display = 'flex';
   };
-  const bgPicker = document.getElementById('bgColorPicker');
-  bgPicker.value = localStorage.getItem('radioBgColor') || '#1e293b';
-  bgPicker.oninput = () => {
-    document.body.style.background = bgPicker.value;
-    localStorage.setItem('radioBgColor', bgPicker.value);
-  };
-  document.body.style.background = bgPicker.value;
-  const animationSelect = document.getElementById('animationSelect');
-  animationSelect.value = localStorage.getItem('radioAnimation') || '';
-  animationSelect.oninput = () => {
-    localStorage.setItem('radioAnimation', animationSelect.value);
-    applyAnimation(animationSelect.value);
-  };
-  function applyAnimation(anim) {
+  document.getElementById('resetCustomizationBtn').onclick = () => {
+    localStorage.removeItem('radioBgColor');
+    localStorage.removeItem('radioAnimation');
+    localStorage.removeItem('radioStickers');
+    document.body.style.background = '#1e293b';
     document.body.style.animation = '';
-    if(anim === 'confetti') document.body.style.animation = 'confetti 1.5s infinite linear';
-    else if(anim === 'wave') document.body.style.animation = 'wave 1.2s infinite alternate';
-  }
-  applyAnimation(animationSelect.value);
-  document.getElementById('addStickerBtn').onclick = () => {
-    document.getElementById('stickerCatalog').style.display = 'flex';
+    document.getElementById('customStickersArea').innerHTML = '';
+    document.getElementById('bgColorPicker').value = '#1e293b';
+    document.getElementById('animationSelect').value = '';
   };
-  document.querySelectorAll('.sticker-option').forEach(img => {
-    img.onclick = () => {
-      const sticker = img.cloneNode();
-      sticker.style.position = 'absolute';
-      sticker.style.left = (10 + Math.random() * 70) + '%';
-      sticker.style.top = (10 + Math.random() * 60) + '%';
-      sticker.style.pointerEvents = 'none';
-      document.getElementById('customStickersArea').appendChild(sticker);
-      let stickers = JSON.parse(localStorage.getItem('radioStickers') || 
+  document.getElementById('bastaBullyingLink').onclick = function(e){
+    e.preventDefault();
+    document.getElementById('modalBasta').style.display = 'flex';
+  };
+  document.getElementById('closeBastaModal').onclick = function(){
+    document.getElementById('modalBasta').style.display = 'none';
+  };
+  </script>
+</body>
+</html>
