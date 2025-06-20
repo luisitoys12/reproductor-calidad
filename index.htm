@@ -43,7 +43,9 @@
     #stickerCatalog .sticker-option {cursor:pointer;}
     #customStickersArea {position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:50;}
     @keyframes confetti {0%{filter:hue-rotate(0);}100%{filter:hue-rotate(360deg);}}
-    @keyframes wave {0%{filter:brightness(1);}50%{filter:brightness(1.2);}100%{filter:brightness(1);}}
+    @keyframes wave {0%{filter:brightness(1);}50%{filter:brightness(1.2);}100%{filter:brightness(1);}
+    }
+    /* Basta de Bullying Modal */
     #modalBasta {display:none;position:fixed;z-index:9999;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;}
     #modalBasta .panelbox {background:#fff;color:#222;padding:23px 18px 18px 18px;border-radius:18px;max-width:360px;width:90vw;position:relative;}
     #modalBasta .modal-close {position:absolute;top:12px;right:13px;font-size:1.4em;border:none;background:none;color:#222;cursor:pointer;}
@@ -117,9 +119,12 @@
     </div>
   </div>
   <div id="stickerCatalog">
--wrap:wrap;">
+    <div class="panelbox">
+      <h3>Elige un sticker</h3>
+      <div style="display:flex;gap:7px;flex-wrap:wrap;">
         <img src="https://em-content.zobj.net/source/microsoft-teams/337/party-popper_1f389.png" class="sticker-option" width="38">
-        <img src="https://em-content.zobj.net/source/microsoft-teams/337/fire_1_" width="38">
+        <img src="https://em-content.zobj.net/source/microsoft-teams/337/fire_1f525.png" class="sticker-option" width="38">
+        <img src="https://em-content.zobj.net/source/microsoft-teams/337/sparkles_2728.png" class="sticker-option" width="38">
         <img src="https://em-content.zobj.net/source/microsoft-teams/337/radio_1f4fb.png" class="sticker-option" width="38">
         <img src="https://em-content.zobj.net/source/microsoft-teams/337/headphone_1f3a7.png" class="sticker-option" width="38">
         <img src="https://em-content.zobj.net/source/microsoft-teams/337/heart-on-fire_2764-fe0f-200d-1f525.png" class="sticker-option" width="38">
@@ -134,69 +139,3 @@
     <div class="menu-section">
       <h3 class="menu-section-title">Opciones</h3>
       <ul class="menu-links">
-        <li><a href="#" class="menu-link" id="historyLink"><i class="fas fa-history"></i> Historial de canciones</a></li>
-        <li><a href="#" class="menu-link" id="aboutLink"><i class="fas fa-info-circle"></i> Acerca de</a></li>
-        <li><a href="#" class="menu-link" id="shareLink"><i class="fas fa-share-alt"></i> Compartir</a></li>
-        <li><a href="novedades.htm" class="menu-link"><i class="fas fa-newspaper"></i> Novedades</a></li>
-      </ul>
-    </div>
-    <div class="menu-section">
-      <h3 class="menu-section-title">Basta de Bullying</h3>
-      <ul class="menu-links">
-        <li>
-          <a href="#" class="menu-link" id="bastaBullyingLink"><i class="fas fa-hand-paper"></i> Firma el pacto</a>
-        </li>
-      </ul>
-    </div>
-    <div class="menu-section">
-      <h3 class="menu-section-title">Redes Sociales</h3>
-      <ul class="menu-links" id="menu-social-links"></ul>
-    </div>
-  </div>
-  <div id="modalBasta">
-    <div class="panelbox">
-      <button class="modal-close" id="closeBastaModal">&times;</button>
-      <h2>Firma el Pacto: Basta de Bullying</h2>
-      <p>¡Únete y haz la diferencia! El bullying es un problema real que debemos erradicar. No te quedes callado. Firma el pacto y sé parte de la solución.</p>
-      <ul>
-        <li>No te quedes callado si eres testigo.</li>
-        <li>Apoya a las personas que lo sufren.</li>
-        <li>Habla con un adulto de confianza.</li>
-        <li>Denuncia cualquier caso.</li>
-      </ul>
-      <p><b>FAQ:</b><br>
-      <b>¿Qué debo hacer?</b><br>
-      - Si ves bullying, informa de inmediato.<br>
-      - Apoya a la persona afectada.<br>
-      - No seas cómplice ni espectador.<br>
-      - Recuerda: ¡Tu voz cuenta!</p>
-      <button class="basta-btn" onclick="window.open('https://estacionkusmedios.org','_blank')">Firma el pacto</button>
-    </div>
-  </div>
-  <audio id="audio" preload="auto" crossorigin="anonymous"></audio>
-  <script src="script.js"></script>
-  <script>
-  // Solo funciones de interfaz para personalización y basta de bullying.
-  document.getElementById('customizeBtn').onclick = () => {
-    document.getElementById('customizePanel').style.display = 'flex';
-  };
-  document.getElementById('resetCustomizationBtn').onclick = () => {
-    localStorage.removeItem('radioBgColor');
-    localStorage.removeItem('radioAnimation');
-    localStorage.removeItem('radioStickers');
-    document.body.style.background = '#1e293b';
-    document.body.style.animation = '';
-    document.getElementById('customStickersArea').innerHTML = '';
-    document.getElementById('bgColorPicker').value = '#1e293b';
-    document.getElementById('animationSelect').value = '';
-  };
-  document.getElementById('bastaBullyingLink').onclick = function(e){
-    e.preventDefault();
-    document.getElementById('modalBasta').style.display = 'flex';
-  };
-  document.getElementById('closeBastaModal').onclick = function(){
-    document.getElementById('modalBasta').style.display = 'none';
-  };
-  </script>
-</body>
-</html>
