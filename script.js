@@ -1,6 +1,6 @@
 // 🎵 VARIABLES CONFIGURABLES 🎵
 const config = {
-    nombreRadio: "EKUSFM", // <--- SI CAMBIAS ESTO, EL SITIO SE BLOQUEA
+    nombreRadio: "EKUSFM",
     nombreDesarrollador: "ESTACIONKUSMEDIOS",
     logoURL: "https://aventura.estacionkusmedios.com/img/default.jpg",
     fondoURL: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cmFkaW98ZW58MHx8MHx8fDA%3D",
@@ -16,13 +16,14 @@ const config = {
       { url: "https://web.facebook.com/ekusfm", icon: "fab fa-facebook" },
       { url: "https://www.instagram.com/estacionkusfm/", icon: "fab fa-instagram" },
       { url: "https://www.youtube.com/estacionkusfm", icon: "fab fa-youtube" },
-      { url: "https://api.whatsapp.com/send/?phone=51984335569&text&type=phone_number&app_absent=0", icon: "fab fa-whatsapp" }
+      // WhatsApp grupo de peticiones
+      { url: "https://chat.whatsapp.com/JSk9LFoclGrFxY7rb4TFWu", icon: "fab fa-whatsapp" }
     ],
     descripcion: "Radio ESTACIONKUSFM es una estación de radio online dedicada a traerte la mejor música y entretenimiento. Disfruta de una selección musical variada y de calidad las 24 horas del día.",
-    estado: "online"
+    estado: "online" // online, offline, maintenance, etc.
 };
 
-// SEGURIDAD: Solo funciona en los dominios autorizados y si el nombre de la radio es EKUSFM
+// --- SEGURIDAD Y BLOQUEO COPIA ---
 (function() {
   const hostname = location.hostname;
   const permitido = (
@@ -45,7 +46,6 @@ const config = {
     document.title = "No autorizado";
     throw new Error("Sitio no autorizado por estacionkusmedios.org");
   }
-  // Bloqueo de copiado (solo molesta a novatos)
   document.addEventListener('contextmenu', e => e.preventDefault());
   document.addEventListener('keydown', function(e) {
     if ((e.ctrlKey && ['u','s','c','a'].includes(e.key.toLowerCase())) ||
@@ -62,12 +62,11 @@ const songTitle = document.getElementById('song-title');
 const artistName = document.getElementById('artist-name');
 const coverImg = document.getElementById('cover-img');
 const serviceBtns = document.getElementById('service-btns');
-
+const liveBtn = document.getElementById('live-announcer-btn');
 audio.src = config.streamURL;
 audio.crossOrigin = "anonymous";
 audio.volume = volumeControl.value;
 
-// Play/Pause
 playPauseBtn.addEventListener('click', () => {
   if (audio.paused) audio.play();
   else audio.pause();
@@ -78,13 +77,10 @@ audio.addEventListener('play', () => {
 audio.addEventListener('pause', () => {
   playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
 });
-
-// Control de volumen
 volumeControl.addEventListener('input', (e) => {
   audio.volume = e.target.value;
 });
 
-// Botones Spotify/Apple Music
 function makeSpotifyAppleBtns(title, artist) {
   if (!title || !artist) return "";
   const query = encodeURIComponent(`${title} ${artist}`);
@@ -98,7 +94,6 @@ function makeSpotifyAppleBtns(title, artist) {
   `;
 }
 
-// Metadatos y botones de servicios
 async function updateMetadata() {
   try {
     const res = await fetch(`${config.azuracastURL}/api/nowplaying/${config.azuracastStation}`);
@@ -112,18 +107,30 @@ async function updateMetadata() {
     artistName.textContent = artist;
     coverImg.src = artUrl || config.albumCover;
     serviceBtns.innerHTML = makeSpotifyAppleBtns(title, artist);
+
+    // LOCUTOR EN VIVO (AUTOMÁTICO SI HAY DJ)
+    if (data.live && data.live.is_live && data.live.streamer_name) {
+      liveBtn.style.display = "inline-block";
+      liveBtn.innerHTML = `<i class="fas fa-microphone"></i> Locutor en vivo: ${data.live.streamer_name}`;
+    } else {
+      liveBtn.style.display = "none";
+    }
+
+    // Estado automático en menú
+    updateMenuStatus(data.live && data.live.is_live ? "online" : config.estado);
   } catch (e) {
     songTitle.textContent = "Error obteniendo metadatos";
     artistName.textContent = "";
     coverImg.src = config.albumCover;
     serviceBtns.innerHTML = "";
+    updateMenuStatus("offline");
   }
 }
 setInterval(updateMetadata, 10000);
 updateMetadata();
 window.addEventListener('DOMContentLoaded', () => { audio.load(); });
 
-// --- HISTORIAL DE CANCIONES DINÁMICO Y ESTADÍSTICAS ---
+// --- HISTORIAL Y ESTADÍSTICAS ---
 async function loadHistoryAndStats() {
   const historyCont = document.getElementById('historyModalContent');
   historyCont.innerHTML = "Cargando historial...";
@@ -133,7 +140,6 @@ async function loadHistoryAndStats() {
     if (!res.ok) throw new Error();
     const data = await res.json();
     const history = data.song_history || [];
-    // Historial dinámico
     if (history.length === 0) { historyCont.innerHTML = "Sin historial."; }
     else {
       historyCont.innerHTML = history.slice(0, 10).map(item => {
@@ -157,7 +163,6 @@ async function loadHistoryAndStats() {
         </div>`;
       }).join('');
     }
-    // Estadísticas menú
     document.getElementById('stat-listeners').textContent = data.listeners.current ?? "-";
     let todayCount = 0;
     const today = new Date().toISOString().slice(0,10);
@@ -250,7 +255,7 @@ fixBtn.onclick = () => {
 const menuSocialLinks = document.getElementById('menu-social-links');
 if (menuSocialLinks && config.redesSociales) {
   menuSocialLinks.innerHTML = config.redesSociales.map(rs =>
-    `<li><a href="${rs.url}" class="menu-link" target="_blank"><i class="${rs.icon}"></i></a></li>`
+    `<li><a href="${rs.url}" class="menu-link" target="_blank"><i class="${rs.icon}"></i> ${rs.icon === "fab fa-whatsapp" ? "Grupo de Peticiones" : ""}</a></li>`
   ).join('');
 }
 const socialBtns = document.getElementById('social-buttons');
@@ -280,11 +285,7 @@ document.getElementById('shareTwitter').onclick = function() {
   window.open('https://twitter.com/intent/tweet?url=' + encodeURIComponent(window.location.href) + '&text=' + encodeURIComponent(config.textoCompartir),'_blank');
 };
 
-// --- ALERTA OFFLINE ---
-const offlineAlert = document.getElementById('offlineAlert');
-function checkOnlineStatus() {
-  offlineAlert.style.display = navigator.onLine ? 'none' : 'block';
-}
-window.addEventListener('online', checkOnlineStatus);
-window.addEventListener('offline', checkOnlineStatus);
-checkOnlineStatus();
+// --- ESTADO EN MENÚ LATERAL ---
+function updateMenuStatus(estadoAuto) {
+  let estado = estadoAuto || config.estado || "online";
+  let icon = document
