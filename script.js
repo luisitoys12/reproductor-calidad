@@ -93,29 +93,44 @@ function makeSpotifyAppleBtns(title, artist) {
   `;
 }
 
+// FUNCIÓN ROBUSTA PARA DETECTAR METADATOS EN CUALQUIER ESTRUCTURA
 async function updateMetadata() {
   try {
     const url = `${config.azuracastURL}/api/nowplaying/${config.azuracastStation}`;
     const res = await fetch(url);
     if (!res.ok) throw new Error("HTTP status: " + res.status);
     const data = await res.json();
-    console.log("Respuesta AzuraCast:", data);
 
-    // Manejo robusto - encuentra la info relevante aunque la estructura cambie un poco
-    let nowPlaying = data.now_playing || data.nowPlaying || data.current_song || {};
-    let song = nowPlaying.song || nowPlaying || {};
-    let title = song.title || nowPlaying.title || "Sin datos";
-    let artist = song.artist || nowPlaying.artist || "Sin datos";
-    let artUrl = song.art || nowPlaying.art || "";
+    // Busca metadatos en varias ubicaciones posibles
+    let title = "", artist = "", artUrl = "";
+    // Estructura clásica AzuraCast
+    if (data.now_playing && data.now_playing.song) {
+      title = data.now_playing.song.title || "";
+      artist = data.now_playing.song.artist || "";
+      artUrl = data.now_playing.song.art || "";
+    }
+    // Alternativa actual de AzuraCast
+    if ((!title || !artist) && data.current_song) {
+      title = data.current_song.title || title;
+      artist = data.current_song.artist || artist;
+      artUrl = data.current_song.art || artUrl;
+    }
+    // Otros posibles lugares
+    if ((!title || !artist) && data.song) {
+      title = data.song.title || title;
+      artist = data.song.artist || artist;
+      artUrl = data.song.art || artUrl;
+    }
+    // Asegura que el cover sea absoluto
     if (artUrl && artUrl.startsWith('/')) artUrl = config.azuracastURL + artUrl;
     if (!artUrl) artUrl = config.albumCover;
 
-    songTitle.textContent = title;
-    artistName.textContent = artist;
+    songTitle.textContent = title || "Desconocido";
+    artistName.textContent = artist || "Desconocido";
     coverImg.src = artUrl;
     serviceBtns.innerHTML = makeSpotifyAppleBtns(title, artist);
 
-    // LOCUTOR EN VIVO (AUTOMÁTICO SI HAY DJ)
+    // Locutor en vivo (Automático por AzuraCast)
     if (data.live && (data.live.is_live || data.live.isLive) && (data.live.streamer_name || data.live.streamerName)) {
       let dj = data.live.streamer_name || data.live.streamerName || "Locutor";
       liveBtn.style.display = "inline-block";
@@ -124,7 +139,6 @@ async function updateMetadata() {
       liveBtn.style.display = "none";
     }
 
-    // Estado automático en menú
     updateMenuStatus(data.live && (data.live.is_live || data.live.isLive) ? "online" : config.estado);
   } catch (e) {
     songTitle.textContent = "Sin datos";
