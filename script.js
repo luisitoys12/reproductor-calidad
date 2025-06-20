@@ -1,249 +1,209 @@
-// === CONFIGURACIÓN ===
-const config = {
-    nombreRadio: "EKUSFM",
-    azuracastURL: "https://radio.estacionkusmedios.com",
-    azuracastStation: "esmerosound",
-    streamURL: "https://radio.estacionkusmedios.com/listen/esmerosound/radio.mp3",
-    albumCover: "https://aventura.estacionkusmedios.com/img/default.jpg",
-    redesSociales: [
-        { url: "https://web.facebook.com/ekusfm", icon: "fab fa-facebook" },
-        { url: "https://www.instagram.com/estacionkusfm/", icon: "fab fa-instagram" },
-        { url: "https://www.youtube.com/estacionkusfm", icon: "fab fa-youtube" },
-        { url: "https://chat.whatsapp.com/JSk9LFoclGrFxY7rb4TFWu", icon: "fab fa-whatsapp" }
-    ]
-};
-
-// === BLOQUEO COPIA (respetando tu sistema) ===
-(function() {
-    const hostname = location.hostname;
-    const permitido = (
-        hostname === "reproductor-calidad.vercel.app" ||
-        hostname === "estacionkusmedios.com" ||
-        hostname.endsWith(".estacionkusmedios.com")
-    );
-    if (!permitido) {
-        document.body.innerHTML = `
-        <div style="text-align:center;padding:40px;color:#fff;background:#1e293b;height:100vh">
-            <h1 style="color:#ff4444;font-size:2.5rem;">Página NO Autorizada</h1>
-            <p style="font-size:1.2rem;">Esta web solo puede ser utilizada por <b>EKUSFM</b> en <b>estacionkusmedios.com</b> o <b>reproductor-calidad.vercel.app</b>.<br>
-            Si eres el responsable, contacta a <a href="https://estacionkusmedios.org" style="color:#0ff;" target="_blank">estacionkusmedios.org</a>
-            </p>
-        </div>`;
-        document.title = "No autorizado";
-        throw new Error("Sitio no autorizado por estacionkusmedios.org");
-    }
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    document.addEventListener('keydown', function(e) {
-        if ((e.ctrlKey && ['u','s','c','a'].includes(e.key.toLowerCase())) ||
-            (e.metaKey && ['u','s','c','a'].includes(e.key.toLowerCase())) ||
-            e.key === 'F12') e.preventDefault();
-    });
-})();
-
-// === REPRODUCTOR ===
-const audio = document.getElementById('audio');
-const playPauseBtn = document.getElementById('playPauseBtn');
-const volumeControl = document.getElementById('volumeControl');
-audio.src = config.streamURL;
-audio.volume = volumeControl.value;
-audio.crossOrigin = "anonymous";
-
-playPauseBtn.addEventListener('click', () => {
-    if (audio.paused) audio.play();
-    else audio.pause();
-});
-audio.addEventListener('play', () => playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>');
-audio.addEventListener('pause', () => playPauseBtn.innerHTML = '<i class="fas fa-play"></i>');
-volumeControl.addEventListener('input', (e) => audio.volume = e.target.value);
-
-// === METADATOS ===
-const songTitle = document.getElementById('song-title');
-const artistName = document.getElementById('artist-name');
-const coverImg = document.getElementById('cover-img');
-const serviceBtns = document.getElementById('service-btns');
-
-function makeSpotifyAppleBtns(title, artist) {
-    if (!title || !artist) return "";
-    const query = encodeURIComponent(`${title} ${artist}`);
-    return `
-      <button class="service-btn spotify" onclick="window.open('https://open.spotify.com/search/${query}','_blank')">
-        <i class="fab fa-spotify"></i> Spotify
-      </button>
-      <button class="service-btn apple" onclick="window.open('https://music.apple.com/search?term=${query}','_blank')">
-        <i class="fab fa-apple"></i> Apple Music
-      </button>
-    `;
-}
-
-async function updateMetadata() {
-    try {
-        const url = `${config.azuracastURL}/api/nowplaying/${config.azuracastStation}`;
-        const res = await fetch(url);
-        if (!res.ok) throw new Error("HTTP status: " + res.status);
-        const data = await res.json();
-
-        let title = data.now_playing?.song?.title || data.now_playing?.song?.text || "Sin datos";
-        let artist = data.now_playing?.song?.artist || "";
-        let artUrl = data.now_playing?.song?.art || "";
-
-        // Fallbacks
-        if ((!title || title === "Sin datos") && data.song?.title) title = data.song.title;
-        if (!artist && data.song?.artist) artist = data.song.artist;
-        if (!artUrl && data.song?.art) artUrl = data.song.art;
-        if ((!title || !artist) && title && title.includes(" - ")) {
-            const [maybeArtist, maybeTitle] = title.split(" - ");
-            if (!artist) artist = maybeArtist.trim();
-            title = maybeTitle.trim();
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EKUSFM by ESTACIONKUSMEDIOS</title>
+    <meta name="theme-color" content="#1e293b">
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', Arial, sans-serif; background: #0f172a; color: #fff; margin:0; }
+        .header {display:flex;align-items:center;justify-content:space-between;padding:16px 24px 6px 24px;}
+        .logo {font-size:2rem;font-weight:bold;}
+        .main-content { max-width:390px; margin:32px auto 0 auto; padding:24px 16px; background:#1e293b;border-radius:18px;box-shadow:0 2px 12px #0003; position:relative;}
+        .cover-container { display:flex;justify-content:center;margin-bottom:13px;}
+        .cover-img { width:170px;height:170px;border-radius:18px;box-shadow:0 3px 16px #0008;object-fit:cover;}
+        .song-info { text-align:center;margin-bottom:12px;}
+        .song-title { font-size:1.25rem;font-weight:bold;}
+        .artist-name { color:#38bdf8;font-size:1.05rem;}
+        .now-playing {color:#94a3b8;font-size:1em;}
+        .controls { display:flex;justify-content:center;gap:18px;margin:16px 0;}
+        .control-btn, .play-btn { background:#334155;border:none;color:#fff;font-size:1.25rem;padding:12px 21px;border-radius:9px;cursor:pointer;}
+        .play-btn { background:#22d3ee;color:#222;font-size:1.44rem;}
+        .volume-container { display:flex;align-items:center;gap:12px;margin-top:8px;}
+        .volume-icon i { font-size:1.13rem;}
+        .volume-control { width:110px;}
+        .service-btns { display:flex;gap:9px;margin:14px 0 0 0;justify-content:center;}
+        .service-btn.spotify { background:#1db954; color:#fff;}
+        .service-btn.apple { background:#333; color:#fff;}
+        .social-buttons { display:flex;gap:15px;margin:23px 0 0 0;justify-content:center;}
+        .social-buttons a { color:#fff;font-size:1.5rem;transition:.2s;}
+        .social-buttons a:hover { color:#0ff;}
+        .radio-clock-container {
+            display: flex; justify-content: center; align-items: center; gap: 12px;
+            margin: 18px 0 10px 0; font-size: 1.09rem; background: #222d; border-radius: 9px; padding: 9px 17px; color: #fff;
         }
-        if (artUrl && artUrl.startsWith("/")) artUrl = config.azuracastURL + artUrl;
-        if (!artUrl) artUrl = config.albumCover;
-
-        songTitle.textContent = title || "Sin datos";
-        artistName.textContent = artist || "";
-        coverImg.src = artUrl;
-        serviceBtns.innerHTML = makeSpotifyAppleBtns(title, artist);
-    } catch (e) {
-        songTitle.textContent = "Sin datos";
-        artistName.textContent = "";
-        coverImg.src = config.albumCover;
-        serviceBtns.innerHTML = "";
-    }
-}
-setInterval(updateMetadata, 10000);
-updateMetadata();
-
-// === RELOJ CDMX ===
-function updateRadioClock() {
-    try {
-        const now = new Date();
-        const options = {
-            timeZone: 'America/Mexico_City',
-            hour: '2-digit', minute: '2-digit', second: '2-digit'
-        };
-        const optionsDate = {
-            timeZone: 'America/Mexico_City',
-            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-        };
-        document.getElementById('radio-clock').textContent = now.toLocaleTimeString('es-MX', options);
-        document.getElementById('radio-clock-date').textContent = now.toLocaleDateString('es-MX', optionsDate);
-    } catch (e) {
-        document.getElementById('radio-clock').textContent = '--:--:--';
-        document.getElementById('radio-clock-date').textContent = 'Fecha no disponible';
-    }
-}
-setInterval(updateRadioClock, 1000);
-updateRadioClock();
-
-// === BOTÓN FIX ===
-document.getElementById('fixBtn').onclick = function() {
-    audio.src = config.streamURL;
-    audio.load();
-    audio.play();
-    updateMetadata();
-};
-
-// === PERSONALIZACIÓN ===
-document.getElementById('customizeBtn').onclick = function() {
-    document.getElementById('customizePanel').style.display = 'flex';
-};
-document.getElementById('bgColorPicker').oninput = function() {
-    document.body.style.background = this.value;
-    localStorage.setItem('radioBgColor', this.value);
-};
-document.getElementById('animationSelect').oninput = function() {
-    localStorage.setItem('radioAnimation', this.value);
-    applyAnimation(this.value);
-};
-function applyAnimation(anim) {
-    document.body.style.animation = '';
-    if(anim === 'confetti') document.body.style.animation = 'confetti 1.5s infinite linear';
-    else if(anim === 'wave') document.body.style.animation = 'wave 1.2s infinite alternate';
-}
-(function() {
-    const color = localStorage.getItem('radioBgColor');
-    if (color) { document.body.style.background = color; document.getElementById('bgColorPicker').value = color; }
-    const anim = localStorage.getItem('radioAnimation');
-    if (anim) { document.getElementById('animationSelect').value = anim; applyAnimation(anim); }
-})();
-
-// === STICKERS ===
-document.getElementById('addStickerBtn').onclick = () => {
-    document.getElementById('stickerCatalog').style.display = 'flex';
-};
-document.querySelectorAll('.sticker-option').forEach(img => {
-    img.onclick = () => {
-        const sticker = img.cloneNode();
-        sticker.style.position = 'absolute';
-        sticker.style.left = (10 + Math.random() * 70) + '%';
-        sticker.style.top = (10 + Math.random() * 60) + '%';
-        sticker.style.pointerEvents = 'none';
-        document.getElementById('customStickersArea').appendChild(sticker);
-        let stickers = JSON.parse(localStorage.getItem('radioStickers') || '[]');
-        stickers.push({src: sticker.src, left: sticker.style.left, top: sticker.style.top});
-        localStorage.setItem('radioStickers', JSON.stringify(stickers));
-        document.getElementById('stickerCatalog').style.display = 'none';
-    };
-});
-window.addEventListener('DOMContentLoaded', ()=>{
-    let stickers = JSON.parse(localStorage.getItem('radioStickers') || '[]');
-    stickers.forEach(s => {
-        let img = document.createElement('img');
-        img.src = s.src; img.style.position='absolute';
-        img.style.left = s.left; img.style.top = s.top;
-        img.style.width = '38px'; img.style.pointerEvents='none';
-        document.getElementById('customStickersArea').appendChild(img);
-    });
-});
-document.getElementById('resetCustomizationBtn').onclick = () => {
-    localStorage.removeItem('radioBgColor');
-    localStorage.removeItem('radioAnimation');
-    localStorage.removeItem('radioStickers');
-    document.body.style.background = '#1e293b';
-    document.body.style.animation = '';
-    document.getElementById('customStickersArea').innerHTML = '';
-    document.getElementById('bgColorPicker').value = '#1e293b';
-    document.getElementById('animationSelect').value = '';
-};
-
-// === MENÚ LATERAL Y MODAL BULLYING ===
-document.getElementById('menuBtn').onclick = function() {
-    document.getElementById('menu').classList.add('open');
-};
-document.getElementById('close-menu').onclick = function() {
-    document.getElementById('menu').classList.remove('open');
-};
-document.addEventListener('click', function(e){
-    var menu = document.getElementById('menu');
-    if(menu.classList.contains('open') && !menu.contains(e.target) && e.target.id !== 'menuBtn'){
-        menu.classList.remove('open');
-    }
-});
-if(document.getElementById('bastaBullyingLink')) {
-    document.getElementById('bastaBullyingLink').onclick = function(e){
-        e.preventDefault();
-        document.getElementById('modalBasta').style.display = 'flex';
-    };
-}
-if(document.getElementById('closeBastaModal')) {
-    document.getElementById('closeBastaModal').onclick = function(){
-        document.getElementById('modalBasta').style.display = 'none';
-    };
-}
-
-// === REDES SOCIALES ===
-const menuSocialLinks = document.getElementById('menu-social-links');
-if (menuSocialLinks && config.redesSociales) {
-    menuSocialLinks.innerHTML = config.redesSociales.map(rs =>
-        `<li><a href="${rs.url}" class="menu-link" target="_blank"><i class="${rs.icon}"></i> ${
-            rs.icon === "fab fa-whatsapp" ? "WhatsApp" :
-            rs.icon === "fab fa-facebook" ? "Facebook" :
-            rs.icon === "fab fa-instagram" ? "Instagram" : "YouTube"
-        }</a></li>`
-    ).join('');
-}
-const socialBtns = document.getElementById('social-buttons');
-if (socialBtns && config.redesSociales) {
-    socialBtns.innerHTML = config.redesSociales.map(rs =>
-        `<a href="${rs.url}" target="_blank"><i class="${rs.icon}"></i></a>`
-    ).join('');
-}
+        .radio-clock-container i { color: #facc15; font-size: 1.5em; }
+        #customizeBtn {position:fixed;bottom:62px;right:16px;z-index:300;font-size:1.6em;background:#38bdf8;color:#222;border-radius:50%;border:none;padding:14px 17px;box-shadow:0 2px 10px #0006;}
+        #fixBtn {position:fixed;bottom:132px;right:16px;z-index:301;font-size:1.6em;background:#fbbf24;color:#222;border-radius:50%;border:none;padding:14px 17px;box-shadow:0 2px 10px #0006;}
+        #customizePanel {display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:400;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;}
+        #customizePanel .panelbox {background:#fff;color:#222;padding:28px 26px;border-radius:24px;max-width:340px;width:95vw;position:relative;}
+        #stickerCatalog {display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:410;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;}
+        #stickerCatalog .panelbox {background:#fff;padding:14px;border-radius:12px;max-width:260px;}
+        #stickerCatalog .sticker-option {cursor:pointer;}
+        #customStickersArea {position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:50;}
+        @keyframes confetti {0%{filter:hue-rotate(0);}100%{filter:hue-rotate(360deg);}}
+        @keyframes wave {0%{filter:brightness(1);}50%{filter:brightness(1.2);}100%{filter:brightness(1);}
+        }
+        #menu {
+            position: fixed; top: 0; right: 0; width: 320px; max-width: 95vw; height: 100vh;
+            background: #0f172a; color: #fff; z-index: 600; transform: translateX(100%);
+            transition: transform 0.25s; box-shadow: -3px 0 16px #0005; display: flex; flex-direction: column;
+        }
+        #menu.open { transform: translateX(0); }
+        #menu .menu-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 22px 26px 11px 26px; border-bottom: 1px solid #2228;
+        }
+        #menu .menu-title { font-size: 1.3em; font-weight: bold; }
+        #menu .close-menu { background:none; border:none; color:#fff; font-size:1.7em; cursor:pointer; }
+        .menu-section { padding: 20px 26px 13px 26px; }
+        .menu-section-title { margin:0 0 10px 0; font-size:1.12em; color:#38bdf8; }
+        .menu-links { list-style:none; padding:0; margin:0; }
+        .menu-link { color: #fff; text-decoration: none; display: flex; align-items: center; gap: 7px; padding: 7px 0; font-size: 1.06em; }
+        .menu-link i { width: 1.2em; }
+        .menu-link:hover { color:#38bdf8; }
+        #modalBasta {display:none;position:fixed;z-index:9999;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;}
+        #modalBasta .panelbox {background:#fff;color:#222;padding:27px 20px 20px 20px;border-radius:19px;max-width:370px;width:90vw;position:relative;}
+        #modalBasta .modal-close {position:absolute;top:14px;right:15px;font-size:1.4em;border:none;background:none;color:#222;cursor:pointer;}
+        #modalBasta h2 {font-size:1.22em;margin-bottom:13px;}
+        #modalBasta p {margin-bottom:16px;font-size:1em;}
+        #modalBasta ul {margin:0 0 11px 0;padding-left:18px;}
+        #modalBasta li {margin-bottom:8px;}
+        #modalBasta .basta-btn {background:#38bdf8;color:#222;font-weight:bold;padding:10px 20px;border:none;border-radius:10px;font-size:1.12em;cursor:pointer;}
+        @media (max-width: 500px) {
+            .main-content {padding:8px 0;}
+            .header {padding:8px 6px 3px 8px;}
+            .logo {font-size:1.2rem;}
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo" id="radio-name">EKUSFM</div>
+        <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
+    </div>
+    <div class="main-content">
+        <div id="customStickersArea"></div>
+        <div class="cover-container">
+            <img src="https://aventura.estacionkusmedios.com/img/default.jpg" alt="Album Cover" class="cover-img" id="cover-img">
+        </div>
+        <div class="song-info">
+            <div class="song-title" id="song-title">Cargando...</div>
+            <div class="artist-name" id="artist-name">Espere un momento</div>
+            <div class="now-playing" id="now-playing-text">Actualmente escuchas 🎶</div>
+        </div>
+        <div class="controls">
+            <button class="control-btn" id="prevBtn" disabled><i class="fas fa-step-backward"></i></button>
+            <button class="play-btn" id="playPauseBtn"><i class="fas fa-play"></i></button>
+            <button class="control-btn" id="nextBtn" disabled><i class="fas fa-step-forward"></i></button>
+        </div>
+        <div class="volume-container">
+            <div class="volume-icon"><i class="fas fa-volume-up" id="volumeIcon"></i></div>
+            <input type="range" class="volume-control" id="volumeControl" min="0" max="1" step="0.01" value="1">
+        </div>
+        <div class="service-btns" id="service-btns"></div>
+        <div class="social-buttons" id="social-buttons"></div>
+        <div class="radio-clock-container">
+            <i class="fas fa-clock"></i>
+            <div>
+                <div id="radio-clock-date" style="font-weight:bold;"></div>
+                <div>
+                  <span id="radio-clock">00:00:00</span>
+                  <span style="font-size:0.91em;color:#38bdf8;">Hora México</span>
+                </div>
+                <div style="font-size:0.93em;color:#38bdf8;">Hora oficial de la radio</div>
+            </div>
+        </div>
+    </div>
+    <button id="customizeBtn" title="Personaliza tu radio 🎨">🎨</button>
+    <button id="fixBtn" title="Reparar radio (si hay error)">🛠️</button>
+    <div id="customizePanel">
+        <div class="panelbox">
+            <button onclick="document.getElementById('customizePanel').style.display='none'" style="position:absolute;top:12px;right:13px;border:none;background:none;font-size:1.5em;">&times;</button>
+            <h2>Personaliza tu radio</h2>
+            <label>Color de fondo: <input type="color" id="bgColorPicker"></label><br><br>
+            <label>Animación:
+                <select id="animationSelect">
+                    <option value="">Ninguna</option>
+                    <option value="confetti">Confetti</option>
+                    <option value="wave">Onda</option>
+                </select>
+            </label><br><br>
+            <label>Stickers:
+                <button id="addStickerBtn">Agregar 🎉</button>
+            </label>
+margin-top:14px;background:#f87171;color:#fff;padding:8px 14px;border:none;border-radius:8px;cursor:pointer;">Restaurar original</button>
+        </div>
+    </div>
+    <div id="stickerCatalog">
+        <div class="panelbox">
+            <h3>Elige un sticker</h3>
+            <div style="display:flex;gap:7px;flex-wrap:wrap;">
+                <img src="https://em-content.zobj.net/source/microsoft-teams/337/party-popper_1f389.png" class="sticker-option" width="38">
+                <img src="https://em-content.zobj.net/source/microsoft-teams/337/fire_1f525.png" class="sticker-option" width="38">
+                <img src="https://em-content.zobj.net/source/microsoft-teams/337/sparkles_2728.png" class="sticker-option" width="38">
+                <img src="https://em-content.zobj.net/source/microsoft-teams/337/radio_1f4fb.png" class="sticker-option" width="38">
+                <img src="https://em-content.zobj.net/source/microsoft-teams/337/headphone_1f3a7.png" class="sticker-option" width="38">
+                <img src="https://em-content.zobj.net/source/microsoft-teams/337/heart-on-fire_2764-fe0f-200d-1f525.png" class="sticker-option" width="38">
+            </div>
+        </div>
+    </div>
+    <div class="menu" id="menu">
+        <div class="menu-header">
+            <div class="menu-title" id="menu-title">Menú</div>
+            <button class="close-menu" id="close-menu"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="menu-section">
+            <h3 class="menu-section-title">Opciones</h3>
+            <ul class="menu-links">
+                <li><a href="#" class="menu-link" id="historyLink"><i class="fas fa-history"></i> Historial de canciones</a></li>
+                <li><a href="#" class="menu-link" id="aboutLink"><i class="fas fa-info-circle"></i> Acerca de</a></li>
+                <li><a href="#" class="menu-link" id="shareLink"><i class="fas fa-share-alt"></i> Compartir</a></li>
+                <li><a href="novedades.htm" class="menu-link"><i class="fas fa-newspaper"></i> Novedades</a></li>
+            </ul>
+        </div>
+        <div class="menu-section">
+            <h3 class="menu-section-title">Basta de Bullying</h3>
+            <ul class="menu-links">
+                <li>
+                    <a href="#" class="menu-link" id="bastaBullyingLink"><i class="fas fa-hand-paper"></i> Firma el pacto</a>
+                </li>
+            </ul>
+        </div>
+        <div class="menu-section">
+            <h3 class="menu-section-title">Redes Sociales</h3>
+            <ul class="menu-links" id="menu-social-links"></ul>
+        </div>
+    </div>
+    <!-- Modal Basta de Bullying -->
+    <div id="modalBasta" style="display:none;position:fixed;z-index:9999;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;">
+        <div class="panelbox" style="background:#fff;color:#222;padding:27px 20px 20px 20px;border-radius:19px;max-width:370px;width:90vw;position:relative;">
+            <button class="modal-close" id="closeBastaModal" style="position:absolute;top:14px;right:15px;font-size:1.4em;border:none;background:none;color:#222;cursor:pointer;">&times;</button>
+            <h2>Firma el Pacto: Basta de Bullying</h2>
+            <p>¡Únete y haz la diferencia! El bullying es un problema real que debemos erradicar. No te quedes callado. Firma el pacto y sé parte de la solución.</p>
+            <ul>
+                <li>No te quedes callado si eres testigo.</li>
+                <li>Apoya a las personas que lo sufren.</li>
+                <li>Habla con un adulto de confianza.</li>
+                <li>Denuncia cualquier caso.</li>
+            </ul>
+            <p><b>FAQ:</b><br>
+            <b>¿Qué debo hacer?</b><br>
+            - Si ves bullying, informa de inmediato.<br>
+            - Apoya a la persona afectada.<br>
+            - No seas cómplice ni espectador.<br>
+            - Recuerda: ¡Tu voz cuenta!</p>
+            <button class="basta-btn"
+                onclick="window.open('https://estacionkusmedios.org','_blank')"
+                style="background:#38bdf8;color:#222;font-weight:bold;padding:10px 20px;border:none;border-radius:10px;font-size:1.12em;cursor:pointer;">
+                Firma el pacto
+            </button>
+        </div>
+    </div>
+    <audio id="audio" preload="auto" crossorigin="anonymous"></audio>
+    <script src="script.js"></script>
+</body>
+</html>
