@@ -404,5 +404,59 @@
   </script>
   <!-- Tu script.js personalizado para otras funciones -->
   <script src="script.js"></script>
+<script>
+(function() {
+  // Elementos del menú
+  const menuBtn = document.getElementById('menuBtn');
+  const menu = document.getElementById('menu');
+  const closeMenuBtn = document.getElementById('close-menu');
+
+  // Asegura display block y clase active
+  function openMenu() {
+    menu.style.display = 'block';
+    setTimeout(() => menu.classList.add('active'), 10);
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    menu.classList.remove('active');
+    setTimeout(() => {
+      menu.style.display = 'none';
+      document.body.style.overflow = '';
+    }, 200);
+  }
+
+  menuBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    openMenu();
+  });
+  closeMenuBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    closeMenu();
+  });
+
+  // Cerrar menú al hacer click fuera del menú
+  document.addEventListener('click', function(e) {
+    if (
+      menu.classList.contains('active') &&
+      !menu.contains(e.target) &&
+      !menuBtn.contains(e.target)
+    ) {
+      closeMenu();
+    }
+  });
+
+  // Previene que clicks dentro del menú cierren el menú
+  menu.addEventListener('click', function(e) {
+    e.stopPropagation();
+  });
+
+  // Modo seguro: asegura que el menú no quede bloqueado al recargar
+  window.addEventListener('pageshow', function() {
+    menu.classList.remove('active');
+    menu.style.display = 'none';
+    document.body.style.overflow = '';
+  });
+})();
+</script>
 </body>
 </html>
