@@ -80,20 +80,7 @@ volumeControl.addEventListener('input', (e) => {
   audio.volume = e.target.value;
 });
 
-function makeSpotifyAppleBtns(title, artist) {
-  if (!title || !artist) return "";
-  const query = encodeURIComponent(`${title} ${artist}`);
-  return `
-    <button class="service-btn spotify" onclick="window.open('https://open.spotify.com/search/${query}','_blank')">
-      <i class="fab fa-spotify"></i> Spotify
-    </button>
-    <button class="service-btn apple" onclick="window.open('https://music.apple.com/search?term=${query}','_blank')">
-      <i class="fab fa-apple"></i> Apple Music
-    </button>
-  `;
-}
-
-// FUNCIÓN ROBUSTA PARA DETECTAR METADATOS EN CUALQUIER ESTRUCTURA
+// --- METADATOS ROBUSTOS ---
 async function updateMetadata() {
   try {
     const url = `${config.azuracastURL}/api/nowplaying/${config.azuracastStation}`;
@@ -101,45 +88,93 @@ async function updateMetadata() {
     if (!res.ok) throw new Error("HTTP status: " + res.status);
     const data = await res.json();
 
-    // Busca metadatos en varias ubicaciones posibles
-    let title = "", artist = "", artUrl = "";
-    // Estructura clásica AzuraCast
-    if (data.now_playing && data.now_playing.song) {
-      title = data.now_playing.song.title || "";
-      artist = data.now_playing.song.artist || "";
-      artUrl = data.now_playing.song.art || "";
+    // Busca metadatos en todas las rutas posibles
+    const deepFind = (obj, paths) => {
+      for (const path of paths) {
+        const keys = path.split(".");
+        let val = obj;
+        for (const k of keys) {
+          if (val && typeof val === "object" && k in val) val = val[k];
+          else { val = undefined; break; }
+        }
+        if (val && typeof val === "string" && val.trim() !== "") return val;
+      }
+      return undefined;
+    };
+
+    let title = deepFind(data, [
+      "now_playing.song.title", "now_playing.song.text",
+      "current_song.title", "current_song.text",
+      "currentSong.title", "currentSong.text",
+      "song.title", "song.text",
+      "np.title", "np.text",
+      "playing.title", "playing.text"
+    ]);
+    let artist = deepFind(data, [
+      "now_playing.song.artist",
+      "current_song.artist",
+      "currentSong.artist",
+      "song.artist",
+      "np.artist",
+      "playing.artist"
+    ]);
+    let artUrl = deepFind(data, [
+      "now_playing.song.art",
+      "current_song.art",
+      "currentSong.art",
+      "song.art",
+      "np.art",
+      "playing.art"
+    ]);
+
+    // Fallback: intenta extraer artista y título de un string
+    if ((!title || !artist) && title && title.includes(" - ")) {
+      const [maybeArtist, maybeTitle] = title.split(" - ");
+      if (!artist) artist = maybeArtist.trim();
+      title = maybeTitle.trim();
     }
-    // Alternativa actual de AzuraCast
-    if ((!title || !artist) && data.current_song) {
-      title = data.current_song.title || title;
-      artist = data.current_song.artist || artist;
-      artUrl = data.current_song.art || artUrl;
+    // Fallback: busca algún campo "title" o "text"
+    if (!title) {
+      for (const key in data) {
+        if (data[key] && typeof data[key] === "object") {
+          if (data[key].title) { title = data[key].title; break; }
+          if (data[key].text) { title = data[key].text; break; }
+        }
+      }
     }
-    // Otros posibles lugares
-    if ((!title || !artist) && data.song) {
-      title = data.song.title || title;
-      artist = data.song.artist || artist;
-      artUrl = data.song.art || artUrl;
+    // Fallback: primer string útil
+    if (!title) {
+      for (const key in data) {
+        if (typeof data[key] === "string" && data[key].trim().length > 2) {
+          title = data[key]; break;
+        }
+      }
     }
-    // Asegura que el cover sea absoluto
-    if (artUrl && artUrl.startsWith('/')) artUrl = config.azuracastURL + artUrl;
+    if (!title) title = "Sin datos";
+    if (!artist) artist = "";
+
+    // Carátula absoluta
+    if (artUrl && artUrl.startsWith("/")) artUrl = config.azuracastURL + artUrl;
     if (!artUrl) artUrl = config.albumCover;
 
-    songTitle.textContent = title || "Desconocido";
-    artistName.textContent = artist || "Desconocido";
+    songTitle.textContent = title;
+    artistName.textContent = artist;
     coverImg.src = artUrl;
     serviceBtns.innerHTML = makeSpotifyAppleBtns(title, artist);
 
-    // Locutor en vivo (Automático por AzuraCast)
+    // Locutor en vivo
     if (data.live && (data.live.is_live || data.live.isLive) && (data.live.streamer_name || data.live.streamerName)) {
       let dj = data.live.streamer_name || data.live.streamerName || "Locutor";
-      liveBtn.style.display = "inline-block";
-      liveBtn.innerHTML = `<i class="fas fa-microphone"></i> Locutor en vivo: ${dj}`;
-    } else {
+      if (liveBtn) {
+        liveBtn.style.display = "inline-block";
+        liveBtn.innerHTML = `<i class="fas fa-microphone"></i> Locutor en vivo: ${dj}`;
+      }
+    } else if (liveBtn) {
       liveBtn.style.display = "none";
     }
 
     updateMenuStatus(data.live && (data.live.is_live || data.live.isLive) ? "online" : config.estado);
+
   } catch (e) {
     songTitle.textContent = "Sin datos";
     artistName.textContent = "";
@@ -153,13 +188,26 @@ setInterval(updateMetadata, 10000);
 updateMetadata();
 window.addEventListener('DOMContentLoaded', () => { audio.load(); });
 
+function makeSpotifyAppleBtns(title, artist) {
+  if (!title || !artist) return "";
+  const query = encodeURIComponent(`${title} ${artist}`);
+  return `
+    <button class="service-btn spotify" onclick="window.open('https://open.spotify.com/search/${query}','_blank')">
+      <i class="fab fa-spotify"></i> Spotify
+    </button>
+    <button class="service-btn apple" onclick="window.open('https://music.apple.com/search?term=${query}','_blank')">
+      <i class="fab fa-apple"></i> Apple Music
+    </button>
+  `;
+}
+
 // --- RELOJ HORA OFICIAL MÉXICO CENTRAL ---
 function updateRadioClock() {
   try {
     const now = new Date();
-    const options = { 
-      timeZone: 'America/Mexico_City', 
-      hour: '2-digit', minute: '2-digit', second: '2-digit' 
+    const options = {
+      timeZone: 'America/Mexico_City',
+      hour: '2-digit', minute: '2-digit', second: '2-digit'
     };
     const optionsDate = {
       timeZone: 'America/Mexico_City',
