@@ -4,7 +4,6 @@ const config = {
     nombreDesarrollador: "ESTACIONKUSMEDIOS",
     logoURL: "https://aventura.estacionkusmedios.com/img/default.jpg",
     fondoURL: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cmFkaW98ZW58MHx8MHx8fDA%3D",
-    // Cambia estos dos valores por los de tu AzuraCast:
     streamURL: "https://radio.estacionkusmedios.com/listen/esmerosound/radio.mp3",
     azuracastURL: "https://radio.estacionkusmedios.com",
     azuracastStation: "esmerosound",
@@ -20,26 +19,39 @@ const config = {
       { url: "https://api.whatsapp.com/send/?phone=51984335569&text&type=phone_number&app_absent=0", icon: "fab fa-whatsapp" }
     ],
     descripcion: "Radio ESTACIONKUSFM es una estación de radio online dedicada a traerte la mejor música y entretenimiento. Disfruta de una selección musical variada y de calidad las 24 horas del día.",
-    estado: "online" // online, offline, maintenance, disabled, desactivated
+    estado: "online"
 };
 
-// SEGURIDAD: Solo funciona si el nombre de la radio es EKUSFM
+// SEGURIDAD: Solo funciona en los dominios autorizados y si el nombre de la radio es EKUSFM
 (function() {
-  const alertaNoAutorizada = () => {
+  const hostname = location.hostname;
+  const permitido = (
+    hostname === "reproductor-calidad.vercel.app" ||
+    hostname === "estacionkusmedios.com" ||
+    hostname.endsWith(".estacionkusmedios.com")
+  );
+  if (
+    typeof config === "undefined" ||
+    config.nombreRadio !== "EKUSFM" ||
+    !permitido
+  ) {
     document.body.innerHTML = `
       <div style="text-align:center;padding:40px;color:#fff;background:#1e293b;height:100vh">
         <h1 style="color:#ff4444;font-size:2.5rem;">Página NO Autorizada</h1>
-        <p style="font-size:1.2rem;">Esta web solo puede ser utilizada por <b>EKUSFM</b>.<br>
+        <p style="font-size:1.2rem;">Esta web solo puede ser utilizada por <b>EKUSFM</b> en <b>estacionkusmedios.com</b> o <b>reproductor-calidad.vercel.app</b>.<br>
         Si eres el responsable, contacta a <a href="https://estacionkusmedios.org" style="color:#0ff;" target="_blank">estacionkusmedios.org</a>
         </p>
       </div>`;
     document.title = "No autorizado";
-  };
-  // Si el nombre de la radio no es EKUSFM (mayúsculas exacto), bloquea todo
-  if (typeof config === "undefined" || config.nombreRadio !== "EKUSFM") {
-    setTimeout(alertaNoAutorizada, 100);
     throw new Error("Sitio no autorizado por estacionkusmedios.org");
   }
+  // Bloqueo de copiado (solo molesta a novatos)
+  document.addEventListener('contextmenu', e => e.preventDefault());
+  document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey && ['u','s','c','a'].includes(e.key.toLowerCase())) ||
+        (e.metaKey && ['u','s','c','a'].includes(e.key.toLowerCase())) ||
+        e.key === 'F12') e.preventDefault();
+  });
 })();
 
 // --- REPRODUCTOR Y METADATOS AZURACAST ---
@@ -49,20 +61,16 @@ const volumeControl = document.getElementById('volumeControl');
 const songTitle = document.getElementById('song-title');
 const artistName = document.getElementById('artist-name');
 const coverImg = document.getElementById('cover-img');
-const background = document.getElementById('background');
+const serviceBtns = document.getElementById('service-btns');
 
-// Inicializa audio
 audio.src = config.streamURL;
 audio.crossOrigin = "anonymous";
 audio.volume = volumeControl.value;
 
 // Play/Pause
 playPauseBtn.addEventListener('click', () => {
-  if (audio.paused) {
-    audio.play();
-  } else {
-    audio.pause();
-  }
+  if (audio.paused) audio.play();
+  else audio.pause();
 });
 audio.addEventListener('play', () => {
   playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
@@ -76,199 +84,207 @@ volumeControl.addEventListener('input', (e) => {
   audio.volume = e.target.value;
 });
 
-// Carga metadatos desde AzuraCast API
+// Botones Spotify/Apple Music
+function makeSpotifyAppleBtns(title, artist) {
+  if (!title || !artist) return "";
+  const query = encodeURIComponent(`${title} ${artist}`);
+  return `
+    <button class="service-btn spotify" onclick="window.open('https://open.spotify.com/search/${query}','_blank')">
+      <i class="fab fa-spotify"></i> Spotify
+    </button>
+    <button class="service-btn apple" onclick="window.open('https://music.apple.com/search?term=${query}','_blank')">
+      <i class="fab fa-apple"></i> Apple Music
+    </button>
+  `;
+}
+
+// Metadatos y botones de servicios
 async function updateMetadata() {
   try {
     const res = await fetch(`${config.azuracastURL}/api/nowplaying/${config.azuracastStation}`);
     if (!res.ok) throw new Error("No se pudo obtener metadatos");
     const data = await res.json();
-
-    songTitle.textContent = data.now_playing.song.title || "Desconocido";
-    artistName.textContent = data.now_playing.song.artist || "Desconocido";
-    // Portada
+    const title = data.now_playing.song.title || "Desconocido";
+    const artist = data.now_playing.song.artist || "Desconocido";
     let artUrl = data.now_playing.song.art;
-    if (artUrl && artUrl.startsWith('/')) {
-      artUrl = config.azuracastURL + artUrl;
-    }
+    if (artUrl && artUrl.startsWith('/')) { artUrl = config.azuracastURL + artUrl; }
+    songTitle.textContent = title;
+    artistName.textContent = artist;
     coverImg.src = artUrl || config.albumCover;
-    background.src = artUrl || config.fondoURL;
+    serviceBtns.innerHTML = makeSpotifyAppleBtns(title, artist);
   } catch (e) {
     songTitle.textContent = "Error obteniendo metadatos";
     artistName.textContent = "";
     coverImg.src = config.albumCover;
-    background.src = config.fondoURL;
+    serviceBtns.innerHTML = "";
   }
 }
-
-// Actualiza metadatos cada 10 segundos
 setInterval(updateMetadata, 10000);
 updateMetadata();
+window.addEventListener('DOMContentLoaded', () => { audio.load(); });
 
-// Opcional: auto-play al cargar
-window.addEventListener('DOMContentLoaded', () => {
-  audio.load();
-});
+// --- HISTORIAL DE CANCIONES DINÁMICO Y ESTADÍSTICAS ---
+async function loadHistoryAndStats() {
+  const historyCont = document.getElementById('historyModalContent');
+  historyCont.innerHTML = "Cargando historial...";
+  try {
+    const url = `${config.azuracastURL}/api/nowplaying/${config.azuracastStation}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error();
+    const data = await res.json();
+    const history = data.song_history || [];
+    // Historial dinámico
+    if (history.length === 0) { historyCont.innerHTML = "Sin historial."; }
+    else {
+      historyCont.innerHTML = history.slice(0, 10).map(item => {
+        const title = item.song.title || "Desconocido";
+        const artist = item.song.artist || "Desconocido";
+        const playedAt = new Date(item.played_at * 1000);
+        const hora = playedAt.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        const query = encodeURIComponent(`${title} ${artist}`);
+        return `<div style="margin-bottom:11px;">
+          <b>${title}</b><br>
+          <span style="color:#38bdf8;font-size:.97em;">${artist}</span>
+          <span style="color:#64748b;font-size:.95em;"> · ${hora}</span>
+          <div class="service-btns" style="margin-top:3px;">
+            <button class="service-btn spotify" onclick="window.open('https://open.spotify.com/search/${query}','_blank')">
+              <i class="fab fa-spotify"></i> Spotify
+            </button>
+            <button class="service-btn apple" onclick="window.open('https://music.apple.com/search?term=${query}','_blank')">
+              <i class="fab fa-apple"></i> Apple Music
+            </button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+    // Estadísticas menú
+    document.getElementById('stat-listeners').textContent = data.listeners.current ?? "-";
+    let todayCount = 0;
+    const today = new Date().toISOString().slice(0,10);
+    if (history) {
+      todayCount = history.filter(item => {
+        const d = new Date(item.played_at * 1000).toISOString().slice(0,10);
+        return d === today;
+      }).length;
+    }
+    document.getElementById('stat-today').textContent = todayCount;
+    document.getElementById('stat-history').textContent = history.length;
+    if (data.station?.uptime) {
+      let up = data.station.uptime;
+      let h = Math.floor(up/3600), m = Math.floor((up%3600)/60), s = up%60;
+      let upstr = (h>0 ? `${h}h ` : "") + (m>0 ? `${m}m ` : "") + `${s}s`;
+      document.getElementById('stat-uptime').textContent = upstr;
+    } else {
+      document.getElementById('stat-uptime').textContent = "-";
+    }
+  } catch {
+    document.getElementById('stat-listeners').textContent = "-";
+    document.getElementById('stat-today').textContent = "-";
+    document.getElementById('stat-history').textContent = "-";
+    document.getElementById('stat-uptime').textContent = "-";
+    document.getElementById('historyModalContent').innerHTML = "Error obteniendo historial.";
+  }
+}
+setInterval(loadHistoryAndStats, 20000);
+document.getElementById('menuBtn').addEventListener('click', loadHistoryAndStats);
 
-// --- MENÚ LATERAL ---
+// --- MENÚ Y MODALES ---
 const menuBtn = document.getElementById('menuBtn');
 const menu = document.getElementById('menu');
 const closeMenuBtn = document.getElementById('close-menu');
 const overlay = document.querySelector('.overlay');
-
-// Abrir menú
 menuBtn.addEventListener('click', (e) => {
-  e.stopPropagation();
-  menu.classList.add('open');
-  overlay.classList.add('active');
-  document.body.style.overflow = 'hidden';
+  e.stopPropagation(); menu.classList.add('open'); overlay.classList.add('active'); document.body.classList.add('menu-open');
 });
-// Cerrar menú
 closeMenuBtn.addEventListener('click', (e) => {
-  e.stopPropagation();
-  menu.classList.remove('open');
-  overlay.classList.remove('active');
-  document.body.style.overflow = '';
+  e.stopPropagation(); menu.classList.remove('open'); overlay.classList.remove('active'); document.body.classList.remove('menu-open');
 });
 overlay.addEventListener('click', () => {
-  menu.classList.remove('open');
-  overlay.classList.remove('active');
-  document.body.style.overflow = '';
+  menu.classList.remove('open'); overlay.classList.remove('active'); document.body.classList.remove('menu-open');
 });
-
-// Cerrar menú al hacer click fuera
 document.addEventListener('click', function(e) {
-  if (
-    menu.classList.contains('open') &&
-    !menu.contains(e.target) &&
-    !menuBtn.contains(e.target)
-  ) {
-    menu.classList.remove('open');
-    overlay.classList.remove('active');
-    document.body.style.overflow = '';
+  if (menu.classList.contains('open') && !menu.contains(e.target) && !menuBtn.contains(e.target)) {
+    menu.classList.remove('open'); overlay.classList.remove('active'); document.body.classList.remove('menu-open');
   }
 });
-
-// Previene que clicks dentro del menú lo cierren
-menu.addEventListener('click', function(e) {
-  e.stopPropagation();
-});
-
-// Cierra con ESC
+menu.addEventListener('click', function(e) { e.stopPropagation(); });
 document.addEventListener('keydown', function(e) {
   if (e.key === "Escape") {
-    menu.classList.remove('open');
-    overlay.classList.remove('active');
-    document.body.style.overflow = '';
+    menu.classList.remove('open'); overlay.classList.remove('active'); document.body.classList.remove('menu-open');
   }
 });
-
-// Modo seguro: asegura que el menú no quede bloqueado al recargar
 window.addEventListener('pageshow', function() {
-  menu.classList.remove('open');
-  overlay.classList.remove('active');
-  document.body.style.overflow = '';
+  menu.classList.remove('open'); overlay.classList.remove('active'); document.body.classList.remove('menu-open');
 });
 
 // --- MODALES ---
-function openModal(modalId) {
-  document.getElementById(modalId).style.display = 'block';
-  overlay.classList.add('active');
-  document.body.style.overflow = 'hidden';
-}
-function closeModal(modalId) {
-  document.getElementById(modalId).style.display = 'none';
-  overlay.classList.remove('active');
-  document.body.style.overflow = '';
-}
-
-// Historial de canciones
-const historyLink = document.getElementById('historyLink');
-const historyModal = document.getElementById('historyModal');
-const closeHistoryModal = document.getElementById('closeHistoryModal');
-historyLink.addEventListener('click', (e) => {
-  e.preventDefault();
-  openModal('historyModal');
+function openModal(modalId) { document.getElementById(modalId).style.display = 'flex'; }
+function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
+document.getElementById('historyLink').onclick = (e) => { e.preventDefault(); openModal('historyModal'); loadHistoryAndStats(); };
+document.getElementById('aboutLink').onclick = (e) => { e.preventDefault(); openModal('aboutModal'); };
+document.getElementById('shareLink').onclick = (e) => { e.preventDefault(); openModal('shareModal'); };
+document.getElementById('closeHistoryModal').onclick = () => closeModal('historyModal');
+document.getElementById('closeAboutModal').onclick = () => closeModal('aboutModal');
+document.getElementById('closeShareModal').onclick = () => closeModal('shareModal');
+document.querySelectorAll('.modal').forEach(modal => {
+  modal.addEventListener('click', function(e) { if (e.target === modal) closeModal(modal.id); });
 });
-closeHistoryModal.addEventListener('click', () => closeModal('historyModal'));
 
-// Acerca de
-const aboutLink = document.getElementById('aboutLink');
-const aboutModal = document.getElementById('aboutModal');
-const closeAboutModal = document.getElementById('closeAboutModal');
-aboutLink.addEventListener('click', (e) => {
-  e.preventDefault();
-  openModal('aboutModal');
-});
-closeAboutModal.addEventListener('click', () => closeModal('aboutModal'));
-
-// Compartir
-const shareLink = document.getElementById('shareLink');
-const shareModal = document.getElementById('shareModal');
-const closeShareModal = document.getElementById('closeShareModal');
-shareLink.addEventListener('click', (e) => {
-  e.preventDefault();
-  openModal('shareModal');
-});
-closeShareModal.addEventListener('click', () => closeModal('shareModal'));
-
-// --- COPIAR ENLACE DE COMPARTIR ---
-const shareUrl = document.getElementById('shareUrl');
-const copyLinkBtn = document.getElementById('copyLink');
-if(shareUrl && copyLinkBtn) {
-  shareUrl.value = window.location.href;
-  copyLinkBtn.addEventListener('click', () => {
-    shareUrl.select();
-    document.execCommand('copy');
-    copyLinkBtn.textContent = '¡Copiado!';
-    setTimeout(() => (copyLinkBtn.textContent = 'Copiar'), 1500);
-  });
+// --- BOTÓN FIX ---
+const fixBtn = document.getElementById('fixBtn');
+const fixAlert = document.getElementById('fixAlert');
+function showFixAlert(text, time=3500) {
+  fixAlert.textContent = text;
+  fixAlert.style.display = 'block';
+  setTimeout(() => { fixAlert.style.display = 'none'; }, time);
 }
+fixBtn.onclick = () => {
+  menuBtn.disabled = false;
+  closeMenuBtn.disabled = false;
+  menu.classList.remove('open'); overlay.classList.remove('active'); document.body.classList.remove('menu-open');
+  audio.src = config.streamURL; audio.load(); audio.volume = volumeControl.value;
+  showFixAlert('¡Solucionado! Si persiste el problema, recarga la página.');
+};
 
-// --- ALERTA OFFLINE ---
-const offlineAlert = document.getElementById('offlineAlert');
-function checkOnlineStatus() {
-  if (navigator.onLine) {
-    offlineAlert.style.display = 'none';
-  } else {
-    offlineAlert.style.display = 'block';
-  }
-}
-window.addEventListener('online', checkOnlineStatus);
-window.addEventListener('offline', checkOnlineStatus);
-checkOnlineStatus();
-
-// --- LLENAR ENLACES SOCIALES ---
+// --- SOCIAL LINKS / MODAL INFO ---
 const menuSocialLinks = document.getElementById('menu-social-links');
 if (menuSocialLinks && config.redesSociales) {
   menuSocialLinks.innerHTML = config.redesSociales.map(rs =>
     `<li><a href="${rs.url}" class="menu-link" target="_blank"><i class="${rs.icon}"></i></a></li>`
   ).join('');
 }
-
-// --- LLENAR SOBRE NOSOTROS ---
-const aboutLogo = document.getElementById('aboutLogo');
-const aboutDescription = document.getElementById('aboutDescription');
-const aboutDeveloper = document.getElementById('aboutDeveloper');
-if (aboutLogo) aboutLogo.src = config.logoURL;
-if (aboutDescription) aboutDescription.textContent = config.descripcion;
-if (aboutDeveloper) aboutDeveloper.textContent = config.nombreDesarrollador;
+const socialBtns = document.getElementById('social-buttons');
+if (socialBtns && config.redesSociales) {
+  socialBtns.innerHTML = config.redesSociales.map(rs =>
+    `<a href="${rs.url}" target="_blank"><i class="${rs.icon}"></i></a>`
+  ).join('');
+}
+document.getElementById('aboutLogo').src = config.logoURL;
+document.getElementById('aboutDescription').textContent = config.descripcion;
+document.getElementById('aboutDeveloper').textContent = config.nombreDesarrollador;
 
 // --- COMPARTIR EN REDES ---
-const shareWhatsapp = document.getElementById('shareWhatsapp');
-const shareFacebook = document.getElementById('shareFacebook');
-const shareTwitter = document.getElementById('shareTwitter');
-if (shareWhatsapp) {
-  shareWhatsapp.onclick = () => {
-    window.open(`https://wa.me/?text=${encodeURIComponent(config.textoCompartir + " " + window.location.href)}`, "_blank");
-  };
+document.getElementById('shareUrl').value = window.location.href;
+document.getElementById('copyLink').onclick = function() {
+  navigator.clipboard.writeText(window.location.href)
+    .then(() => showFixAlert('Enlace copiado!'))
+    .catch(() => showFixAlert('No se pudo copiar el enlace'));
+};
+document.getElementById('shareWhatsapp').onclick = function() {
+  window.open('https://wa.me/?text=' + encodeURIComponent(config.textoCompartir + " " + window.location.href),'_blank');
+};
+document.getElementById('shareFacebook').onclick = function() {
+  window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href),'_blank');
+};
+document.getElementById('shareTwitter').onclick = function() {
+  window.open('https://twitter.com/intent/tweet?url=' + encodeURIComponent(window.location.href) + '&text=' + encodeURIComponent(config.textoCompartir),'_blank');
+};
+
+// --- ALERTA OFFLINE ---
+const offlineAlert = document.getElementById('offlineAlert');
+function checkOnlineStatus() {
+  offlineAlert.style.display = navigator.onLine ? 'none' : 'block';
 }
-if (shareFacebook) {
-  shareFacebook.onclick = () => {
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, "_blank");
-  };
-}
-if (shareTwitter) {
-  shareTwitter.onclick = () => {
-    window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(config.textoCompartir)}`, "_blank");
-  };
-}
+window.addEventListener('online', checkOnlineStatus);
+window.addEventListener('offline', checkOnlineStatus);
+checkOnlineStatus();
