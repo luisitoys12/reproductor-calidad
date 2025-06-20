@@ -16,11 +16,10 @@ const config = {
       { url: "https://web.facebook.com/ekusfm", icon: "fab fa-facebook" },
       { url: "https://www.instagram.com/estacionkusfm/", icon: "fab fa-instagram" },
       { url: "https://www.youtube.com/estacionkusfm", icon: "fab fa-youtube" },
-      // WhatsApp grupo de peticiones
       { url: "https://chat.whatsapp.com/JSk9LFoclGrFxY7rb4TFWu", icon: "fab fa-whatsapp" }
     ],
     descripcion: "Radio ESTACIONKUSFM es una estación de radio online dedicada a traerte la mejor música y entretenimiento. Disfruta de una selección musical variada y de calidad las 24 horas del día.",
-    estado: "online" // online, offline, maintenance, etc.
+    estado: "online"
 };
 
 // --- SEGURIDAD Y BLOQUEO COPIA ---
@@ -96,34 +95,44 @@ function makeSpotifyAppleBtns(title, artist) {
 
 async function updateMetadata() {
   try {
-    const res = await fetch(`${config.azuracastURL}/api/nowplaying/${config.azuracastStation}`);
-    if (!res.ok) throw new Error("No se pudo obtener metadatos");
+    const url = `${config.azuracastURL}/api/nowplaying/${config.azuracastStation}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("HTTP status: " + res.status);
     const data = await res.json();
-    const title = data.now_playing.song.title || "Desconocido";
-    const artist = data.now_playing.song.artist || "Desconocido";
-    let artUrl = data.now_playing.song.art;
-    if (artUrl && artUrl.startsWith('/')) { artUrl = config.azuracastURL + artUrl; }
+    console.log("Respuesta AzuraCast:", data);
+
+    // Manejo robusto - encuentra la info relevante aunque la estructura cambie un poco
+    let nowPlaying = data.now_playing || data.nowPlaying || data.current_song || {};
+    let song = nowPlaying.song || nowPlaying || {};
+    let title = song.title || nowPlaying.title || "Sin datos";
+    let artist = song.artist || nowPlaying.artist || "Sin datos";
+    let artUrl = song.art || nowPlaying.art || "";
+    if (artUrl && artUrl.startsWith('/')) artUrl = config.azuracastURL + artUrl;
+    if (!artUrl) artUrl = config.albumCover;
+
     songTitle.textContent = title;
     artistName.textContent = artist;
-    coverImg.src = artUrl || config.albumCover;
+    coverImg.src = artUrl;
     serviceBtns.innerHTML = makeSpotifyAppleBtns(title, artist);
 
     // LOCUTOR EN VIVO (AUTOMÁTICO SI HAY DJ)
-    if (data.live && data.live.is_live && data.live.streamer_name) {
+    if (data.live && (data.live.is_live || data.live.isLive) && (data.live.streamer_name || data.live.streamerName)) {
+      let dj = data.live.streamer_name || data.live.streamerName || "Locutor";
       liveBtn.style.display = "inline-block";
-      liveBtn.innerHTML = `<i class="fas fa-microphone"></i> Locutor en vivo: ${data.live.streamer_name}`;
+      liveBtn.innerHTML = `<i class="fas fa-microphone"></i> Locutor en vivo: ${dj}`;
     } else {
       liveBtn.style.display = "none";
     }
 
     // Estado automático en menú
-    updateMenuStatus(data.live && data.live.is_live ? "online" : config.estado);
+    updateMenuStatus(data.live && (data.live.is_live || data.live.isLive) ? "online" : config.estado);
   } catch (e) {
-    songTitle.textContent = "Error obteniendo metadatos";
+    songTitle.textContent = "Sin datos";
     artistName.textContent = "";
     coverImg.src = config.albumCover;
     serviceBtns.innerHTML = "";
     updateMenuStatus("offline");
+    console.error("Error obteniendo metadatos:", e);
   }
 }
 setInterval(updateMetadata, 10000);
@@ -139,12 +148,12 @@ async function loadHistoryAndStats() {
     const res = await fetch(url);
     if (!res.ok) throw new Error();
     const data = await res.json();
-    const history = data.song_history || [];
+    let history = data.song_history || data.songHistory || [];
     if (history.length === 0) { historyCont.innerHTML = "Sin historial."; }
     else {
       historyCont.innerHTML = history.slice(0, 10).map(item => {
-        const title = item.song.title || "Desconocido";
-        const artist = item.song.artist || "Desconocido";
+        const title = (item.song && item.song.title) || item.title || "Desconocido";
+        const artist = (item.song && item.song.artist) || item.artist || "Desconocido";
         const playedAt = new Date(item.played_at * 1000);
         const hora = playedAt.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         const query = encodeURIComponent(`${title} ${artist}`);
@@ -163,7 +172,7 @@ async function loadHistoryAndStats() {
         </div>`;
       }).join('');
     }
-    document.getElementById('stat-listeners').textContent = data.listeners.current ?? "-";
+    document.getElementById('stat-listeners').textContent = data.listeners?.current ?? "-";
     let todayCount = 0;
     const today = new Date().toISOString().slice(0,10);
     if (history) {
