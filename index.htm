@@ -93,6 +93,15 @@
     #customStickersArea {position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:50;}
     @keyframes confetti {0%{filter:hue-rotate(0);}100%{filter:hue-rotate(360deg);}}
     @keyframes wave {0%{filter:brightness(1);}50%{filter:brightness(1.2);}100%{filter:brightness(1);}}
+    /* Basta de Bullying Modal */
+    #modalBasta {display:none;position:fixed;z-index:9999;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;}
+    #modalBasta .panelbox {background:#fff;color:#222;padding:23px 18px 18px 18px;border-radius:18px;max-width:360px;width:90vw;position:relative;}
+    #modalBasta .modal-close {position:absolute;top:12px;right:13px;font-size:1.4em;border:none;background:none;color:#222;cursor:pointer;}
+    #modalBasta h2 {font-size:1.18em;margin-bottom:10px;}
+    #modalBasta p {margin-bottom:15px;font-size:1em;}
+    #modalBasta ul {margin:0 0 10px 0;padding-left:17px;}
+    #modalBasta li {margin-bottom:7px;}
+    #modalBasta .basta-btn {background:#38bdf8;color:#222;font-weight:bold;padding:9px 19px;border:none;border-radius:9px;font-size:1.09em;cursor:pointer;}
   </style>
 </head>
 <body>
@@ -156,6 +165,7 @@
       <label>Stickers:
         <button id="addStickerBtn">Agregar 🎉</button>
       </label>
+      <button id="resetCustomizationBtn" style="margin-top:14px;background:#f87171;color:#fff;padding:8px 14px;border:none;border-radius:8px;cursor:pointer;">Restaurar original</button>
     </div>
   </div>
   <div id="stickerCatalog">
@@ -183,6 +193,14 @@
         <li><a href="#" class="menu-link" id="aboutLink"><i class="fas fa-info-circle"></i> Acerca de</a></li>
         <li><a href="#" class="menu-link" id="shareLink"><i class="fas fa-share-alt"></i> Compartir</a></li>
         <li><a href="novedades.htm" class="menu-link"><i class="fas fa-newspaper"></i> Novedades</a></li>
+      </ul>
+    </div>
+    <div class="menu-section">
+      <h3 class="menu-section-title">Basta de Bullying</h3>
+      <ul class="menu-links">
+        <li>
+          <a href="#" class="menu-link" id="bastaBullyingLink"><i class="fas fa-hand-paper"></i> Firma el pacto</a>
+        </li>
       </ul>
     </div>
     <div class="menu-section">
@@ -247,6 +265,26 @@
       </div>
     </div>
   </div>
+  <div id="modalBasta">
+    <div class="panelbox">
+      <button class="modal-close" id="closeBastaModal">&times;</button>
+      <h2>Firma el Pacto: Basta de Bullying</h2>
+      <p>¡Únete y haz la diferencia! El bullying es un problema real que debemos erradicar. No te quedes callado. Firma el pacto y sé parte de la solución.</p>
+      <ul>
+        <li>No te quedes callado si eres testigo.</li>
+        <li>Apoya a las personas que lo sufren.</li>
+        <li>Habla con un adulto de confianza.</li>
+        <li>Denuncia cualquier caso.</li>
+      </ul>
+      <p><b>FAQ:</b><br>
+      <b>¿Qué debo hacer?</b><br>
+      - Si ves bullying, informa de inmediato.<br>
+      - Apoya a la persona afectada.<br>
+      - No seas cómplice ni espectador.<br>
+      - Recuerda: ¡Tu voz cuenta!</p>
+      <button class="basta-btn" onclick="window.open('https://estacionkusmedios.org','_blank')">Firma el pacto</button>
+    </div>
+  </div>
   <div class="offline-alert" id="offlineAlert">Sin conexión a internet. Algunas funciones pueden no estar disponibles.</div>
   <div class="watermark">Powered by: ESTACIONKUSMEDIOS</div>
   <audio id="audio" preload="auto"></audio>
@@ -275,6 +313,7 @@
   }
   setInterval(updateRadioClock, 1000);
   updateRadioClock();
+
   document.getElementById('customizeBtn').onclick = () => {
     document.getElementById('customizePanel').style.display = 'flex';
   };
@@ -308,22 +347,4 @@
       sticker.style.top = (10 + Math.random() * 60) + '%';
       sticker.style.pointerEvents = 'none';
       document.getElementById('customStickersArea').appendChild(sticker);
-      let stickers = JSON.parse(localStorage.getItem('radioStickers') || '[]');
-      stickers.push({src: sticker.src, left: sticker.style.left, top: sticker.style.top});
-      localStorage.setItem('radioStickers', JSON.stringify(stickers));
-      document.getElementById('stickerCatalog').style.display = 'none';
-    };
-  });
-  window.addEventListener('DOMContentLoaded', ()=>{
-    let stickers = JSON.parse(localStorage.getItem('radioStickers') || '[]');
-    stickers.forEach(s => {
-      let img = document.createElement('img');
-      img.src = s.src; img.style.position='absolute';
-      img.style.left = s.left; img.style.top = s.top;
-      img.style.width = '38px'; img.style.pointerEvents='none';
-      document.getElementById('customStickersArea').appendChild(img);
-    });
-  });
-  </script>
-</body>
-</html>
+      let stickers = JSON.parse(localStorage.getItem('radioStickers') || 
