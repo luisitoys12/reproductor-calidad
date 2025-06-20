@@ -35,7 +35,8 @@
       margin: 16px 0 8px 0; font-size: 1.07rem; background: #222d; border-radius: 8px; padding: 7px 15px; color: #fff;
     }
     .radio-clock-container i { color: #facc15; font-size: 1.5em; }
-    #customizeBtn {position:fixed;bottom:60px;right:12px;z-index:300;font-size:1.5em;background:#38bdf8;color:#222;border-radius:50%;border:none;padding:12px 16px;box-shadow:0 2px 10px #0006;}
+    #customizeBtn {position:fixed;bottom:60px;right:12px;z-index:300;font-size:1.5em;background:#38bdf8;color:#222;border-radius:50%;border:none16px;box-shadow:0 2px 10px #0006;}
+    #fixBtn {position:fixed;bottom:120px;right:12px;z-index:301;font-size:1.5em;background:#fbbf24;color:#222;border-radius:50%;border:none;padding:12px 16px;box-shadow:0 2px 10px #0006;}
     #customizePanel {display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:400;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;}
     #customizePanel .panelbox {background:#fff;color:#222;padding:26px 24px;border-radius:22px;max-width:330px;width:95vw;position:relative;}
     #stickerCatalog {display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:410;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;}
@@ -45,25 +46,15 @@
     @keyframes confetti {0%{filter:hue-rotate(0);}100%{filter:hue-rotate(360deg);}}
     @keyframes wave {0%{filter:brightness(1);}50%{filter:brightness(1.2);}100%{filter:brightness(1);}
     }
-    /* MENÚ LATERAL */
     #menu {
-      position: fixed;
-      top: 0; right: 0;
-      width: 300px; max-width: 90vw;
-      height: 100vh;
-      background: #0f172a;
-      color: #fff;
-      z-index: 600;
-      transform: translateX(100%);
-      transition: transform 0.25s;
-      box-shadow: -3px 0 16px #0005;
-      display: flex; flex-direction: column;
+      position: fixed; top: 0; right: 0; width: 300px; max-width: 90vw; height: 100vh;
+      background: #0f172a; color: #fff; z-index: 600; transform: translateX(100%);
+      transition: transform 0.25s; box-shadow: -3px 0 16px #0005; display: flex; flex-direction: column;
     }
     #menu.open { transform: translateX(0); }
     #menu .menu-header {
       display: flex; justify-content: space-between; align-items: center;
-      padding: 18px 22px 10px 22px;
-      border-bottom: 1px solid #2228;
+      padding: 18px 22px 10px 22px; border-bottom: 1px solid #2228;
     }
     #menu .menu-title { font-size: 1.3em; font-weight: bold; }
     #menu .close-menu { background:none; border:none; color:#fff; font-size:1.6em; cursor:pointer; }
@@ -73,7 +64,6 @@
     .menu-link { color: #fff; text-decoration: none; display: flex; align-items: center; gap: 7px; padding: 7px 0; font-size: 1.05em; }
     .menu-link i { width: 1.2em; }
     .menu-link:hover { color:#38bdf8; }
-    /* Basta de Bullying Modal */
     #modalBasta {display:none;position:fixed;z-index:9999;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;}
     #modalBasta .panelbox {background:#fff;color:#222;padding:23px 18px 18px 18px;border-radius:18px;max-width:360px;width:90vw;position:relative;}
     #modalBasta .modal-close {position:absolute;top:12px;right:13px;font-size:1.4em;border:none;background:none;color:#222;cursor:pointer;}
@@ -108,7 +98,9 @@
       <div class="volume-icon"><i class="fas fa-volume-up" id="volumeIcon"></i></div>
       <input type="range" class="volume-control" id="volumeControl" min="0" max="1" step="0.01" value="1">
     </div>
-    <div class="service-btns" id="service-btns"></div>
+    <div class="service-btns" id="service-btns">
+      <!-- Los botones de Spotify y Apple Music se agregan dinámicamente desde script.js -->
+    </div>
     <div class="social-buttons" id="social-buttons">
       <a href="https://web.facebook.com/ekusfm" target="_blank"><i class="fab fa-facebook"></i></a>
       <a href="https://www.instagram.com/estacionkusfm/" target="_blank"><i class="fab fa-instagram"></i></a>
@@ -128,6 +120,7 @@
     </div>
   </div>
   <button id="customizeBtn" title="Personaliza tu radio 🎨">🎨</button>
+  <button id="fixBtn" title="Reparar radio (si hay error)">🛠️</button>
   <div id="customizePanel">
     <div class="panelbox">
       <button onclick="document.getElementById('customizePanel').style.display='none'" style="position:absolute;top:9px;right:10px;border:none;background:none;font-size:1.5em;">&times;</button>
@@ -183,7 +176,12 @@
     </div>
     <div class="menu-section">
       <h3 class="menu-section-title">Redes Sociales</h3>
-      <ul class="menu-links" id="menu-social-links"></ul>
+      <ul class="menu-links" id="menu-social-links">
+        <li><a href="https://web.facebook.com/ekusfm" target="_blank" class="menu-link"><i class="fab fa-facebook"></i> Facebook</a></li>
+        <li><a href="https://www.instagram.com/estacionkusfm/" target="_blank" class="menu-link"><i class="fab fa-instagram"></i> Instagram</a></li>
+        <li><a href="https://www.youtube.com/estacionkusfm" target="_blank" class="menu-link"><i class="fab fa-youtube"></i> YouTube</a></li>
+        <li><a href="https://chat.whatsapp.com/JSk9LFoclGrFxY7rb4TFWu" target="_blank" class="menu-link"><i class="fab fa-whatsapp"></i> WhatsApp</a></li>
+      </ul>
     </div>
   </div>
   <!-- Modal Basta de Bullying -->
@@ -221,7 +219,6 @@
   document.getElementById('close-menu').onclick = function() {
     document.getElementById('menu').classList.remove('open');
   };
-  // Cierra menú al hacer click fuera
   document.addEventListener('click', function(e){
     var menu = document.getElementById('menu');
     if(menu.classList.contains('open') && !menu.contains(e.target) && e.target.id !== 'menuBtn'){
@@ -253,7 +250,7 @@
       document.getElementById('modalBasta').style.display = 'none';
     };
   }
-  // RELOJ Hora México Central
+  // Reloj México Central
   function updateRadioClock() {
     try {
       const now = new Date();
