@@ -14,6 +14,41 @@
   <link rel="icon" type="image/png" href="icon.png">
   <link rel="apple-touch-icon" href="icon.png">
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* Posiciona el botón Fix */
+    #fixBtn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 10010;
+      background: #1e293b;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 56px;
+      height: 56px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.22);
+      font-size: 2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #fixBtn:active { background: #334155; }
+    #fixAlert {
+      position: fixed;
+      bottom: 90px;
+      right: 24px;
+      background: #fff;
+      color: #222;
+      border-radius: 8px;
+      padding: 15px 22px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      font-size: 1rem;
+      z-index: 10020;
+      display: none;
+    }
+  </style>
 </head>
 <body>
   <img id="background" class="background" src="/placeholder.svg" alt="Background">
@@ -66,24 +101,20 @@
     <div class="status-indicator" id="statusIndicator"></div>
 
     <div class="social-buttons" id="social-buttons">
-      <!-- Social buttons will be added dynamically -->
+      <!-- Social buttons will be added dinámicamente -->
     </div>
   </div>
 
-  <!-- Maintenance Mode Template -->
+  <!-- Templates de mantenimiento/desactivado -->
   <div class="maintenance-mode" id="maintenanceMode" style="display: none; text-align: center; padding: 20px;">
     <h1>Sitio en Mantenimiento</h1>
     <p>Estamos realizando algunas actualizaciones. Volveremos pronto.</p>
     <img src="maintenance.png" alt="Maintenance" style="width: 200px; margin-top: 20px;">
   </div>
-
-  <!-- Disabled Template -->
   <div class="disabled-mode" id="disabledMode" style="display: none; text-align: center; padding: 20px;">
     <h1>Sitio Desactivado</h1>
     <p>Este sitio web ha sido desactivado.</p>
   </div>
-
-  <!-- Desactivated Template -->
   <div class="desactivated-mode" id="desactivatedMode" style="display: none; text-align: center; padding: 20px;">
     <h1>Servicio No Disponible</h1>
     <p>Este servicio ya no está disponible.</p>
@@ -96,7 +127,6 @@
         <i class="fas fa-times"></i>
       </button>
     </div>
-
     <div class="menu-section">
       <h3 class="menu-section-title">Opciones</h3>
       <ul class="menu-links">
@@ -106,16 +136,15 @@
         <li><a href="novedades.htm" class="menu-link"><i class="fas fa-newspaper"></i> Novedades</a></li>
       </ul>
     </div>
-
     <div class="menu-section">
       <h3 class="menu-section-title">Redes Sociales</h3>
       <ul class="menu-links" id="menu-social-links">
-        <!-- Social links will be added dynamically -->
+        <!-- Social links will be added dinámicamente -->
       </ul>
     </div>
   </div>
 
-  <!-- Modal de Historial -->
+  <!-- Modales -->
   <div class="modal" id="historyModal">
     <div class="modal-content">
       <button class="modal-close" id="closeHistoryModal">&times;</button>
@@ -125,8 +154,6 @@
       </div>
     </div>
   </div>
-
-  <!-- Modal de Acerca de -->
   <div class="modal" id="aboutModal">
     <div class="modal-content">
       <button class="modal-close" id="closeAboutModal">&times;</button>
@@ -140,8 +167,6 @@
       </div>
     </div>
   </div>
-
-  <!-- Modal de Compartir -->
   <div class="modal" id="shareModal">
     <div class="modal-content">
       <button class="modal-close" id="closeShareModal">&times;</button>
@@ -176,10 +201,12 @@
   <div class="offline-alert" id="offlineAlert">
     Sin conexión a internet. Algunas funciones pueden no estar disponibles.
   </div>
-
   <div class="watermark">Powered by: ESTACIONKUSMEDIOS</div>
-
   <audio id="audio" preload="auto"></audio>
+
+  <!-- Botón Fix -->
+  <button id="fixBtn" title="Solucionar problemas"><i class="fas fa-wrench"></i></button>
+  <div id="fixAlert"></div>
 
   <script>
     // Configuración AzuraCast
@@ -253,8 +280,129 @@
     window.addEventListener('DOMContentLoaded', () => {
       audio.load();
     });
+
+    // ------------- MENÚ Y MODALES -------------
+
+    // MENU
+    const menuBtn = document.getElementById('menuBtn');
+    const menu = document.getElementById('menu');
+    const closeMenuBtn = document.getElementById('close-menu');
+
+    // Muestra/Oculta menú
+    function openMenu() {
+      menu.style.display = 'block';
+      setTimeout(() => { menu.classList.add('active'); }, 5);
+      document.body.style.overflow = 'hidden';
+    }
+    function closeMenu() {
+      menu.classList.remove('active');
+      setTimeout(() => { menu.style.display = 'none'; }, 250);
+      document.body.style.overflow = '';
+    }
+
+    menuBtn.addEventListener('click', openMenu);
+    closeMenuBtn.addEventListener('click', closeMenu);
+
+    // Cerrar menú al hacer click fuera
+    window.addEventListener('click', function(e) {
+      if (menu.classList.contains('active') && !menu.contains(e.target) && !menuBtn.contains(e.target)) {
+        closeMenu();
+      }
+    });
+
+    // MODALES
+    function openModal(id) {
+      document.getElementById(id).style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal(id) {
+      document.getElementById(id).style.display = 'none';
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('historyLink').onclick = (e) => { e.preventDefault(); openModal('historyModal'); };
+    document.getElementById('aboutLink').onclick = (e) => { e.preventDefault(); openModal('aboutModal'); };
+    document.getElementById('shareLink').onclick = (e) => { e.preventDefault(); openModal('shareModal'); };
+
+    document.getElementById('closeHistoryModal').onclick = () => closeModal('historyModal');
+    document.getElementById('closeAboutModal').onclick = () => closeModal('aboutModal');
+    document.getElementById('closeShareModal').onclick = () => closeModal('shareModal');
+
+    // Cierra modales al hacer click fuera
+    document.querySelectorAll('.modal').forEach(modal => {
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) closeModal(modal.id);
+      });
+    });
+
+    // ------------- FIX BUTTON -------------
+
+    const fixBtn = document.getElementById('fixBtn');
+    const fixAlert = document.getElementById('fixAlert');
+    function showFixAlert(text, time=3500) {
+      fixAlert.textContent = text;
+      fixAlert.style.display = 'block';
+      setTimeout(() => { fixAlert.style.display = 'none'; }, time);
+    }
+
+    fixBtn.onclick = () => {
+      // 1. Repara menú
+      try {
+        menuBtn.onclick = openMenu;
+        closeMenuBtn.onclick = closeMenu;
+        menuBtn.disabled = false;
+        closeMenuBtn.disabled = false;
+        menu.style.display = '';
+        menu.classList.remove('active');
+      } catch (e) {}
+
+      // 2. Repara audio
+      try {
+        audio.src = AUDIO_STREAM_URL;
+        audio.load();
+        audio.volume = volumeControl.value;
+        playPauseBtn.innerHTML = audio.paused ? '<i class="fas fa-play"></i>' : '<i class="fas fa-pause"></i>';
+      } catch (e) {}
+
+      // 3. Actualiza metadatos
+      updateMetadata();
+
+      // 4. Verifica conexión
+      if (!navigator.onLine) {
+        showFixAlert('Sin conexión a internet. Intenta reconectar.');
+        return;
+      }
+
+      // 5. Recarga scripts si falta alguno
+      if (typeof openMenu !== 'function' || typeof updateMetadata !== 'function') {
+        showFixAlert('Error crítico: recarga la página (F5)');
+        return;
+      }
+
+      // 6. Si todo ok
+      showFixAlert('¡Solucionado! Si persiste el problema, recarga la página.');
+    };
+
+    // ------------- OTROS -------------
+    // Ejemplo para compartir URL
+    document.getElementById('shareUrl').value = window.location.href;
+    document.getElementById('copyLink').onclick = function() {
+      navigator.clipboard.writeText(window.location.href)
+        .then(() => showFixAlert('Enlace copiado!'))
+        .catch(() => showFixAlert('No se pudo copiar el enlace'));
+    };
+    // Redirección compartir
+    document.getElementById('shareWhatsapp').onclick = function() {
+      window.open('https://wa.me/?text=' + encodeURIComponent('Escucha la radio aquí: ' + window.location.href),'_blank');
+    };
+    document.getElementById('shareFacebook').onclick = function() {
+      window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href),'_blank');
+    };
+    document.getElementById('shareTwitter').onclick = function() {
+      window.open('https://twitter.com/intent/tweet?url=' + encodeURIComponent(window.location.href),'_blank');
+    };
   </script>
-  <!-- Tu script.js personalizado para menú, modales, etc -->
+  <!-- Tu script.js personalizado para otras funciones -->
   <script src="script.js"></script>
 </body>
 </html>
