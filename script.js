@@ -288,4 +288,34 @@ document.getElementById('shareTwitter').onclick = function() {
 // --- ESTADO EN MENÚ LATERAL ---
 function updateMenuStatus(estadoAuto) {
   let estado = estadoAuto || config.estado || "online";
-  let icon = document
+  let icon = document.getElementById('menu-status-icon');
+  let txt = document.getElementById('menu-status-text');
+  if (!icon || !txt) return;
+  if (estado === "online") {
+    icon.className = "fas fa-circle";
+    icon.style.color = "limegreen";
+    txt.textContent = "Transmisión Online";
+  } else if (estado === "offline") {
+    icon.className = "fas fa-circle";
+    icon.style.color = "red";
+    txt.textContent = "Fuera de línea";
+  } else if (estado === "maintenance") {
+    icon.className = "fas fa-wrench";
+    icon.style.color = "orange";
+    txt.textContent = "Mantenimiento";
+  } else {
+    icon.className = "fas fa-dot-circle";
+    icon.style.color = "#888";
+    txt.textContent = "Estado desconocido";
+  }
+}
+updateMenuStatus();
+
+// --- ALERTA OFFLINE ---
+const offlineAlert = document.getElementById('offlineAlert');
+function checkOnlineStatus() {
+  offlineAlert.style.display = navigator.onLine ? 'none' : 'block';
+}
+window.addEventListener('online', checkOnlineStatus);
+window.addEventListener('offline', checkOnlineStatus);
+checkOnlineStatus();
