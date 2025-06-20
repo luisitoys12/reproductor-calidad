@@ -9,73 +9,83 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     body { font-family: 'Poppins', sans-serif; margin:0; background:#0f172a; color:#fff;}
-    .header { background: #1e293b; color: #fff; display: flex; justify-content: space-between; align-items: center; padding: 12px 18px;}
-    .logo { font-weight: bold; font-size: 1.5rem; color: #0ea5e9;}
-    .menu-btn { background: none; border: none; color: #fff; font-size: 1.6rem; cursor: pointer; padding: 8px 12px; border-radius: 6px;}
-    .menu-btn:hover { background: #334155; }
-    .main-content { max-width: 400px; margin: 30px auto 0 auto; background: #1e293b; border-radius: 18px; box-shadow: 0 8px 32px #0002; padding: 24px 20px 30px 20px; text-align:center; position:relative;}
-    .status-badge { display: inline-block; background: #0ea5e9; color: #fff; border-radius: 18px; padding: 7px 16px; margin-bottom: 12px; font-weight: 600; font-size: 1rem;}
-    .cover-container { margin: 10px 0 16px 0;}
-    .cover-img { width: 140px; height: 140px; border-radius: 16px; box-shadow: 0 2px 12px #0004; object-fit:cover;}
-    .song-info { margin-bottom: 13px;}
-    .song-title { font-size: 1.18rem; font-weight: 700; color: #fff; }
-    .artist-name { color: #38bdf8; font-size: 1rem; }
-    .now-playing { font-size: .97rem; color: #94a3b8;}
-    .controls { display: flex; justify-content: center; align-items: center; gap: 20px; margin: 16px 0 10px 0;}
-    .control-btn, .play-btn { background: #334155; color: #fff; border: none; border-radius: 50%; width: 44px; height: 44px; font-size: 1.25rem; display: flex; align-items: center; justify-content: center; cursor: pointer;}
-    .play-btn { background: #0ea5e9; font-size:1.6rem; }
-    .play-btn:active { background: #0284c7;}
-    .volume-container { display:flex; align-items: center; justify-content: center; gap: 10px; margin-bottom:12px;}
-    .volume-control { width:80px;}
-    .volume-icon { font-size:1.1rem;}
-    .service-btns { display:flex; gap:12px; margin-top:8px; justify-content:center;}
-    .service-btn { display:inline-flex; align-items:center; gap:6px; background:#1e293b; color:#fff; border:none; border-radius:7px; padding:6px 13px; cursor:pointer; font-size:1rem;}
+    .overlay { position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:100;display:none;background:rgba(30,41,59,0.7);}
+    .overlay.active { display:block;}
+    .header {display:flex;align-items:center;justify-content:space-between;padding:12px 22px 4px 22px;}
+    .logo {font-size:1.8rem;font-weight:bold;}
+    .menu-btn { background:none;border:none;font-size:1.7rem;color:#fff;cursor:pointer;}
+    .main-content { max-width:370px; margin:30px auto 0 auto; padding:22px 15px; background:#1e293b;border-radius:18px;box-shadow:0 2px 12px #0003;}
+    .status-badge { background:#334155;padding:7px 12px;border-radius:7px;margin-bottom:13px;display:flex;align-items:center;gap:10px;}
+    .status-badge i { color:#38bdf8;}
+    #live-announcer-btn { margin:10px 0 5px 0; display:none; background: #ff1744; color:#fff; border:none; border-radius:8px; padding:8px 16px; font-size:1.08rem; font-weight:bold; cursor:pointer; box-shadow:0 2px 8px #0005;}
+    #live-announcer-btn i { margin-right:7px;}
+    .cover-container { display:flex;justify-content:center;margin-bottom:13px;}
+    .cover-img { width:160px;height:160px;border-radius:15px;box-shadow:0 3px 16px #0008;object-fit:cover;}
+    .song-info { text-align:center;margin-bottom:8px;}
+    .song-title { font-size:1.18rem;font-weight:bold;}
+    .artist-name { color:#38bdf8;font-size:1.01rem;}
+    .now-playing {color:#94a3b8;font-size:.99em;}
+    .controls { display:flex;justify-content:center;gap:16px;margin:13px 0;}
+    .control-btn, .play-btn { background:#334155;border:none;color:#fff;font-size:1.25rem;padding:10px 19px;border-radius:8px;cursor:pointer;}
+    .play-btn { background:#22d3ee;color:#222;font-size:1.36rem;}
+    .volume-container { display:flex;align-items:center;gap:10px;margin-top:7px;}
+    .volume-icon i { font-size:1.1rem;}
+    .volume-control { width:100px;}
+    .service-btns { display:flex;gap:8px;margin:13px 0 0 0;justify-content:center;}
+    .service-btn { background:#222d;color:#fff;padding:6px 13px;border:none;border-radius:7px;cursor:pointer;font-size:.97rem;}
     .service-btn.spotify { background:#1db954;}
-    .service-btn.apple { background:#fc3c44;}
-    .service-btn i { font-size:1.1em;}
-    .status-indicator { margin-bottom: 8px; }
-    .social-buttons { margin: 12px 0 0 0; display: flex; justify-content: center; gap: 13px;}
-    .social-buttons a { color: #fff; background:#0ea5e9; border-radius: 50%; width:34px; height:34px; display:flex; align-items:center; justify-content:center; font-size:1.2rem;}
-    .social-buttons a:hover { background: #0284c7;}
-    .offline-alert { display: none; position:fixed; bottom:0; left:0; right:0; background:#dc2626; color:#fff; text-align:center; padding:10px; font-size:1rem; z-index:10050;}
-    .watermark { text-align:center; margin: 30px 0 8px 0; color:#64748b; font-size:.95rem;}
-    #menu { display: none; position: fixed; top: 0; left: 0; bottom: 0; width: 280px; max-width: 90vw; background: #1e293b; color: #fff; z-index: 10500; transition: transform 0.22s cubic-bezier(.4,0,.2,1), box-shadow 0.22s; transform: translateX(-100%); box-shadow: 2px 0 16px rgba(30,41,59,0.13); overflow-y: auto; padding-bottom: 48px;}
-    #menu.open { display: block; transform: translateX(0);}
-    .overlay { display: none; position: fixed; left:0; top:0; right:0; bottom:0; background: rgba(30,41,59, 0.7); z-index: 10499;}
-    .overlay.active { display: block; }
-    .menu-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 22px 10px 22px; border-bottom: 1px solid #334155;}
-    .menu-title { font-size: 1.3rem; font-weight: 700; color: #0ea5e9; }
-    .close-menu { background: transparent; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;}
-    .close-menu:hover { color: #f87171;}
-    .menu-section { padding: 18px 22px;}
-    .menu-section-title { font-size: 1rem; font-weight: 600; margin-bottom: 10px; color: #38bdf8;}
-    .menu-links { list-style: none; padding: 0; margin: 0;}
-    .menu-link { display: flex; align-items: center; gap: 12px; color: #fff; padding: 10px 0; text-decoration: none; font-size: 1rem; border-radius: 6px;}
-    .menu-link:hover { background: #334155; color: #0ea5e9;}
-    .menu-links li:not(:last-child) { border-bottom: 1px solid #334155;}
-    #menu-stats-section .menu-links li { border-bottom: none; padding: 6px 0; font-size: 1rem;}
-    #menu-stats-section i { color: #38bdf8; width: 18px; text-align:center;}
-    #menu-stats-section b { color: #0ea5e9; }
-    @media (max-width: 700px) {
-      #menu { width: 96vw; max-width: 96vw; font-size: 1.05rem;}
-      .main-content { max-width:96vw; padding:16px 4vw;}
+    .service-btn.apple { background:#333;}
+    .social-buttons { display:flex;gap:13px;margin:20px 0 0 0;justify-content:center;}
+    .social-buttons a { color:#fff;font-size:1.4rem;transition:.2s;}
+    .social-buttons a:hover { color:#0ff;}
+    .radio-clock-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 11px;
+      margin: 16px 0 8px 0;
+      font-size: 1.07rem;
+      background: #222d;
+      border-radius: 8px;
+      padding: 7px 15px;
+      color: #fff;
     }
-    #menu, .overlay { z-index: 9999; }
-    body.menu-open { overflow: hidden; }
-    .modal { display: none; position: fixed; z-index: 11000; left: 0; top: 0; width: 100vw; height: 100vh; background: rgba(15,23,42,0.93); justify-content: center; align-items: center;}
-    .modal-content { background: #fff; color:#222; border-radius: 12px; padding: 26px 22px 18px 22px; max-width: 95vw; width: 400px; box-shadow: 0 3px 22px #0005; position: relative; margin: auto;}
-    .modal-close { position: absolute; top: 11px; right: 13px; background: transparent; border: none; font-size: 1.5rem; color: #222; cursor: pointer;}
-    .modal-title { font-size: 1.1rem; font-weight: 700; margin: 0 0 16px 0;}
-    .about-logo { max-width: 85px; border-radius: 8px; margin-bottom: 12px;}
-    .about-text { font-size:1rem; margin: 7px 0;}
-    .share-option { display:flex; align-items:center; gap:12px; margin-bottom:10px; cursor:pointer;}
-    .share-icon { width:32px; height:32px; display:flex; align-items:center; justify-content:center; border-radius: 50%; color:#fff; font-size:1.3rem;}
-    .share-url-container { display:flex; gap:8px; margin-top:10px;}
-    .share-url { flex:1; border-radius:7px; border:1px solid #e5e7eb; padding:7px 9px;}
-    .copy-btn { background:#0ea5e9; color:#fff; border:none; border-radius:7px; padding:7px 14px; cursor:pointer;}
-    #fixBtn { position: fixed; bottom: 24px; right: 24px; z-index: 10010; background: #1e293b; color: #fff; border: none; border-radius: 50%; width: 56px; height: 56px; box-shadow: 0 2px 8px rgba(0,0,0,0.22); font-size: 2rem; cursor: pointer; display: flex; align-items: center; justify-content: center;}
-    #fixBtn:active { background: #334155; }
-    #fixAlert { position: fixed; bottom: 90px; right: 24px; background: #fff; color: #222; border-radius: 8px; padding: 15px 22px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); font-size: 1rem; z-index: 10020; display: none;}
+    .radio-clock-container i {
+      color: #facc15;
+      font-size: 1.5em;
+    }
+    .watermark {position:fixed;right:10px;bottom:8px;font-size:.93rem;color:#64748b;}
+    #fixBtn {position:fixed;left:10px;bottom:10px;background:#facc15;color:#222;border:none;border-radius:50%;font-size:1.22rem;width:42px;height:42px;cursor:pointer;box-shadow:0 2px 12px #0005;}
+    #fixAlert { position:fixed;left:50%;bottom:62px;transform:translateX(-50%);background:#222d;color:#fff;padding:10px 22px;border-radius:8px;display:none; }
+    .offline-alert { position:fixed;top:0;left:0;width:100vw;background:#f87171;color:#fff;padding:8px;text-align:center;display:none;z-index:300;}
+    /* Menú lateral */
+    .menu { position:fixed;top:0;left:0;height:100vh;width:320px;max-width:94vw;background:#1e293b;box-shadow:1px 0 9px #0008;z-index:150;transform:translateX(-100%);transition:.2s;display:flex;flex-direction:column; }
+    .menu.open { transform:translateX(0);}
+    .menu-header { display:flex;align-items:center;justify-content:space-between;padding:15px 22px 6px 22px;}
+    .menu-title { font-size:1.3rem;font-weight:bold;}
+    .close-menu { background:none;border:none;font-size:1.5rem;color:#fff;cursor:pointer;}
+    .menu-section {margin:0 0 23px 0;}
+    .menu-section-title {margin:8px 22px 5px 22px;font-size:1.02rem;color:#38bdf8;}
+    .menu-links { list-style:none;padding:0 22px;margin:0;}
+    .menu-links li {margin:11px 0;}
+    .menu-link { color:#fff;text-decoration:none;font-size:1.06rem;transition:.2s;}
+    .menu-link i {margin-right:9px;}
+    .menu-link:hover { color:#38bdf8;}
+    #menu-social-links li { display:flex;align-items:center;gap:10px;}
+    #menu-status {display:flex;align-items:center;gap:12px;margin:18px 22px 0 22px;font-size:1.08rem;}
+    #menu-status-icon {font-size:1.2em;}
+    /* Modales */
+    .modal { display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.7);z-index:250;align-items:center;justify-content:center;}
+    .modal-content {background:#1e293b;padding:25px 18px 18px 18px;border-radius:15px;max-width:370px;width:94vw;box-shadow:0 2px 19px #000a;position:relative;}
+    .modal-title {font-size:1.08rem;font-weight:bold;margin-bottom:13px;}
+    .modal-close {position:absolute;top:11px;right:13px;font-size:1.5rem;background:none;border:none;color:#fff;cursor:pointer;}
+    .about-logo {width:70px;height:70px;border-radius:14px;margin-bottom:8px;object-fit:cover;}
+    /* Compartir */
+    .share-option {display:flex;align-items:center;gap:12px;margin-bottom:12px;cursor:pointer;}
+    .share-icon {width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;border-radius:50%;}
+    .share-url-container {display:flex;gap:5px;margin-top:7px;}
+    .share-url {flex:1;background:#222d;color:#fff;padding:7px 10px;border-radius:6px;border:none;}
+    .copy-btn {background:#38bdf8;color:#222;border:none;border-radius:6px;padding:7px 15px;cursor:pointer;}
   </style>
 </head>
 <body>
@@ -89,6 +99,7 @@
       <i class="fas fa-broadcast-tower"></i>
       <span id="status-text">Transmitiendo en vivo desde nuestra cabina central 🎙️ en digital</span>
     </div>
+    <button id="live-announcer-btn"><i class="fas fa-microphone"></i> Locutor en vivo</button>
     <div class="cover-container">
       <img src="/placeholder.svg" alt="Album Cover" class="cover-img" id="cover-img">
     </div>
@@ -109,6 +120,20 @@
     <div class="service-btns" id="service-btns"></div>
     <div class="status-indicator" id="statusIndicator"></div>
     <div class="social-buttons" id="social-buttons"></div>
+
+    <!-- HORA OFICIAL DE LA RADIO: debajo de social-buttons -->
+    <div class="radio-clock-container">
+      <i class="fas fa-clock"></i>
+      <div>
+        <div id="radio-clock-date" style="font-weight:bold;"></div>
+        <div>
+          <span id="radio-clock">00:00:00</span>
+          <span style="font-size:0.91em;color:#38bdf8;">Hora México</span>
+        </div>
+        <div style="font-size:0.93em;color:#38bdf8;">Hora oficial de la radio</div>
+      </div>
+    </div>
+    <!-- Fin bloque hora -->
   </div>
   <div class="menu" id="menu">
     <div class="menu-header">
@@ -127,8 +152,11 @@
     <div class="menu-section">
       <h3 class="menu-section-title">Redes Sociales</h3>
       <ul class="menu-links" id="menu-social-links"></ul>
+      <div id="menu-status">
+        <i id="menu-status-icon" class="fas fa-circle" style="color:limegreen;"></i>
+        <span id="menu-status-text">Transmisión Online</span>
+      </div>
     </div>
-    <!-- ESTADÍSTICAS -->
     <div class="menu-section" id="menu-stats-section">
       <h3 class="menu-section-title">Estadísticas</h3>
       <ul class="menu-links" id="menu-stats">
@@ -189,5 +217,29 @@
   <button id="fixBtn" title="Solucionar problemas"><i class="fas fa-wrench"></i></button>
   <div id="fixAlert"></div>
   <script src="script.js"></script>
+  <script>
+  function updateRadioClock() {
+    // Hora central de México (UTC-6 / UTC-5 en verano)
+    const now = new Date();
+    const mexicoTime = now.toLocaleTimeString('es-MX', {
+      timeZone: 'America/Mexico_City',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    });
+    const mexicoDate = now.toLocaleDateString('es-MX', {
+      timeZone: 'America/Mexico_City',
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    document.getElementById('radio-clock-date').textContent =
+      mexicoDate.charAt(0).toUpperCase() + mexicoDate.slice(1);
+    document.getElementById('radio-clock').textContent = mexicoTime;
+  }
+  setInterval(updateRadioClock, 1000);
+  updateRadioClock();
+  </script>
 </body>
 </html>
