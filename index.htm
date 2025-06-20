@@ -45,6 +45,34 @@
     @keyframes confetti {0%{filter:hue-rotate(0);}100%{filter:hue-rotate(360deg);}}
     @keyframes wave {0%{filter:brightness(1);}50%{filter:brightness(1.2);}100%{filter:brightness(1);}
     }
+    /* MENÚ LATERAL */
+    #menu {
+      position: fixed;
+      top: 0; right: 0;
+      width: 300px; max-width: 90vw;
+      height: 100vh;
+      background: #0f172a;
+      color: #fff;
+      z-index: 600;
+      transform: translateX(100%);
+      transition: transform 0.25s;
+      box-shadow: -3px 0 16px #0005;
+      display: flex; flex-direction: column;
+    }
+    #menu.open { transform: translateX(0); }
+    #menu .menu-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 18px 22px 10px 22px;
+      border-bottom: 1px solid #2228;
+    }
+    #menu .menu-title { font-size: 1.3em; font-weight: bold; }
+    #menu .close-menu { background:none; border:none; color:#fff; font-size:1.6em; cursor:pointer; }
+    .menu-section { padding: 18px 22px 10px 22px; }
+    .menu-section-title { margin:0 0 9px 0; font-size:1.1em; color:#38bdf8; }
+    .menu-links { list-style:none; padding:0; margin:0; }
+    .menu-link { color: #fff; text-decoration: none; display: flex; align-items: center; gap: 7px; padding: 7px 0; font-size: 1.05em; }
+    .menu-link i { width: 1.2em; }
+    .menu-link:hover { color:#38bdf8; }
     /* Basta de Bullying Modal */
     #modalBasta {display:none;position:fixed;z-index:9999;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;}
     #modalBasta .panelbox {background:#fff;color:#222;padding:23px 18px 18px 18px;border-radius:18px;max-width:360px;width:90vw;position:relative;}
@@ -186,6 +214,20 @@
   <audio id="audio" preload="auto" crossorigin="anonymous"></audio>
   <script src="script.js"></script>
   <script>
+  // Menú lateral: abrir/cerrar
+  document.getElementById('menuBtn').onclick = function() {
+    document.getElementById('menu').classList.add('open');
+  };
+  document.getElementById('close-menu').onclick = function() {
+    document.getElementById('menu').classList.remove('open');
+  };
+  // Cierra menú al hacer click fuera
+  document.addEventListener('click', function(e){
+    var menu = document.getElementById('menu');
+    if(menu.classList.contains('open') && !menu.contains(e.target) && e.target.id !== 'menuBtn'){
+      menu.classList.remove('open');
+    }
+  });
   // Botón "Restaurar original"
   if(document.getElementById('resetCustomizationBtn')) {
     document.getElementById('resetCustomizationBtn').onclick = () => {
@@ -211,6 +253,29 @@
       document.getElementById('modalBasta').style.display = 'none';
     };
   }
+  // RELOJ Hora México Central
+  function updateRadioClock() {
+    try {
+      const now = new Date();
+      const options = { 
+        timeZone: 'America/Mexico_City', 
+        hour: '2-digit', minute: '2-digit', second: '2-digit' 
+      };
+      const optionsDate = {
+        timeZone: 'America/Mexico_City',
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+      };
+      const time = now.toLocaleTimeString('es-MX', options);
+      const date = now.toLocaleDateString('es-MX', optionsDate);
+      document.getElementById('radio-clock').textContent = time;
+      document.getElementById('radio-clock-date').textContent = date.charAt(0).toUpperCase() + date.slice(1);
+    } catch(e) {
+      document.getElementById('radio-clock').textContent = '--:--:--';
+      document.getElementById('radio-clock-date').textContent = 'Fecha no disponible';
+    }
+  }
+  setInterval(updateRadioClock, 1000);
+  updateRadioClock();
   </script>
 </body>
 </html>
