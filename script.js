@@ -1,6 +1,6 @@
 // 🎵 VARIABLES CONFIGURABLES 🎵
 const config = {
-    nombreRadio: "EKUSFM",
+    nombreRadio: "EKUSFM", // <--- SI CAMBIAS ESTO, EL SITIO SE BLOQUEA
     nombreDesarrollador: "ESTACIONKUSMEDIOS",
     logoURL: "https://aventura.estacionkusmedios.com/img/default.jpg",
     fondoURL: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cmFkaW98ZW58MHx8MHx8fDA%3D",
@@ -8,7 +8,6 @@ const config = {
     streamURL: "https://radio.estacionkusmedios.com/listen/esmerosound/radio.mp3",
     azuracastURL: "https://radio.estacionkusmedios.com",
     azuracastStation: "esmerosound",
-    cancionActual: "esmerosound",
     albumCover: "https://aventura.estacionkusmedios.com/img/default.jpg",
     aboutDeveloper: "ESTACIONKUSMEDIOS BASED IN CRISPRO CODE Adapted Azuracast",
     textoEmitiendo: "Transmitiendo en vivo desde nuestra estación 🎙️",
@@ -23,6 +22,25 @@ const config = {
     descripcion: "Radio ESTACIONKUSFM es una estación de radio online dedicada a traerte la mejor música y entretenimiento. Disfruta de una selección musical variada y de calidad las 24 horas del día.",
     estado: "online" // online, offline, maintenance, disabled, desactivated
 };
+
+// SEGURIDAD: Solo funciona si el nombre de la radio es EKUSFM
+(function() {
+  const alertaNoAutorizada = () => {
+    document.body.innerHTML = `
+      <div style="text-align:center;padding:40px;color:#fff;background:#1e293b;height:100vh">
+        <h1 style="color:#ff4444;font-size:2.5rem;">Página NO Autorizada</h1>
+        <p style="font-size:1.2rem;">Esta web solo puede ser utilizada por <b>EKUSFM</b>.<br>
+        Si eres el responsable, contacta a <a href="https://estacionkusmedios.org" style="color:#0ff;" target="_blank">estacionkusmedios.org</a>
+        </p>
+      </div>`;
+    document.title = "No autorizado";
+  };
+  // Si el nombre de la radio no es EKUSFM (mayúsculas exacto), bloquea todo
+  if (typeof config === "undefined" || config.nombreRadio !== "EKUSFM") {
+    setTimeout(alertaNoAutorizada, 100);
+    throw new Error("Sitio no autorizado por estacionkusmedios.org");
+  }
+})();
 
 // --- REPRODUCTOR Y METADATOS AZURACAST ---
 const audio = document.getElementById('audio');
@@ -98,28 +116,69 @@ const closeMenuBtn = document.getElementById('close-menu');
 const overlay = document.querySelector('.overlay');
 
 // Abrir menú
-menuBtn.addEventListener('click', () => {
+menuBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
   menu.classList.add('open');
   overlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
 });
 // Cerrar menú
-closeMenuBtn.addEventListener('click', () => {
+closeMenuBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
   menu.classList.remove('open');
   overlay.classList.remove('active');
+  document.body.style.overflow = '';
 });
 overlay.addEventListener('click', () => {
   menu.classList.remove('open');
   overlay.classList.remove('active');
+  document.body.style.overflow = '';
+});
+
+// Cerrar menú al hacer click fuera
+document.addEventListener('click', function(e) {
+  if (
+    menu.classList.contains('open') &&
+    !menu.contains(e.target) &&
+    !menuBtn.contains(e.target)
+  ) {
+    menu.classList.remove('open');
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+});
+
+// Previene que clicks dentro del menú lo cierren
+menu.addEventListener('click', function(e) {
+  e.stopPropagation();
+});
+
+// Cierra con ESC
+document.addEventListener('keydown', function(e) {
+  if (e.key === "Escape") {
+    menu.classList.remove('open');
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+});
+
+// Modo seguro: asegura que el menú no quede bloqueado al recargar
+window.addEventListener('pageshow', function() {
+  menu.classList.remove('open');
+  overlay.classList.remove('active');
+  document.body.style.overflow = '';
 });
 
 // --- MODALES ---
 function openModal(modalId) {
   document.getElementById(modalId).style.display = 'block';
   overlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
 }
 function closeModal(modalId) {
   document.getElementById(modalId).style.display = 'none';
   overlay.classList.remove('active');
+  document.body.style.overflow = '';
 }
 
 // Historial de canciones
