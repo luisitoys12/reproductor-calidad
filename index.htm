@@ -58,7 +58,6 @@
     #fixBtn {position:fixed;left:10px;bottom:10px;background:#facc15;color:#222;border:none;border-radius:50%;font-size:1.22rem;width:42px;height:42px;cursor:pointer;box-shadow:0 2px 12px #0005;}
     #fixAlert { position:fixed;left:50%;bottom:62px;transform:translateX(-50%);background:#222d;color:#fff;padding:10px 22px;border-radius:8px;display:none; }
     .offline-alert { position:fixed;top:0;left:0;width:100vw;background:#f87171;color:#fff;padding:8px;text-align:center;display:none;z-index:300;}
-    /* Menú lateral */
     .menu { position:fixed;top:0;left:0;height:100vh;width:320px;max-width:94vw;background:#1e293b;box-shadow:1px 0 9px #0008;z-index:150;transform:translateX(-100%);transition:.2s;display:flex;flex-direction:column; }
     .menu.open { transform:translateX(0);}
     .menu-header { display:flex;align-items:center;justify-content:space-between;padding:15px 22px 6px 22px;}
@@ -74,19 +73,16 @@
     #menu-social-links li { display:flex;align-items:center;gap:10px;}
     #menu-status {display:flex;align-items:center;gap:12px;margin:18px 22px 0 22px;font-size:1.08rem;}
     #menu-status-icon {font-size:1.2em;}
-    /* Modales */
     .modal { display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.7);z-index:250;align-items:center;justify-content:center;}
     .modal-content {background:#1e293b;padding:25px 18px 18px 18px;border-radius:15px;max-width:370px;width:94vw;box-shadow:0 2px 19px #000a;position:relative;}
     .modal-title {font-size:1.08rem;font-weight:bold;margin-bottom:13px;}
     .modal-close {position:absolute;top:11px;right:13px;font-size:1.5rem;background:none;border:none;color:#fff;cursor:pointer;}
     .about-logo {width:70px;height:70px;border-radius:14px;margin-bottom:8px;object-fit:cover;}
-    /* Compartir */
     .share-option {display:flex;align-items:center;gap:12px;margin-bottom:12px;cursor:pointer;}
     .share-icon {width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;border-radius:50%;}
     .share-url-container {display:flex;gap:5px;margin-top:7px;}
     .share-url {flex:1;background:#222d;color:#fff;padding:7px 10px;border-radius:6px;border:none;}
     .copy-btn {background:#38bdf8;color:#222;border:none;border-radius:6px;padding:7px 15px;cursor:pointer;}
-    /* Personalización */
     #customizeBtn {position:fixed;bottom:60px;right:12px;z-index:300;font-size:1.5em;background:#38bdf8;color:#222;border-radius:50%;border:none;padding:12px 16px;box-shadow:0 2px 10px #0006;}
     #customizePanel {display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:400;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;}
     #customizePanel .panelbox {background:#fff;color:#222;padding:26px 24px;border-radius:22px;max-width:330px;width:95vw;position:relative;}
@@ -95,7 +91,6 @@
     #stickerCatalog .panelbox {background:#fff;padding:14px;border-radius:12px;max-width:260px;}
     #stickerCatalog .sticker-option {cursor:pointer;}
     #customStickersArea {position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:50;}
-    /* Animaciones básicas */
     @keyframes confetti {0%{filter:hue-rotate(0);}100%{filter:hue-rotate(360deg);}}
     @keyframes wave {0%{filter:brightness(1);}50%{filter:brightness(1.2);}100%{filter:brightness(1);}}
   </style>
@@ -133,8 +128,6 @@
     <div class="service-btns" id="service-btns"></div>
     <div class="status-indicator" id="statusIndicator"></div>
     <div class="social-buttons" id="social-buttons"></div>
-
-    <!-- HORA OFICIAL DE LA RADIO: debajo de social-buttons -->
     <div class="radio-clock-container">
       <i class="fas fa-clock"></i>
       <div>
@@ -146,10 +139,7 @@
         <div style="font-size:0.93em;color:#38bdf8;">Hora oficial de la radio</div>
       </div>
     </div>
-    <!-- Fin bloque hora -->
   </div>
-
-  <!-- Panel Personalización -->
   <button id="customizeBtn" title="Personaliza tu radio 🎨">🎨</button>
   <div id="customizePanel">
     <div class="panelbox">
@@ -181,8 +171,6 @@
       </div>
     </div>
   </div>
-
-  <!-- Menú lateral y Modales originales -->
   <div class="menu" id="menu">
     <div class="menu-header">
       <div class="menu-title" id="menu-title">Menú</div>
@@ -266,7 +254,6 @@
   <div id="fixAlert"></div>
   <script src="script.js"></script>
   <script>
-  // HORA OFICIAL DE LA RADIO
   function updateRadioClock() {
     const now = new Date();
     const mexicoTime = now.toLocaleTimeString('es-MX', {
@@ -288,12 +275,9 @@
   }
   setInterval(updateRadioClock, 1000);
   updateRadioClock();
-
-  // PANEL PERSONALIZACIÓN
   document.getElementById('customizeBtn').onclick = () => {
     document.getElementById('customizePanel').style.display = 'flex';
   };
-  // Color de fondo
   const bgPicker = document.getElementById('bgColorPicker');
   bgPicker.value = localStorage.getItem('radioBgColor') || '#1e293b';
   bgPicker.oninput = () => {
@@ -301,7 +285,6 @@
     localStorage.setItem('radioBgColor', bgPicker.value);
   };
   document.body.style.background = bgPicker.value;
-  // Animación
   const animationSelect = document.getElementById('animationSelect');
   animationSelect.value = localStorage.getItem('radioAnimation') || '';
   animationSelect.oninput = () => {
@@ -314,8 +297,6 @@
     else if(anim === 'wave') document.body.style.animation = 'wave 1.2s infinite alternate';
   }
   applyAnimation(animationSelect.value);
-
-  // Stickers
   document.getElementById('addStickerBtn').onclick = () => {
     document.getElementById('stickerCatalog').style.display = 'flex';
   };
@@ -327,14 +308,12 @@
       sticker.style.top = (10 + Math.random() * 60) + '%';
       sticker.style.pointerEvents = 'none';
       document.getElementById('customStickersArea').appendChild(sticker);
-      // Guarda stickers en localStorage (ejemplo simple)
       let stickers = JSON.parse(localStorage.getItem('radioStickers') || '[]');
       stickers.push({src: sticker.src, left: sticker.style.left, top: sticker.style.top});
       localStorage.setItem('radioStickers', JSON.stringify(stickers));
       document.getElementById('stickerCatalog').style.display = 'none';
     };
   });
-  // Cargar stickers al iniciar
   window.addEventListener('DOMContentLoaded', ()=>{
     let stickers = JSON.parse(localStorage.getItem('radioStickers') || '[]');
     stickers.forEach(s => {
