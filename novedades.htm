@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Novedades - EKUSFM</title>
-  <link rel="stylesheet" href="ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -39,9 +39,88 @@
 </head>
 <body>
   <!-- Reproductor pequeño y fijo arriba -->
-  <div id="mini-reproductor">
-    <audio id="audio-mini" controls preload="auto"></audio>
+  <div id="mini-reproductor" class="mini-player">
+    <button id="playPauseMiniBtn" class="mini-play-btn" title="Play/Pause"><i class="fas fa-play"></i></button>
+    <div class="mini-song-info">
+      <div id="miniSongTitle" class="mini-song-title">Cargando...</div>
+      <div id="miniArtistName" class="mini-artist-name"></div>
+      <div id="miniListenersCount" class="mini-listeners-count" style="font-size:0.75rem; color:#94a3b8; margin-top:2px;">Oyentes: 0</div>
+    </div>
+    <input type="range" id="miniVolumeControl" class="mini-volume-control" min="0" max="1" step="0.01" value="1" title="Volume" />
+    <audio id="audio-mini" preload="auto" crossorigin="anonymous"></audio>
   </div>
+
+  <style>
+    .mini-player {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      width: 280px;
+      background: url('https://images.pexels.com/photos/3082341/pexels-photo-3082341.jpeg') no-repeat center center;
+      background-size: cover;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px #0008;
+      z-index: 10000;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+      font-family: 'Poppins', Arial, sans-serif;
+      /* Add a subtle dark overlay */
+      position: relative;
+      overflow: hidden;
+    }
+    .mini-player::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 0;
+      border-radius: 10px;
+    }
+    .mini-play-btn {
+      background: #22d3ee;
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      color: #222;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+      position: relative;
+    }
+    .mini-song-info {
+      flex-grow: 1;
+      overflow: hidden;
+      z-index: 1;
+      position: relative;
+    }
+    .mini-song-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .mini-artist-name {
+      font-size: 0.8rem;
+      color: #38bdf8;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .mini-volume-control {
+      width: 70px;
+      cursor: pointer;
+      z-index: 1;
+      position: relative;
+    }
+  </style>
 
   <div class="header">
     <div class="logo">
@@ -57,13 +136,13 @@
     
     <div class="tab-menu">
       <button class="tab-link active" data-tab="programas">
-        <i class="fas fa-microphone"></i> Programas
+        <span class="material-icons" style="vertical-align: middle;">mic</span> Programas
       </button>
       <button class="tab-link" data-tab="eventos">
-        <i class="fas fa-calendar-alt"></i> Eventos
+        <span class="material-icons" style="vertical-align: middle;">event</span> Eventos
       </button>
       <button class="tab-link" data-tab="concursos">
-        <i class="fas fa-trophy"></i> Concursos
+        <span class="material-icons" style="vertical-align: middle;">emoji_events</span> Concursos
       </button>
     </div>
 
