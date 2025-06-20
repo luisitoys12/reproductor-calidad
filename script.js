@@ -334,4 +334,4 @@ if (socialBtns && config.redesSociales) {
   socialBtns.innerHTML = config.redesSociales.map(rs =>
     `<a href="${rs.url}" target="_blank"><i class="${rs.icon}"></i></a>`
   ).join('');
-}
+},
