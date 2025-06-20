@@ -1,337 +1,249 @@
-// 🎵 VARIABLES CONFIGURABLES 🎵
+// === CONFIGURACIÓN ===
 const config = {
     nombreRadio: "EKUSFM",
-    nombreDesarrollador: "ESTACIONKUSMEDIOS",
-    logoURL: "https://aventura.estacionkusmedios.com/img/default.jpg",
-    fondoURL: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cmFkaW98ZW58MHx8MHx8fDA%3D",
-    streamURL: "https://radio.estacionkusmedios.com/listen/esmerosound/radio.mp3",
     azuracastURL: "https://radio.estacionkusmedios.com",
     azuracastStation: "esmerosound",
+    streamURL: "https://radio.estacionkusmedios.com/listen/esmerosound/radio.mp3",
     albumCover: "https://aventura.estacionkusmedios.com/img/default.jpg",
-    aboutDeveloper: "ESTACIONKUSMEDIOS BASED IN CRISPRO CODE Adapted Azuracast",
-    textoEmitiendo: "Transmitiendo en vivo desde nuestra estación 🎙️",
-    textoSonandoAhora: "Actualmente en reproducción 🎶",
-    textoCompartir: "¡Escucha la mejor música en ESTACIONKUSFM! 🎵🔥",
     redesSociales: [
-      { url: "https://web.facebook.com/ekusfm", icon: "fab fa-facebook" },
-      { url: "https://www.instagram.com/estacionkusfm/", icon: "fab fa-instagram" },
-      { url: "https://www.youtube.com/estacionkusfm", icon: "fab fa-youtube" },
-      { url: "https://chat.whatsapp.com/JSk9LFoclGrFxY7rb4TFWu", icon: "fab fa-whatsapp" }
-    ],
-    descripcion: "Radio ESTACIONKUSFM es una estación de radio online dedicada a traerte la mejor música y entretenimiento. Disfruta de una selección musical variada y de calidad las 24 horas del día.",
-    estado: "online"
+        { url: "https://web.facebook.com/ekusfm", icon: "fab fa-facebook" },
+        { url: "https://www.instagram.com/estacionkusfm/", icon: "fab fa-instagram" },
+        { url: "https://www.youtube.com/estacionkusfm", icon: "fab fa-youtube" },
+        { url: "https://chat.whatsapp.com/JSk9LFoclGrFxY7rb4TFWu", icon: "fab fa-whatsapp" }
+    ]
 };
 
-// --- SEGURIDAD Y BLOQUEO COPIA ---
+// === BLOQUEO COPIA (respetando tu sistema) ===
 (function() {
-  const hostname = location.hostname;
-  const permitido = (
-    hostname === "reproductor-calidad.vercel.app" ||
-    hostname === "estacionkusmedios.com" ||
-    hostname.endsWith(".estacionkusmedios.com")
-  );
-  if (
-    typeof config === "undefined" ||
-    config.nombreRadio !== "EKUSFM" ||
-    !permitido
-  ) {
-    document.body.innerHTML = `
-      <div style="text-align:center;padding:40px;color:#fff;background:#1e293b;height:100vh">
-        <h1 style="color:#ff4444;font-size:2.5rem;">Página NO Autorizada</h1>
-        <p style="font-size:1.2rem;">Esta web solo puede ser utilizada por <b>EKUSFM</b> en <b>estacionkusmedios.com</b> o <b>reproductor-calidad.vercel.app</b>.<br>
-        Si eres el responsable, contacta a <a href="https://estacionkusmedios.org" style="color:#0ff;" target="_blank">estacionkusmedios.org</a>
-        </p>
-      </div>`;
-    document.title = "No autorizado";
-    throw new Error("Sitio no autorizado por estacionkusmedios.org");
-  }
-  document.addEventListener('contextmenu', e => e.preventDefault());
-  document.addEventListener('keydown', function(e) {
-    if ((e.ctrlKey && ['u','s','c','a'].includes(e.key.toLowerCase())) ||
-        (e.metaKey && ['u','s','c','a'].includes(e.key.toLowerCase())) ||
-        e.key === 'F12') e.preventDefault();
-  });
+    const hostname = location.hostname;
+    const permitido = (
+        hostname === "reproductor-calidad.vercel.app" ||
+        hostname === "estacionkusmedios.com" ||
+        hostname.endsWith(".estacionkusmedios.com")
+    );
+    if (!permitido) {
+        document.body.innerHTML = `
+        <div style="text-align:center;padding:40px;color:#fff;background:#1e293b;height:100vh">
+            <h1 style="color:#ff4444;font-size:2.5rem;">Página NO Autorizada</h1>
+            <p style="font-size:1.2rem;">Esta web solo puede ser utilizada por <b>EKUSFM</b> en <b>estacionkusmedios.com</b> o <b>reproductor-calidad.vercel.app</b>.<br>
+            Si eres el responsable, contacta a <a href="https://estacionkusmedios.org" style="color:#0ff;" target="_blank">estacionkusmedios.org</a>
+            </p>
+        </div>`;
+        document.title = "No autorizado";
+        throw new Error("Sitio no autorizado por estacionkusmedios.org");
+    }
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey && ['u','s','c','a'].includes(e.key.toLowerCase())) ||
+            (e.metaKey && ['u','s','c','a'].includes(e.key.toLowerCase())) ||
+            e.key === 'F12') e.preventDefault();
+    });
 })();
 
-// --- REPRODUCTOR Y METADATOS AZURACAST ---
+// === REPRODUCTOR ===
 const audio = document.getElementById('audio');
 const playPauseBtn = document.getElementById('playPauseBtn');
 const volumeControl = document.getElementById('volumeControl');
+audio.src = config.streamURL;
+audio.volume = volumeControl.value;
+audio.crossOrigin = "anonymous";
+
+playPauseBtn.addEventListener('click', () => {
+    if (audio.paused) audio.play();
+    else audio.pause();
+});
+audio.addEventListener('play', () => playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>');
+audio.addEventListener('pause', () => playPauseBtn.innerHTML = '<i class="fas fa-play"></i>');
+volumeControl.addEventListener('input', (e) => audio.volume = e.target.value);
+
+// === METADATOS ===
 const songTitle = document.getElementById('song-title');
 const artistName = document.getElementById('artist-name');
 const coverImg = document.getElementById('cover-img');
 const serviceBtns = document.getElementById('service-btns');
-const liveBtn = document.getElementById('live-announcer-btn') || {style:{},innerHTML:""};
-audio.src = config.streamURL;
-audio.crossOrigin = "anonymous";
-audio.volume = volumeControl.value;
 
-playPauseBtn.addEventListener('click', () => {
-  if (audio.paused) audio.play();
-  else audio.pause();
-});
-audio.addEventListener('play', () => {
-  playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
-});
-audio.addEventListener('pause', () => {
-  playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
-});
-volumeControl.addEventListener('input', (e) => {
-  audio.volume = e.target.value;
-});
+function makeSpotifyAppleBtns(title, artist) {
+    if (!title || !artist) return "";
+    const query = encodeURIComponent(`${title} ${artist}`);
+    return `
+      <button class="service-btn spotify" onclick="window.open('https://open.spotify.com/search/${query}','_blank')">
+        <i class="fab fa-spotify"></i> Spotify
+      </button>
+      <button class="service-btn apple" onclick="window.open('https://music.apple.com/search?term=${query}','_blank')">
+        <i class="fab fa-apple"></i> Apple Music
+      </button>
+    `;
+}
 
-// --- METADATOS ROBUSTOS ---
 async function updateMetadata() {
-  try {
-    const url = `${config.azuracastURL}/api/nowplaying/${config.azuracastStation}`;
-    const res = await fetch(url);
-    if (!res.ok) throw new Error("HTTP status: " + res.status);
-    const data = await res.json();
+    try {
+        const url = `${config.azuracastURL}/api/nowplaying/${config.azuracastStation}`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("HTTP status: " + res.status);
+        const data = await res.json();
 
-    // Busca metadatos en todas las rutas posibles
-    const deepFind = (obj, paths) => {
-      for (const path of paths) {
-        const keys = path.split(".");
-        let val = obj;
-        for (const k of keys) {
-          if (val && typeof val === "object" && k in val) val = val[k];
-          else { val = undefined; break; }
+        let title = data.now_playing?.song?.title || data.now_playing?.song?.text || "Sin datos";
+        let artist = data.now_playing?.song?.artist || "";
+        let artUrl = data.now_playing?.song?.art || "";
+
+        // Fallbacks
+        if ((!title || title === "Sin datos") && data.song?.title) title = data.song.title;
+        if (!artist && data.song?.artist) artist = data.song.artist;
+        if (!artUrl && data.song?.art) artUrl = data.song.art;
+        if ((!title || !artist) && title && title.includes(" - ")) {
+            const [maybeArtist, maybeTitle] = title.split(" - ");
+            if (!artist) artist = maybeArtist.trim();
+            title = maybeTitle.trim();
         }
-        if (val && typeof val === "string" && val.trim() !== "") return val;
-      }
-      return undefined;
-    };
+        if (artUrl && artUrl.startsWith("/")) artUrl = config.azuracastURL + artUrl;
+        if (!artUrl) artUrl = config.albumCover;
 
-    let title = deepFind(data, [
-      "now_playing.song.title", "now_playing.song.text",
-      "current_song.title", "current_song.text",
-      "currentSong.title", "currentSong.text",
-      "song.title", "song.text",
-      "np.title", "np.text",
-      "playing.title", "playing.text"
-    ]);
-    let artist = deepFind(data, [
-      "now_playing.song.artist",
-      "current_song.artist",
-      "currentSong.artist",
-      "song.artist",
-      "np.artist",
-      "playing.artist"
-    ]);
-    let artUrl = deepFind(data, [
-      "now_playing.song.art",
-      "current_song.art",
-      "currentSong.art",
-      "song.art",
-      "np.art",
-      "playing.art"
-    ]);
-
-    // Fallback: intenta extraer artista y título de un string
-    if ((!title || !artist) && title && title.includes(" - ")) {
-      const [maybeArtist, maybeTitle] = title.split(" - ");
-      if (!artist) artist = maybeArtist.trim();
-      title = maybeTitle.trim();
+        songTitle.textContent = title || "Sin datos";
+        artistName.textContent = artist || "";
+        coverImg.src = artUrl;
+        serviceBtns.innerHTML = makeSpotifyAppleBtns(title, artist);
+    } catch (e) {
+        songTitle.textContent = "Sin datos";
+        artistName.textContent = "";
+        coverImg.src = config.albumCover;
+        serviceBtns.innerHTML = "";
     }
-    // Fallback: busca algún campo "title" o "text"
-    if (!title) {
-      for (const key in data) {
-        if (data[key] && typeof data[key] === "object") {
-          if (data[key].title) { title = data[key].title; break; }
-          if (data[key].text) { title = data[key].text; break; }
-        }
-      }
-    }
-    // Fallback: primer string útil
-    if (!title) {
-      for (const key in data) {
-        if (typeof data[key] === "string" && data[key].trim().length > 2) {
-          title = data[key]; break;
-        }
-      }
-    }
-    if (!title) title = "Sin datos";
-    if (!artist) artist = "";
-
-    // Carátula absoluta
-    if (artUrl && artUrl.startsWith("/")) artUrl = config.azuracastURL + artUrl;
-    if (!artUrl) artUrl = config.albumCover;
-
-    songTitle.textContent = title;
-    artistName.textContent = artist;
-    coverImg.src = artUrl;
-    serviceBtns.innerHTML = makeSpotifyAppleBtns(title, artist);
-
-    // Locutor en vivo
-    if (data.live && (data.live.is_live || data.live.isLive) && (data.live.streamer_name || data.live.streamerName)) {
-      let dj = data.live.streamer_name || data.live.streamerName || "Locutor";
-      if (liveBtn) {
-        liveBtn.style.display = "inline-block";
-        liveBtn.innerHTML = `<i class="fas fa-microphone"></i> Locutor en vivo: ${dj}`;
-      }
-    } else if (liveBtn) {
-      liveBtn.style.display = "none";
-    }
-
-    updateMenuStatus(data.live && (data.live.is_live || data.live.isLive) ? "online" : config.estado);
-
-  } catch (e) {
-    songTitle.textContent = "Sin datos";
-    artistName.textContent = "";
-    coverImg.src = config.albumCover;
-    serviceBtns.innerHTML = "";
-    updateMenuStatus("offline");
-    console.error("Error obteniendo metadatos:", e);
-  }
 }
 setInterval(updateMetadata, 10000);
 updateMetadata();
-window.addEventListener('DOMContentLoaded', () => { audio.load(); });
 
-function makeSpotifyAppleBtns(title, artist) {
-  if (!title || !artist) return "";
-  const query = encodeURIComponent(`${title} ${artist}`);
-  return `
-    <button class="service-btn spotify" onclick="window.open('https://open.spotify.com/search/${query}','_blank')">
-      <i class="fab fa-spotify"></i> Spotify
-    </button>
-    <button class="service-btn apple" onclick="window.open('https://music.apple.com/search?term=${query}','_blank')">
-      <i class="fab fa-apple"></i> Apple Music
-    </button>
-  `;
-}
-
-// --- RELOJ HORA OFICIAL MÉXICO CENTRAL ---
+// === RELOJ CDMX ===
 function updateRadioClock() {
-  try {
-    const now = new Date();
-    const options = {
-      timeZone: 'America/Mexico_City',
-      hour: '2-digit', minute: '2-digit', second: '2-digit'
-    };
-    const optionsDate = {
-      timeZone: 'America/Mexico_City',
-      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-    };
-    const time = now.toLocaleTimeString('es-MX', options);
-    const date = now.toLocaleDateString('es-MX', optionsDate);
-    document.getElementById('radio-clock').textContent = time;
-    document.getElementById('radio-clock-date').textContent = date.charAt(0).toUpperCase() + date.slice(1);
-  } catch(e) {
-    document.getElementById('radio-clock').textContent = '--:--:--';
-    document.getElementById('radio-clock-date').textContent = 'Fecha no disponible';
-  }
+    try {
+        const now = new Date();
+        const options = {
+            timeZone: 'America/Mexico_City',
+            hour: '2-digit', minute: '2-digit', second: '2-digit'
+        };
+        const optionsDate = {
+            timeZone: 'America/Mexico_City',
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+        };
+        document.getElementById('radio-clock').textContent = now.toLocaleTimeString('es-MX', options);
+        document.getElementById('radio-clock-date').textContent = now.toLocaleDateString('es-MX', optionsDate);
+    } catch (e) {
+        document.getElementById('radio-clock').textContent = '--:--:--';
+        document.getElementById('radio-clock-date').textContent = 'Fecha no disponible';
+    }
 }
 setInterval(updateRadioClock, 1000);
 updateRadioClock();
 
-// --- PERSONALIZACIÓN Y STICKERS ---
-document.getElementById('customizeBtn').onclick = () => {
-  document.getElementById('customizePanel').style.display = 'flex';
+// === BOTÓN FIX ===
+document.getElementById('fixBtn').onclick = function() {
+    audio.src = config.streamURL;
+    audio.load();
+    audio.play();
+    updateMetadata();
 };
-const bgPicker = document.getElementById('bgColorPicker');
-bgPicker.value = localStorage.getItem('radioBgColor') || '#1e293b';
-bgPicker.oninput = () => {
-  document.body.style.background = bgPicker.value;
-  localStorage.setItem('radioBgColor', bgPicker.value);
+
+// === PERSONALIZACIÓN ===
+document.getElementById('customizeBtn').onclick = function() {
+    document.getElementById('customizePanel').style.display = 'flex';
 };
-document.body.style.background = bgPicker.value;
-const animationSelect = document.getElementById('animationSelect');
-animationSelect.value = localStorage.getItem('radioAnimation') || '';
-animationSelect.oninput = () => {
-  localStorage.setItem('radioAnimation', animationSelect.value);
-  applyAnimation(animationSelect.value);
+document.getElementById('bgColorPicker').oninput = function() {
+    document.body.style.background = this.value;
+    localStorage.setItem('radioBgColor', this.value);
+};
+document.getElementById('animationSelect').oninput = function() {
+    localStorage.setItem('radioAnimation', this.value);
+    applyAnimation(this.value);
 };
 function applyAnimation(anim) {
-  document.body.style.animation = '';
-  if(anim === 'confetti') document.body.style.animation = 'confetti 1.5s infinite linear';
-  else if(anim === 'wave') document.body.style.animation = 'wave 1.2s infinite alternate';
+    document.body.style.animation = '';
+    if(anim === 'confetti') document.body.style.animation = 'confetti 1.5s infinite linear';
+    else if(anim === 'wave') document.body.style.animation = 'wave 1.2s infinite alternate';
 }
-applyAnimation(animationSelect.value);
+(function() {
+    const color = localStorage.getItem('radioBgColor');
+    if (color) { document.body.style.background = color; document.getElementById('bgColorPicker').value = color; }
+    const anim = localStorage.getItem('radioAnimation');
+    if (anim) { document.getElementById('animationSelect').value = anim; applyAnimation(anim); }
+})();
+
+// === STICKERS ===
 document.getElementById('addStickerBtn').onclick = () => {
-  document.getElementById('stickerCatalog').style.display = 'flex';
+    document.getElementById('stickerCatalog').style.display = 'flex';
 };
 document.querySelectorAll('.sticker-option').forEach(img => {
-  img.onclick = () => {
-    const sticker = img.cloneNode();
-    sticker.style.position = 'absolute';
-    sticker.style.left = (10 + Math.random() * 70) + '%';
-    sticker.style.top = (10 + Math.random() * 60) + '%';
-    sticker.style.pointerEvents = 'none';
-    document.getElementById('customStickersArea').appendChild(sticker);
-    let stickers = JSON.parse(localStorage.getItem('radioStickers') || '[]');
-    stickers.push({src: sticker.src, left: sticker.style.left, top: sticker.style.top});
-    localStorage.setItem('radioStickers', JSON.stringify(stickers));
-    document.getElementById('stickerCatalog').style.display = 'none';
-  };
+    img.onclick = () => {
+        const sticker = img.cloneNode();
+        sticker.style.position = 'absolute';
+        sticker.style.left = (10 + Math.random() * 70) + '%';
+        sticker.style.top = (10 + Math.random() * 60) + '%';
+        sticker.style.pointerEvents = 'none';
+        document.getElementById('customStickersArea').appendChild(sticker);
+        let stickers = JSON.parse(localStorage.getItem('radioStickers') || '[]');
+        stickers.push({src: sticker.src, left: sticker.style.left, top: sticker.style.top});
+        localStorage.setItem('radioStickers', JSON.stringify(stickers));
+        document.getElementById('stickerCatalog').style.display = 'none';
+    };
 });
 window.addEventListener('DOMContentLoaded', ()=>{
-  let stickers = JSON.parse(localStorage.getItem('radioStickers') || '[]');
-  stickers.forEach(s => {
-    let img = document.createElement('img');
-    img.src = s.src; img.style.position='absolute';
-    img.style.left = s.left; img.style.top = s.top;
-    img.style.width = '38px'; img.style.pointerEvents='none';
-    document.getElementById('customStickersArea').appendChild(img);
-  });
+    let stickers = JSON.parse(localStorage.getItem('radioStickers') || '[]');
+    stickers.forEach(s => {
+        let img = document.createElement('img');
+        img.src = s.src; img.style.position='absolute';
+        img.style.left = s.left; img.style.top = s.top;
+        img.style.width = '38px'; img.style.pointerEvents='none';
+        document.getElementById('customStickersArea').appendChild(img);
+    });
 });
 document.getElementById('resetCustomizationBtn').onclick = () => {
-  localStorage.removeItem('radioBgColor');
-  localStorage.removeItem('radioAnimation');
-  localStorage.removeItem('radioStickers');
-  document.body.style.background = '#1e293b';
-  document.body.style.animation = '';
-  document.getElementById('customStickersArea').innerHTML = '';
-  document.getElementById('bgColorPicker').value = '#1e293b';
-  document.getElementById('animationSelect').value = '';
+    localStorage.removeItem('radioBgColor');
+    localStorage.removeItem('radioAnimation');
+    localStorage.removeItem('radioStickers');
+    document.body.style.background = '#1e293b';
+    document.body.style.animation = '';
+    document.getElementById('customStickersArea').innerHTML = '';
+    document.getElementById('bgColorPicker').value = '#1e293b';
+    document.getElementById('animationSelect').value = '';
 };
 
-// --- MENÚ LATERAL ---
+// === MENÚ LATERAL Y MODAL BULLYING ===
 document.getElementById('menuBtn').onclick = function() {
-  document.getElementById('menu').classList.add('open');
+    document.getElementById('menu').classList.add('open');
 };
 document.getElementById('close-menu').onclick = function() {
-  document.getElementById('menu').classList.remove('open');
+    document.getElementById('menu').classList.remove('open');
 };
 document.addEventListener('click', function(e){
-  var menu = document.getElementById('menu');
-  if(menu.classList.contains('open') && !menu.contains(e.target) && e.target.id !== 'menuBtn'){
-    menu.classList.remove('open');
-  }
+    var menu = document.getElementById('menu');
+    if(menu.classList.contains('open') && !menu.contains(e.target) && e.target.id !== 'menuBtn'){
+        menu.classList.remove('open');
+    }
 });
-
-// --- BOTÓN FIX ---
-const fixBtn = document.getElementById('fixBtn');
-fixBtn.onclick = function() {
-  audio.src = config.streamURL;
-  audio.load();
-  audio.play();
-  // Si quieres mostrar un alert usa: alert("¡Radio reparada!");
-};
-
-// --- MODAL BASTA DE BULLYING ---
 if(document.getElementById('bastaBullyingLink')) {
-  document.getElementById('bastaBullyingLink').onclick = function(e){
-    e.preventDefault();
-    document.getElementById('modalBasta').style.display = 'flex';
-  };
+    document.getElementById('bastaBullyingLink').onclick = function(e){
+        e.preventDefault();
+        document.getElementById('modalBasta').style.display = 'flex';
+    };
 }
 if(document.getElementById('closeBastaModal')) {
-  document.getElementById('closeBastaModal').onclick = function(){
-    document.getElementById('modalBasta').style.display = 'none';
-  };
+    document.getElementById('closeBastaModal').onclick = function(){
+        document.getElementById('modalBasta').style.display = 'none';
+    };
 }
 
-// --- REDES SOCIALES DINÁMICAS (menú y footer) ---
+// === REDES SOCIALES ===
 const menuSocialLinks = document.getElementById('menu-social-links');
 if (menuSocialLinks && config.redesSociales) {
-  menuSocialLinks.innerHTML = config.redesSociales.map(rs =>
-    `<li><a href="${rs.url}" class="menu-link" target="_blank"><i class="${rs.icon}"></i> ${rs.icon === "fab fa-whatsapp" ? "WhatsApp" : (rs.icon === "fab fa-facebook" ? "Facebook" : (rs.icon === "fab fa-instagram" ? "Instagram" : "YouTube"))}</a></li>`
-  ).join('');
+    menuSocialLinks.innerHTML = config.redesSociales.map(rs =>
+        `<li><a href="${rs.url}" class="menu-link" target="_blank"><i class="${rs.icon}"></i> ${
+            rs.icon === "fab fa-whatsapp" ? "WhatsApp" :
+            rs.icon === "fab fa-facebook" ? "Facebook" :
+            rs.icon === "fab fa-instagram" ? "Instagram" : "YouTube"
+        }</a></li>`
+    ).join('');
 }
 const socialBtns = document.getElementById('social-buttons');
 if (socialBtns && config.redesSociales) {
-  socialBtns.innerHTML = config.redesSociales.map(rs =>
-    `<a href="${rs.url}" target="_blank"><i class="${rs.icon}"></i></a>`
-  ).join('');
-},
+    socialBtns.innerHTML = config.redesSociales.map(rs =>
+        `<a href="${rs.url}" target="_blank"><i class="${rs.icon}"></i></a>`
+    ).join('');
+}
