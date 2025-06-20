@@ -14,8 +14,105 @@
   <link rel="icon" type="image/png" href="icon.png">
   <link rel="apple-touch-icon" href="icon.png">
   <link rel="stylesheet" href="style.css">
+  <!-- CSS MENÚ Y OVERLAY -->
   <style>
-    /* Posiciona el botón Fix */
+    /* --- MENÚ LATERAL --- */
+    #menu {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      width: 280px;
+      max-width: 90vw;
+      background: #1e293b;
+      color: #fff;
+      z-index: 10500;
+      transition: transform 0.22s cubic-bezier(.4,0,.2,1), box-shadow 0.22s;
+      transform: translateX(-100%);
+      box-shadow: 2px 0 16px rgba(30,41,59,0.13);
+      overflow-y: auto;
+      padding-bottom: 48px;
+    }
+    #menu.open {
+      display: block;
+      transform: translateX(0);
+    }
+    .overlay {
+      display: none;
+      position: fixed; left:0; top:0; right:0; bottom:0;
+      background: rgba(30,41,59, 0.7);
+      z-index: 10499;
+      transition: opacity 0.22s;
+    }
+    .overlay.active {
+      display: block;
+    }
+    .menu-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 22px 10px 22px;
+      border-bottom: 1px solid #334155;
+    }
+    .menu-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #0ea5e9;
+    }
+    .close-menu {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: color 0.12s;
+    }
+    .close-menu:hover { color: #f87171; }
+    .menu-section {
+      padding: 18px 22px;
+    }
+    .menu-section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #38bdf8;
+    }
+    .menu-links {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .menu-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #fff;
+      padding: 10px 0;
+      text-decoration: none;
+      font-size: 1rem;
+      border-radius: 6px;
+      transition: background 0.14s, color 0.14s;
+    }
+    .menu-link:hover {
+      background: #334155;
+      color: #0ea5e9;
+    }
+    .menu-links li:not(:last-child) {
+      border-bottom: 1px solid #334155;
+    }
+    @media (max-width: 700px) {
+      #menu {
+        width: 96vw;
+        max-width: 96vw;
+        font-size: 1.05rem;
+      }
+    }
+    #menu, .overlay {
+      z-index: 9999;
+    }
+    body.menu-open {
+      overflow: hidden;
+    }
+    /* --- BOTÓN FIX --- */
     #fixBtn {
       position: fixed;
       bottom: 24px;
@@ -53,7 +150,6 @@
 <body>
   <img id="background" class="background" src="/placeholder.svg" alt="Background">
   <div class="overlay"></div>
-
   <div class="header">
     <div class="logo" id="radio-name">
       EKUSMEDIOS
@@ -62,67 +158,12 @@
       <i class="fas fa-bars"></i>
     </button>
   </div>
-
   <div class="main-content">
-    <div class="status-badge status-live" id="status-badge">
-      <i class="fas fa-broadcast-tower"></i>
-      <span id="status-text">Transmitiendo en vivo desde nuestra cabina central 🎙️ en digital</span>
-    </div>
-
-    <div class="cover-container">
-      <img src="/placeholder.svg" alt="Album Cover" width="250%" height="108%" class="cover-img" id="cover-img">
-    </div>
-
-    <div class="song-info">
-      <div class="song-title" id="song-title">Cargando...</div>
-      <div class="artist-name" id="artist-name">Espere un momento</div>
-      <div class="now-playing" id="now-playing-text">Actualmente escuchas 🎶</div>
-    </div>
-
-    <div class="controls">
-      <button class="control-btn" id="prevBtn" disabled>
-        <i class="fas fa-step-backward"></i>
-      </button>
-      <button class="play-btn" id="playPauseBtn">
-        <i class="fas fa-play"></i>
-      </button>
-      <button class="control-btn" id="nextBtn" disabled>
-        <i class="fas fa-step-forward"></i>
-      </button>
-    </div>
-
-    <div class="volume-container">
-      <div class="volume-icon">
-        <i class="fas fa-volume-up" id="volumeIcon"></i>
-      </div>
-      <input type="range" class="volume-control" id="volumeControl" min="0" max="1" step="0.01" value="1">
-    </div>
-
-    <div class="status-indicator" id="statusIndicator"></div>
-
-    <div class="social-buttons" id="social-buttons">
-      <!-- Social buttons will be added dinámicamente -->
-    </div>
+    <!-- ... tu contenido principal ... -->
   </div>
-
-  <!-- Templates de mantenimiento/desactivado -->
-  <div class="maintenance-mode" id="maintenanceMode" style="display: none; text-align: center; padding: 20px;">
-    <h1>Sitio en Mantenimiento</h1>
-    <p>Estamos realizando algunas actualizaciones. Volveremos pronto.</p>
-    <img src="maintenance.png" alt="Maintenance" style="width: 200px; margin-top: 20px;">
-  </div>
-  <div class="disabled-mode" id="disabledMode" style="display: none; text-align: center; padding: 20px;">
-    <h1>Sitio Desactivado</h1>
-    <p>Este sitio web ha sido desactivado.</p>
-  </div>
-  <div class="desactivated-mode" id="desactivatedMode" style="display: none; text-align: center; padding: 20px;">
-    <h1>Servicio No Disponible</h1>
-    <p>Este servicio ya no está disponible.</p>
-  </div>
-
   <div class="menu" id="menu">
     <div class="menu-header">
-      <div class="menu-title" id="menu-title"></div>
+      <div class="menu-title" id="menu-title">Menú</div>
       <button class="close-menu" id="close-menu">
         <i class="fas fa-times"></i>
       </button>
@@ -143,200 +184,105 @@
       </ul>
     </div>
   </div>
-
-  <!-- Modales -->
-  <div class="modal" id="historyModal">
-    <div class="modal-content">
-      <button class="modal-close" id="closeHistoryModal">&times;</button>
-      <h3 class="modal-title">Historial de canciones</h3>
-      <div id="historyModalContent">
-        <!-- El historial se llenará dinámicamente -->
-      </div>
-    </div>
-  </div>
-  <div class="modal" id="aboutModal">
-    <div class="modal-content">
-      <button class="modal-close" id="closeAboutModal">&times;</button>
-      <h3 class="modal-title">Acerca de</h3>
-      <div class="about-content">
-        <img id="aboutLogo" class="about-logo" src="/placeholder.svg" alt="Logo">
-        <p class="about-text" id="aboutDescription">Cargando...</p>
-        <p class="about-text">Versión: 1.0.0</p>
-        <p class="about-text">Desarrollado con ❤️ por <span id="aboutDeveloper">ESTACIONKUSMEDIOS</span></p>
-        <p class="about-text">Powered by: <strong>ESTACIONKUSMEDIOS</strong></p>
-      </div>
-    </div>
-  </div>
-  <div class="modal" id="shareModal">
-    <div class="modal-content">
-      <button class="modal-close" id="closeShareModal">&times;</button>
-      <h3 class="modal-title">Compartir</h3>
-      <div id="shareOptions">
-        <div class="share-option" id="shareWhatsapp">
-          <div class="share-icon" style="background-color: #25D366;">
-            <i class="fab fa-whatsapp"></i>
-          </div>
-          <div class="share-text">Compartir en WhatsApp</div>
-        </div>
-        <div class="share-option" id="shareFacebook">
-          <div class="share-icon" style="background-color: #1877F2;">
-            <i class="fab fa-facebook-f"></i>
-          </div>
-          <div class="share-text">Compartir en Facebook</div>
-        </div>
-        <div class="share-option" id="shareTwitter">
-          <div class="share-icon" style="background-color: #1DA1F2;">
-            <i class="fab fa-twitter"></i>
-          </div>
-          <div class="share-text">Compartir en Twitter</div>
-        </div>
-        <div class="share-url-container">
-          <input type="text" id="shareUrl" class="share-url" readonly>
-          <button id="copyLink" class="copy-btn">Copiar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="offline-alert" id="offlineAlert">
-    Sin conexión a internet. Algunas funciones pueden no estar disponibles.
-  </div>
-  <div class="watermark">Powered by: ESTACIONKUSMEDIOS</div>
-  <audio id="audio" preload="auto"></audio>
-
   <!-- Botón Fix -->
   <button id="fixBtn" title="Solucionar problemas"><i class="fas fa-wrench"></i></button>
   <div id="fixAlert"></div>
-
+  <!-- ... el resto de tus modales, reproductor, etc ... -->
+  <audio id="audio" preload="auto"></audio>
+  <!-- JS MENÚ, SEGURIDAD Y FIX -->
   <script>
-    // Configuración AzuraCast
-    const AZURACAST_URL = "https://radio.estacionkusmedios.com";
-    const STATION = "esmerosound";
-    const AUDIO_STREAM_URL = "https://radio.estacionkusmedios.com/listen/esmerosound/radio.mp3";
+    // 🎵 VARIABLES CONFIGURABLES 🎵
+    const config = {
+        nombreRadio: "EKUSFM", // <--- SI CAMBIAS ESTO, EL SITIO SE BLOQUEA
+        nombreDesarrollador: "ESTACIONKUSMEDIOS",
+        logoURL: "https://aventura.estacionkusmedios.com/img/default.jpg",
+        fondoURL: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cmFkaW98ZW58MHx8MHx8fDA%3D",
+        streamURL: "https://radio.estacionkusmedios.com/listen/esmerosound/radio.mp3",
+        azuracastURL: "https://radio.estacionkusmedios.com",
+        azuracastStation: "esmerosound",
+        albumCover: "https://aventura.estacionkusmedios.com/img/default.jpg",
+        aboutDeveloper: "ESTACIONKUSMEDIOS BASED IN CRISPRO CODE Adapted Azuracast",
+        textoEmitiendo: "Transmitiendo en vivo desde nuestra estación 🎙️",
+        textoSonandoAhora: "Actualmente en reproducción 🎶",
+        textoCompartir: "¡Escucha la mejor música en ESTACIONKUSFM! 🎵🔥",
+        redesSociales: [
+          { url: "https://web.facebook.com/ekusfm", icon: "fab fa-facebook" },
+          { url: "https://www.instagram.com/estacionkusfm/", icon: "fab fa-instagram" },
+          { url: "https://www.youtube.com/estacionkusfm", icon: "fab fa-youtube" },
+          { url: "https://api.whatsapp.com/send/?phone=51984335569&text&type=phone_number&app_absent=0", icon: "fab fa-whatsapp" }
+        ],
+        descripcion: "Radio ESTACIONKUSFM es una estación de radio online dedicada a traerte la mejor música y entretenimiento. Disfruta de una selección musical variada y de calidad las 24 horas del día.",
+        estado: "online" // online, offline, maintenance, disabled, desactivated
+    };
 
-    // Elementos DOM
-    const audio = document.getElementById('audio');
-    const playPauseBtn = document.getElementById('playPauseBtn');
-    const volumeControl = document.getElementById('volumeControl');
-    const songTitle = document.getElementById('song-title');
-    const artistName = document.getElementById('artist-name');
-    const coverImg = document.getElementById('cover-img');
-    const background = document.getElementById('background');
-
-    // Inicializa audio
-    audio.src = AUDIO_STREAM_URL;
-    audio.crossOrigin = "anonymous";
-    audio.volume = volumeControl.value;
-
-    // Play/Pause
-    playPauseBtn.addEventListener('click', () => {
-      if (audio.paused) {
-        audio.play();
-      } else {
-        audio.pause();
+    // SEGURIDAD: Solo funciona si el nombre de la radio es EKUSFM
+    (function() {
+      const alertaNoAutorizada = () => {
+        document.body.innerHTML = `
+          <div style="text-align:center;padding:40px;color:#fff;background:#1e293b;height:100vh">
+            <h1 style="color:#ff4444;font-size:2.5rem;">Página NO Autorizada</h1>
+            <p style="font-size:1.2rem;">Esta web solo puede ser utilizada por <b>EKUSFM</b>.<br>
+            Si eres el responsable, contacta a <a href="https://estacionkusmedios.org" style="color:#0ff;" target="_blank">estacionkusmedios.org</a>
+            </p>
+          </div>`;
+        document.title = "No autorizado";
+      };
+      if (typeof config === "undefined" || config.nombreRadio !== "EKUSFM") {
+        setTimeout(alertaNoAutorizada, 100);
+        throw new Error("Sitio no autorizado por estacionkusmedios.org");
       }
-    });
-    audio.addEventListener('play', () => {
-      playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
-    });
-    audio.addEventListener('pause', () => {
-      playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
-    });
+    })();
 
-    // Control de volumen
-    volumeControl.addEventListener('input', (e) => {
-      audio.volume = e.target.value;
-    });
-
-    // Carga metadatos desde AzuraCast API
-    async function updateMetadata() {
-      try {
-        const res = await fetch(`${AZURACAST_URL}/api/nowplaying/${STATION}`);
-        if (!res.ok) throw new Error("No se pudo obtener metadatos");
-        const data = await res.json();
-
-        songTitle.textContent = data.now_playing.song.title || "Desconocido";
-        artistName.textContent = data.now_playing.song.artist || "Desconocido";
-        // Portada
-        let artUrl = data.now_playing.song.art;
-        if (artUrl && artUrl.startsWith('/')) {
-          artUrl = AZURACAST_URL + artUrl;
-        }
-        coverImg.src = artUrl || "/placeholder.svg";
-        background.src = artUrl || "/placeholder.svg";
-      } catch (e) {
-        songTitle.textContent = "Error obteniendo metadatos";
-        artistName.textContent = "";
-        coverImg.src = "/placeholder.svg";
-        background.src = "/placeholder.svg";
-      }
-    }
-
-    // Actualiza metadatos cada 10 segundos
-    setInterval(updateMetadata, 10000);
-    updateMetadata();
-
-    // Opcional: auto-play al cargar
-    window.addEventListener('DOMContentLoaded', () => {
-      audio.load();
-    });
-
-    // ------------- MENÚ Y MODALES -------------
-
-    // MENU
+    // MENÚ LATERAL
     const menuBtn = document.getElementById('menuBtn');
     const menu = document.getElementById('menu');
     const closeMenuBtn = document.getElementById('close-menu');
-
-    // Muestra/Oculta menú
-    function openMenu() {
-      menu.style.display = 'block';
-      setTimeout(() => { menu.classList.add('active'); }, 5);
-      document.body.style.overflow = 'hidden';
-    }
-    function closeMenu() {
-      menu.classList.remove('active');
-      setTimeout(() => { menu.style.display = 'none'; }, 250);
-      document.body.style.overflow = '';
-    }
-
-    menuBtn.addEventListener('click', openMenu);
-    closeMenuBtn.addEventListener('click', closeMenu);
-
-    // Cerrar menú al hacer click fuera
-    window.addEventListener('click', function(e) {
-      if (menu.classList.contains('active') && !menu.contains(e.target) && !menuBtn.contains(e.target)) {
-        closeMenu();
+    const overlay = document.querySelector('.overlay');
+    // Abrir menú
+    menuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      menu.classList.add('open');
+      overlay.classList.add('active');
+      document.body.classList.add('menu-open');
+    });
+    // Cerrar menú
+    closeMenuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      menu.classList.remove('open');
+      overlay.classList.remove('active');
+      document.body.classList.remove('menu-open');
+    });
+    overlay.addEventListener('click', () => {
+      menu.classList.remove('open');
+      overlay.classList.remove('active');
+      document.body.classList.remove('menu-open');
+    });
+    document.addEventListener('click', function(e) {
+      if (
+        menu.classList.contains('open') &&
+        !menu.contains(e.target) &&
+        !menuBtn.contains(e.target)
+      ) {
+        menu.classList.remove('open');
+        overlay.classList.remove('active');
+        document.body.classList.remove('menu-open');
       }
     });
-
-    // MODALES
-    function openModal(id) {
-      document.getElementById(id).style.display = 'block';
-      document.body.style.overflow = 'hidden';
-    }
-    function closeModal(id) {
-      document.getElementById(id).style.display = 'none';
-      document.body.style.overflow = '';
-    }
-
-    document.getElementById('historyLink').onclick = (e) => { e.preventDefault(); openModal('historyModal'); };
-    document.getElementById('aboutLink').onclick = (e) => { e.preventDefault(); openModal('aboutModal'); };
-    document.getElementById('shareLink').onclick = (e) => { e.preventDefault(); openModal('shareModal'); };
-
-    document.getElementById('closeHistoryModal').onclick = () => closeModal('historyModal');
-    document.getElementById('closeAboutModal').onclick = () => closeModal('aboutModal');
-    document.getElementById('closeShareModal').onclick = () => closeModal('shareModal');
-
-    // Cierra modales al hacer click fuera
-    document.querySelectorAll('.modal').forEach(modal => {
-      modal.addEventListener('click', function(e) {
-        if (e.target === modal) closeModal(modal.id);
-      });
+    menu.addEventListener('click', function(e) { e.stopPropagation(); });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === "Escape") {
+        menu.classList.remove('open');
+        overlay.classList.remove('active');
+        document.body.classList.remove('menu-open');
+      }
+    });
+    window.addEventListener('pageshow', function() {
+      menu.classList.remove('open');
+      overlay.classList.remove('active');
+      document.body.classList.remove('menu-open');
     });
 
-    // ------------- FIX BUTTON -------------
-
+    // BOTÓN FIX
     const fixBtn = document.getElementById('fixBtn');
     const fixAlert = document.getElementById('fixAlert');
     function showFixAlert(text, time=3500) {
@@ -344,119 +290,15 @@
       fixAlert.style.display = 'block';
       setTimeout(() => { fixAlert.style.display = 'none'; }, time);
     }
-
     fixBtn.onclick = () => {
-      // 1. Repara menú
-      try {
-        menuBtn.onclick = openMenu;
-        closeMenuBtn.onclick = closeMenu;
-        menuBtn.disabled = false;
-        closeMenuBtn.disabled = false;
-        menu.style.display = '';
-        menu.classList.remove('active');
-      } catch (e) {}
-
-      // 2. Repara audio
-      try {
-        audio.src = AUDIO_STREAM_URL;
-        audio.load();
-        audio.volume = volumeControl.value;
-        playPauseBtn.innerHTML = audio.paused ? '<i class="fas fa-play"></i>' : '<i class="fas fa-pause"></i>';
-      } catch (e) {}
-
-      // 3. Actualiza metadatos
-      updateMetadata();
-
-      // 4. Verifica conexión
-      if (!navigator.onLine) {
-        showFixAlert('Sin conexión a internet. Intenta reconectar.');
-        return;
-      }
-
-      // 5. Recarga scripts si falta alguno
-      if (typeof openMenu !== 'function' || typeof updateMetadata !== 'function') {
-        showFixAlert('Error crítico: recarga la página (F5)');
-        return;
-      }
-
-      // 6. Si todo ok
+      // Repara menú
+      menuBtn.disabled = false;
+      closeMenuBtn.disabled = false;
+      menu.classList.remove('open');
+      overlay.classList.remove('active');
+      document.body.classList.remove('menu-open');
       showFixAlert('¡Solucionado! Si persiste el problema, recarga la página.');
     };
-
-    // ------------- OTROS -------------
-    // Ejemplo para compartir URL
-    document.getElementById('shareUrl').value = window.location.href;
-    document.getElementById('copyLink').onclick = function() {
-      navigator.clipboard.writeText(window.location.href)
-        .then(() => showFixAlert('Enlace copiado!'))
-        .catch(() => showFixAlert('No se pudo copiar el enlace'));
-    };
-    // Redirección compartir
-    document.getElementById('shareWhatsapp').onclick = function() {
-      window.open('https://wa.me/?text=' + encodeURIComponent('Escucha la radio aquí: ' + window.location.href),'_blank');
-    };
-    document.getElementById('shareFacebook').onclick = function() {
-      window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href),'_blank');
-    };
-    document.getElementById('shareTwitter').onclick = function() {
-      window.open('https://twitter.com/intent/tweet?url=' + encodeURIComponent(window.location.href),'_blank');
-    };
   </script>
-  <!-- Tu script.js personalizado para otras funciones -->
-  <script src="script.js"></script>
-<script>
-(function() {
-  // Elementos del menú
-  const menuBtn = document.getElementById('menuBtn');
-  const menu = document.getElementById('menu');
-  const closeMenuBtn = document.getElementById('close-menu');
-
-  // Asegura display block y clase active
-  function openMenu() {
-    menu.style.display = 'block';
-    setTimeout(() => menu.classList.add('active'), 10);
-    document.body.style.overflow = 'hidden';
-  }
-  function closeMenu() {
-    menu.classList.remove('active');
-    setTimeout(() => {
-      menu.style.display = 'none';
-      document.body.style.overflow = '';
-    }, 200);
-  }
-
-  menuBtn.addEventListener('click', function(e) {
-    e.stopPropagation();
-    openMenu();
-  });
-  closeMenuBtn.addEventListener('click', function(e) {
-    e.stopPropagation();
-    closeMenu();
-  });
-
-  // Cerrar menú al hacer click fuera del menú
-  document.addEventListener('click', function(e) {
-    if (
-      menu.classList.contains('active') &&
-      !menu.contains(e.target) &&
-      !menuBtn.contains(e.target)
-    ) {
-      closeMenu();
-    }
-  });
-
-  // Previene que clicks dentro del menú cierren el menú
-  menu.addEventListener('click', function(e) {
-    e.stopPropagation();
-  });
-
-  // Modo seguro: asegura que el menú no quede bloqueado al recargar
-  window.addEventListener('pageshow', function() {
-    menu.classList.remove('active');
-    menu.style.display = 'none';
-    document.body.style.overflow = '';
-  });
-})();
-</script>
 </body>
 </html>
