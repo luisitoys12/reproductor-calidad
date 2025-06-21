@@ -388,3 +388,32 @@ shareWhatsAppBtn.addEventListener('click', () => {
     const whatsappUrl = `https://api.whatsapp.com/send?text=${message}%20${url}`;
     window.open(whatsappUrl, '_blank');
 });
+
+// Dark mode toggle
+const btnDarkMode = document.getElementById('btnDarkMode');
+btnDarkMode.addEventListener('click', () => {
+  document.body.classList.toggle('light-mode');
+  if (document.body.classList.contains('light-mode')) {
+    btnDarkMode.textContent = 'Modo Claro';
+  } else {
+    btnDarkMode.textContent = 'Modo Oscuro';
+  }
+});
+
+// Peticiones button click handler
+const btnPeticiones = document.getElementById('btnPeticiones');
+btnPeticiones.addEventListener('click', () => {
+  alert('Funcionalidad de peticiones aún no implementada.');
+});
+
+// Recargar button click handler
+const btnRecargar = document.getElementById('btnRecargar');
+btnRecargar.addEventListener('click', () => {
+  location.reload();
+});
+
+// Fix button click handler
+const btnFix = document.getElementById('btnFix');
+btnFix.addEventListener('click', () => {
+  alert('Funcionalidad de reparación aún no implementada.');
+});
