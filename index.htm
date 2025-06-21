@@ -362,83 +362,6 @@
         font-size: 1.12em;
         cursor: pointer;
       }
-      /* ========== HISTORIAL PROFESIONAL ========== */
-      .song-card {
-        display: flex;
-        align-items: center;
-        background: #222b;
-        border-radius: 14px;
-        box-shadow: 0 2px 14px #0004;
-        margin-bottom: 13px;
-        padding: 11px 10px 11px 8px;
-        transition: background 0.2s;
-        gap: 11px;
-      }
-      .song-card:hover { background: #334155; }
-      .song-cover {
-        width: 60px;
-        height: 60px;
-        border-radius: 10px;
-        object-fit: cover;
-        background: #181818;
-        box-shadow: 0 1px 8px #0007;
-      }
-      .song-info-hist {
-        flex: 1;
-        min-width: 0;
-      }
-      .song-title-hist {
-        font-size: 1.07em;
-        font-weight: bold;
-        color: #fff;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
-      }
-      .song-artist-hist {
-        color: #38bdf8;
-        font-size: 1em;
-        margin-bottom: 2px;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
-      }
-      .song-meta-row {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-top: 2px;
-      }
-      .song-time-hist {
-        color: #facc15;
-        font-size: 0.97em;
-        display: flex;
-        align-items: center;
-        gap: 4px;
-      }
-      .song-btns-hist {
-        display: flex;
-        gap: 6px;
-        margin-left: 2px;
-      }
-      .song-btn-hist {
-        padding: 4px 11px 4px 9px;
-        border-radius: 7px;
-        border: none;
-        font-size: .96em;
-        font-weight: 500;
-        cursor: pointer;
-        background: #334155;
-        color: #fff;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        transition: background 0.15s, color 0.15s;
-        text-decoration: none;
-      }
-      .song-btn-hist.spotify { background: #1db954; color: #fff;}
-      .song-btn-hist.apple { background: #111; color: #fff;}
-      .song-btn-hist:hover { opacity: .82; }
       @media (max-width: 500px) {
         .main-content {
           padding: 8px 0;
@@ -449,9 +372,6 @@
         .logo {
           font-size: 1.2rem;
         }
-        .song-card { padding: 8px 3px 8px 2px; }
-        .song-cover { width: 48px;height: 48px;}
-        .song-title-hist { font-size: .97em;}
       }
     </style>
 </head>
@@ -578,16 +498,15 @@
             </button>
         </div>
     </div>
-    <!-- === NUEVO: MODAL HISTORIAL DE CANCIONES PROFESIONAL === -->
-    <div id="historyModal" style="display:none;position:fixed;z-index:9999;left:0;top:0;width:100vw;height:100vh;background:rgba(15,23,42,0.97);align-items:center;justify-content:center;">
-      <div style="background:#1e293b;color:#fff;padding:23px 0 10px 0;border-radius:22px;max-width:410px;width:95vw;position:relative;box-shadow:0 6px 48px #0007;">
-        <button style="position:absolute;top:14px;right:17px;font-size:1.7em;border:none;background:none;color:#fff;cursor:pointer;z-index:2;">&times;</button>
-        <h2 style="text-align:center;font-size:1.35em;font-weight:bold;margin-bottom:14px;color:#38bdf8;">Historial de canciones</h2>
-        <div id="historial-list" style="max-height:64vh;overflow:auto;padding:0 17px 8px 17px;"></div>
-        <div style="text-align:center;font-size:.96em;color:#64748b;margin-top:9px;">Canciones tocadas recientemente</div>
+    <!-- === NUEVO: MODAL HISTORIAL DE CANCIONES === -->
+    <div id="historyModal" style="display:none;position:fixed;z-index:9999;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;">
+      <div style="background:#fff;color:#222;padding:27px 20px 20px 20px;border-radius:19px;max-width:370px;width:90vw;position:relative;">
+        <button style="position:absolute;top:14px;right:15px;font-size:1.4em;border:none;background:none;color:#222;cursor:pointer;">&times;</button>
+        <h2>Historial de canciones</h2>
+        <ul id="historial-list" style="max-height:330px;overflow:auto;padding-left:14px;"></ul>
       </div>
     </div>
-    <!-- === MODAL ACERCA DE === -->
+    <!-- === NUEVO: MODAL ACERCA DE === -->
     <div id="aboutModal" style="display:none;position:fixed;z-index:9999;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;">
       <div style="background:#fff;color:#222;padding:27px 20px 20px 20px;border-radius:19px;max-width:370px;width:90vw;position:relative;">
         <button style="position:absolute;top:14px;right:15px;font-size:1.4em;border:none;background:none;color:#222;cursor:pointer;">&times;</button>
@@ -599,4 +518,8 @@
           Esta página es propiedad de EstacionKUSMedios, pensada especialmente para EstacionKUSFM.
         </p>
       </div>
-    </div
+    </div>
+    <audio id="audio" preload="auto" crossorigin="anonymous"></audio>
+    <script src="script.js"></script>
+</body>
+</html>
