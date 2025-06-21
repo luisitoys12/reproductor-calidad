@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración de Contenido - EKUSFM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #0f172a; /* Color de fondo similar a tu estilo */
+            color: #f8fafc; /* Color de texto claro */
+            margin: 0;
+            padding: 20px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+        h1, h2 {
+            color: #38bdf8; /* Azul claro para títulos */
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .container {
+            background: #1e293b; /* Fondo para secciones */
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #94a3b8;
+        }
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        textarea {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #475569;
+            border-radius: 8px;
+            background-color: #2d3748;
+            color: #f8fafc;
+            box-sizing: border-box; /* Incluye padding en el ancho */
+        }
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        button {
+            background-color: #22d3ee; /* Verde azulado para botones */
+            color: #1e293b;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 700;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #06b6d4; /* Un poco más oscuro al pasar el ratón */
+        }
+        .message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .success {
+            background-color: #16a34a; /* Verde para éxito */
+            color: #dcfce7;
+        }
+        .error {
+            background-color: #dc2626; /* Rojo para error */
+            color: #fee2e2;
+        }
+        .data-list {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #475569;
+        }
+        .data-list-item {
+            background: #2d3748;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .data-list-item button {
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            background-color: #ef4444; /* Rojo para borrar */
+            color: white;
+        }
+        .data-list-item button:hover {
+            background-color: #dc2626;
+        }
+    </style>
+</head>
+<body>
+    <h1>Panel de Administración de Contenido EKUSFM</h1>
+
+    <div class="container">
+        <h2>Administrar Noticias</h2>
+        <form id="newsForm">
+            <label for="newsTitle">Título de la Noticia:</label>
+            <input type="text" id="newsTitle" required>
+
+            <label for="newsContent">Contenido de la Noticia:</label>
+            <textarea id="newsContent" required></textarea>
+
+            <label for="newsDate">Fecha de la Noticia:</label>
+            <input type="date" id="newsDate" required>
+
+            <button type="submit">Agregar Noticia</button>
+            <div id="newsMessage" class="message"></div>
+        </form>
+        <div class="data-list" id="newsList">
+            <h3>Noticias Existentes:</h3>
+            <p>Cargando noticias...</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Administrar Top 10 Canciones (Videos de YouTube)</h2>
+        <form id="videosForm">
+            <label for="videoTitle">Título de la Canción/Video:</label>
+            <input type="text" id="videoTitle" required>
+
+            <label for="videoId">ID del Video de YouTube:</label>
+            <input type="text" id="videoId" placeholder="Ej: dQw4w9WgXcQ" required>
+
+            <label for="videoRank">Ranking (1-10):</label>
+            <input type="number" id="videoRank" min="1" max="10" required>
+
+            <button type="submit">Agregar Video</button>
+            <div id="videosMessage" class="message"></div>
+        </form>
+        <div class="data-list" id="videosList">
+            <h3>Videos Existentes:</h3>
+            <p>Cargando videos...</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Administrar Programas</h2>
+        <form id="programsForm">
+            <label for="programName">Nombre del Programa:</label>
+            <input type="text" id="programName" required>
+
+            <label for="programSchedule">Horario:</label>
+            <input type="text" id="programSchedule" placeholder="Ej: Lunes a Viernes 10:00 AM - 12:00 PM" required>
+
+            <label for="programDescription">Descripción:</label>
+            <textarea id="programDescription"></textarea>
+
+            <button type="submit">Agregar Programa</button>
+            <div id="programsMessage" class="message"></div>
+        </form>
+        <div class="data-list" id="programsList">
+            <h3>Programas Existentes:</h3>
+            <p>Cargando programas...</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Administrar Otras Funciones</h2>
+        <form id="featuresForm">
+            <label for="featureName">Nombre de la Función:</label>
+            <input type="text" id="featureName" required>
+
+            <label for="featureOrder">Orden de Visualización:</label>
+            <input type="number" id="featureOrder" min="1" required>
+
+            <button type="submit">Agregar Función</button>
+            <div id="featuresMessage" class="message"></div>
+        </form>
+        <div class="data-list" id="featuresList">
+            <h3>Funciones Existentes:</h3>
+            <p>Cargando funciones...</p>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
+    <script>
+        // *** TU CONFIGURACIÓN DE FIREBASE (¡CÓPIALA EXACTAMENTE DE TU CONSOLA!) ***
+        const firebaseConfig = {
+            apiKey: "AIzaSyBHlQ6WQauQLTbvp_iHbkWZ8Bhv3fntSpM",
+            authDomain: "ekusfm-d1a9d.firebaseapp.com",
+            databaseURL: "https://ekusfm-d1a9d-default-rtdb.firebaseio.com",
+            projectId: "ekusfm-d1a9d",
+            storageBucket: "ekusfm-d1a9d.firebasestorage.app",
+            messagingSenderId: "849619346647",
+            appId: "1:849619346647:web:06559451c66950d9b03c92",
+            measurementId: "G-X59DPNG6N4"
+        };
+
+        // Inicializa Firebase solo si no está ya inicializado
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+
+        const database = firebase.database();
+
+        // --- Funciones de Utilidad ---
+        function showMessage(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = `message ${type}`;
+            setTimeout(() => {
+                element.textContent = '';
+                element.className = 'message';
+            }, 3000); // Borra el mensaje después de 3 segundos
+        }
+
+        // --- Administración de Noticias ---
+        const newsForm = document.getElementById('newsForm');
+        const newsList = document.getElementById('newsList');
+
+        newsForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const title = newsForm.newsTitle.value;
+            const content = newsForm.newsContent.value;
+            const date = new Date(newsForm.newsDate.value).getTime(); // Guarda como timestamp
+
+            database.ref('noticias').push({ title, content, date })
+                .then(() => {
+                    showMessage('newsMessage', 'Noticia agregada con éxito!', 'success');
+                    newsForm.reset();
+                    loadNewsAdmin(); // Recarga la lista de noticias
+                })
+                .catch(error => {
+                    showMessage('newsMessage', 'Error al agregar noticia: ' + error.message, 'error');
+                    console.error('Error adding news:', error);
+                });
+        });
+
+        function loadNewsAdmin() {
+            newsList.innerHTML = '<h3>Noticias Existentes:</h3><p>Cargando noticias...</p>';
+            database.ref('noticias').orderByChild('date').once('value')
+                .then(snapshot => {
+                    newsList.innerHTML = '<h3>Noticias Existentes:</h3>';
+                    if (!snapshot.exists() || snapshot.val() === null) {
+                        newsList.innerHTML += '<p>No hay noticias.</p>';
+                        return;
+                    }
+                    const newsData = snapshot.val();
+                    const sortedNews = [];
+                    for (let key in newsData) {
+                        if (newsData.hasOwnProperty(key)) {
+                            sortedNews.push({ id: key, ...newsData[key] });
+                        }
+                    }
+                    sortedNews.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+                    sortedNews.forEach(item => {
+                        const div = document.createElement('div');
+                        div.className = 'data-list-item';
+                        div.innerHTML = `
+                            <span>${item.title} (${new Date(item.date).toLocaleDateString()})</span>
+                            <button data-id="${item.id}" data-type="noticias">Borrar</button>
+                        `;
+                        newsList.appendChild(div);
+                    });
+                })
+                .catch(error => {
+                    newsList.innerHTML = '<h3>Noticias Existentes:</h3><p>Error al cargar noticias.</p>';
+                    console.error('Error loading news for admin:', error);
+                });
+        }
+
+        // --- Administración de Videos ---
+        const videosForm = document.getElementById('videosForm');
+        const videosList = document.getElementById('videosList');
+
+        videosForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const title = videosForm.videoTitle.value;
+            const videoId = videosForm.videoId.value;
+            const rank = parseInt(videosForm.videoRank.value); // Asegura que es un número
+
+            database.ref('top10videos').push({ title, videoId, rank })
+                .then(() => {
+                    showMessage('videosMessage', 'Video agregado con éxito!', 'success');
+                    videosForm.reset();
+                    loadVideosAdmin();
+                })
+                .catch(error => {
+                    showMessage('videosMessage', 'Error al agregar video: ' + error.message, 'error');
+                    console.error('Error adding video:', error);
+                });
+        });
+
+        function loadVideosAdmin() {
+            videosList.innerHTML = '<h3>Videos Existentes:</h3><p>Cargando videos...</p>';
+            database.ref('top10videos').orderByChild('rank').once('value')
+                .then(snapshot => {
+                    videosList.innerHTML = '<h3>Videos Existentes:</h3>';
+                    if (!snapshot.exists() || snapshot.val() === null) {
+                        videosList.innerHTML += '<p>No hay videos.</p>';
+                        return;
+                    }
+                    const videosData = snapshot.val();
+                    const sortedVideos = [];
+                    for (let key in videosData) {
+                        if (videosData.hasOwnProperty(key)) {
+                            sortedVideos.push({ id: key, ...videosData[key] });
+                        }
+                    }
+                    sortedVideos.sort((a, b) => (a.rank || 0) - (b.rank || 0));
+
+                    sortedVideos.forEach(item => {
+                        const div = document.createElement('div');
+                        div.className = 'data-list-item';
+                        div.innerHTML = `
+                            <span>#${item.rank} - ${item.title} (ID: ${item.videoId})</span>
+                            <button data-id="${item.id}" data-type="top10videos">Borrar</button>
+                        `;
+                        videosList.appendChild(div);
+                    });
+                })
+                .catch(error => {
+                    videosList.innerHTML = '<h3>Videos Existentes:</h3><p>Error al cargar videos.</p>';
+                    console.error('Error loading videos for admin:', error);
+                });
+        }
+
+        // --- Administración de Programas ---
+        const programsForm = document.getElementById('programsForm');
+        const programsList = document.getElementById('programsList');
+
+        programsForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = programsForm.programName.value;
+            const schedule = programsForm.programSchedule.value;
+            const description = programsForm.programDescription.value;
+
+            database.ref('programas').push({ name, schedule, description })
+                .then(() => {
+                    showMessage('programsMessage', 'Programa agregado con éxito!', 'success');
+                    programsForm.reset();
+                    loadProgramsAdmin();
+                })
+                .catch(error => {
+                    showMessage('programsMessage', 'Error al agregar programa: ' + error.message, 'error');
+                    console.error('Error adding program:', error);
+                });
+        });
+
+        function loadProgramsAdmin() {
+            programsList.innerHTML = '<h3>Programas Existentes:</h3><p>Cargando programas...</p>';
+            database.ref('programas').orderByChild('name').once('value')
+                .then(snapshot => {
+                    programsList.innerHTML = '<h3>Programas Existentes:</h3>';
+                    if (!snapshot.exists() || snapshot.val() === null) {
+                        programsList.innerHTML += '<p>No hay programas.</p>';
+                        return;
+                    }
+                    const programsData = snapshot.val();
+                    const sortedPrograms = [];
+                    for (let key in programsData) {
+                        if (programsData.hasOwnProperty(key)) {
+                            sortedPrograms.push({ id: key, ...programsData[key] });
+                        }
+                    }
+                    sortedPrograms.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+
+                    sortedPrograms.forEach(item => {
+                        const div = document.createElement('div');
+                        div.className = 'data-list-item';
+                        div.innerHTML = `
+                            <span>${item.name} (${item.schedule})</span>
+                            <button data-id="${item.id}" data-type="programas">Borrar</button>
+                        `;
+                        programsList.appendChild(div);
+                    });
+                })
+                .catch(error => {
+                    programsList.innerHTML = '<h3>Programas Existentes:</h3><p>Error al cargar programas.</p>';
+                    console.error('Error loading programs for admin:', error);
+                });
+        }
+
+        // --- Administración de Funciones/Características ---
+        const featuresForm = document.getElementById('featuresForm');
+        const featuresList = document.getElementById('featuresList');
+
+        featuresForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = featuresForm.featureName.value;
+            const order = parseInt(featuresForm.featureOrder.value);
+
+            database.ref('features').push({ name, order })
+                .then(() => {
+                    showMessage('featuresMessage', 'Función agregada con éxito!', 'success');
+                    featuresForm.reset();
+                    loadFeaturesAdmin();
+                })
+                .catch(error => {
+                    showMessage('featuresMessage', 'Error al agregar función: ' + error.message, 'error');
+                    console.error('Error adding feature:', error);
+                });
+        });
+
+        function loadFeaturesAdmin() {
+            featuresList.innerHTML = '<h3>Funciones Existentes:</h3><p>Cargando funciones...</p>';
+            database.ref('features').orderByChild('order').once('value')
+                .then(snapshot => {
+                    featuresList.innerHTML = '<h3>Funciones Existentes:</h3>';
+                    if (!snapshot.exists() || snapshot.val() === null) {
+                        featuresList.innerHTML += '<p>No hay funciones.</p>';
+                        return;
+                    }
+                    const featuresData = snapshot.val();
+                    const sortedFeatures = [];
+                    for (let key in featuresData) {
+                        if (featuresData.hasOwnProperty(key)) {
+                            sortedFeatures.push({ id: key, ...featuresData[key] });
+                        }
+                    }
+                    sortedFeatures.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+                    sortedFeatures.forEach(item => {
+                        const div = document.createElement('div');
+                        div.className = 'data-list-item';
+                        div.innerHTML = `
+                            <span>${item.name} (Orden: ${item.order})</span>
+                            <button data-id="${item.id}" data-type="features">Borrar</button>
+                        `;
+                        featuresList.appendChild(div);
+                    });
+                })
+                .catch(error => {
+                    featuresList.innerHTML = '<h3>Funciones Existentes:</h3><p>Error al cargar funciones.</p>';
+                    console.error('Error loading features for admin:', error);
+                });
+        }
+
+        // --- Función Genérica para Borrar Ítems ---
+        document.body.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON' && e.target.textContent === 'Borrar') {
+                const itemId = e.target.dataset.id;
+                const itemType = e.target.dataset.type; // 'noticias', 'top10videos', etc.
+
+                if (confirm(`¿Estás seguro de que quieres borrar este ${itemType.slice(0, -1)}?`)) {
+                    database.ref(`${itemType}/${itemId}`).remove()
+                        .then(() => {
+                            showMessage(`${itemType}Message`, `Item borrado con éxito!`, 'success');
+                            // Recargar la lista correspondiente
+                            if (itemType === 'noticias') loadNewsAdmin();
+                            else if (itemType === 'top10videos') loadVideosAdmin();
+                            else if (itemType === 'programas') loadProgramsAdmin();
+                            else if (itemType === 'features') loadFeaturesAdmin();
+                        })
+                        .catch(error => {
+                            showMessage(`${itemType}Message`, `Error al borrar item: ${error.message}`, 'error');
+                            console.error(`Error deleting ${itemType} item:`, error);
+                        });
+                }
+            }
+        });
+
+        // --- Cargar todas las listas al iniciar la página ---
+        document.addEventListener('DOMContentLoaded', () => {
+            loadNewsAdmin();
+            loadVideosAdmin();
+            loadProgramsAdmin();
+            loadFeaturesAdmin();
+        });
+    </script>
+</body>
+</html>
