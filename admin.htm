@@ -1,580 +1,888 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administración de Contenido - EKUSFM</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #0f172a; /* Color de fondo similar a tu estilo */
-            color: #f8fafc; /* Color de texto claro */
-            margin: 0;
-            padding: 20px;
-            max-width: 900px;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.6;
-        }
-        h1, h2 {
-            color: #38bdf8; /* Azul claro para títulos */
-            text-align: center;
-            margin-bottom: 25px;
-        }
-        .container {
-            background: #1e293b; /* Fondo para secciones */
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #94a3b8;
-        }
-        input[type="text"],
-        input[type="password"],
-        input[type="number"],
-        input[type="date"],
-        textarea {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #475569;
-            border-radius: 8px;
-            background-color: #2d3748;
-            color: #f8fafc;
-            box-sizing: border-box; /* Incluye padding en el ancho */
-        }
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-        button {
-            background-color: #22d3ee; /* Verde azulado para botones */
-            color: #1e293b;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 700;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: #06b6d4; /* Un poco más oscuro al pasar el ratón */
-        }
-        .message {
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 8px;
-            font-weight: 600;
-        }
-        .success {
-            background-color: #16a34a; /* Verde para éxito */
-            color: #dcfce7;
-        }
-        .error {
-            background-color: #dc2626; /* Rojo para error */
-            color: #fee2e2;
-        }
-        .data-list {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #475569;
-        }
-        .data-list-item {
-            background: #2d3748;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .data-list-item button {
-            padding: 8px 12px;
-            font-size: 0.85rem;
-            background-color: #ef4444; /* Rojo para borrar */
-            color: white;
-        }
-        .data-list-item button:hover {
-            background-color: #dc2626;
-        }
-        #admin-content {
-            display: none; /* Oculto por defecto hasta que el usuario inicie sesión */
-        }
-        #logout-button {
-            background-color: #f97316; /* Color naranja para cerrar sesión */
-            float: right;
-            margin-top: 10px;
-        }
-        #login-form-container {
-            max-width: 400px;
-            margin: 50px auto;
-            background: #1e293b;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            text-align: center;
-        }
-        #login-form-container h2 {
-            margin-bottom: 20px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Administración - EKUSFM</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="icon.png">
+  <style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #0f172a; /* Fondo oscuro */
+        color: #f8fafc; /* Texto claro */
+        margin: 0;
+        padding: 20px;
+        line-height: 1.6;
+    }
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #1e293b;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+    }
+    h1 {
+        color: #22d3ee;
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 2.5rem;
+    }
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #334155;
+    }
+    .section-header h2 {
+        color: #38bdf8;
+        margin: 0;
+        font-size: 1.8rem;
+    }
+    .form-group {
+        margin-bottom: 15px;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #cbd5e1;
+    }
+    .form-group input[type="text"],
+    .form-group input[type="number"],
+    .form-group textarea {
+        width: calc(100% - 20px);
+        padding: 10px;
+        border: 1px solid #475569;
+        border-radius: 8px;
+        background-color: #2d3748;
+        color: #f8fafc;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+    }
+    .form-group input[type="text"]::placeholder,
+    .form-group input[type="number"]::placeholder,
+    .form-group textarea::placeholder {
+        color: #94a3b8;
+        opacity: 0.7;
+    }
+    .form-group input[type="text"]:focus,
+    .form-group input[type="number"]:focus,
+    .form-group textarea:focus {
+        border-color: #38bdf8;
+        outline: none;
+    }
+    .form-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+    .btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+    }
+    .btn-primary {
+        background-color: #22d3ee;
+        color: #1e293b;
+    }
+    .btn-primary:hover {
+        background-color: #06b6d4;
+    }
+    .btn-secondary {
+        background-color: #475569;
+        color: #f8fafc;
+    }
+    .btn-secondary:hover {
+        background-color: #64748b;
+    }
+    .btn-danger {
+        background-color: #ef4444;
+        color: #f8fafc;
+    }
+    .btn-danger:hover {
+        background-color: #dc2626;
+    }
+    .data-list {
+        margin-top: 25px;
+        border-top: 1px solid #334155;
+        padding-top: 20px;
+    }
+    .data-item {
+        background-color: #2d3748;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .data-item:hover {
+        background-color: #3b4555;
+    }
+    .data-item-content {
+        flex-grow: 1;
+    }
+    .data-item-content h3 {
+        margin: 0;
+        color: #22d3ee;
+        font-size: 1.2rem;
+    }
+    .data-item-content p {
+        margin: 5px 0 0;
+        color: #94a3b8;
+        font-size: 0.9rem;
+    }
+    .item-actions {
+        display: flex;
+        gap: 8px;
+    }
+    .item-actions .btn {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+    .tabs {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #334155;
+    }
+    .tab-button {
+        background-color: transparent;
+        border: none;
+        padding: 15px 25px;
+        color: #94a3b8;
+        font-size: 1.1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: color 0.3s ease, border-bottom 0.3s ease;
+        border-bottom: 3px solid transparent;
+        margin: 0 10px;
+    }
+    .tab-button.active {
+        color: #38bdf8;
+        border-bottom: 3px solid #38bdf8;
+    }
+    .tab-content {
+        display: none;
+    }
+    .tab-content.active {
+        display: block;
+    }
+    .no-data-message {
+        text-align: center;
+        color: #94a3b8;
+        font-style: italic;
+        padding: 20px;
+    }
+    .back-to-home {
+        display: block;
+        text-align: center;
+        margin-top: 30px;
+        font-size: 1.1rem;
+    }
+    .back-to-home a {
+        color: #22d3ee;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s ease;
+    }
+    .back-to-home a:hover {
+        color: #06b6d4;
+    }
+    .explanation-text {
+        background-color: #2d3748;
+        border-left: 4px solid #38bdf8;
+        padding: 15px 20px;
+        margin-bottom: 25px;
+        border-radius: 0 8px 8px 0;
+        font-size: 0.95rem;
+        color: #cbd5e1;
+    }
+    .explanation-text strong {
+        color: #22d3ee;
+    }
+
+  </style>
 </head>
 <body>
-    <h1>Panel de Administración de Contenido EKUSFM</h1>
+  <div class="container">
+    <h1>Panel de Administración EKUSFM</h1>
 
-    <div id="login-form-container" class="container">
-        <h2>Acceso de Administración</h2>
-        <form id="loginForm">
-            <label for="loginEmail">Email:</label>
-            <input type="text" id="loginEmail" value="admin@ekusfm.com" required>
-
-            <label for="loginPassword">Contraseña:</label>
-            <input type="password" id="loginPassword" value="ekusfmadmin1234" required>
-
-            <button type="submit">Iniciar Sesión</button>
-            <div id="loginMessage" class="message"></div>
-        </form>
+    <div class="tabs">
+        <button class="tab-button active" data-tab="news">Noticias</button>
+        <button class="tab-button" data-tab="videos">Top 10 Videos</button>
+        <button class="tab-button" data-tab="programs">Programas</button>
+        <button class="tab-button" data-tab="features">Funciones</button>
     </div>
 
-    <div id="admin-content">
-        <p>Bienvenido, <span id="userEmailDisplay"></span>! <button id="logout-button">Cerrar Sesión</button></p>
-
-        <div class="container">
-            <h2>Administrar Noticias</h2>
-            <form id="newsForm">
+    <div id="news" class="tab-content active">
+        <div class="section-header">
+            <h2>Gestión de Noticias</h2>
+            <button class="btn btn-secondary" onclick="clearNewsForm()">Nuevo</button>
+        </div>
+        <form id="newsForm">
+            <input type="hidden" id="newsId">
+            <div class="form-group">
                 <label for="newsTitle">Título de la Noticia:</label>
-                <input type="text" id="newsTitle" required>
-
+                <input type="text" id="newsTitle" placeholder="Ingresa el título de la noticia" required>
+            </div>
+            <div class="form-group">
                 <label for="newsContent">Contenido de la Noticia:</label>
-                <textarea id="newsContent" required></textarea>
-
-                <label for="newsDate">Fecha de la Noticia:</label>
-                <input type="date" id="newsDate" required>
-
-                <button type="submit">Agregar Noticia</button>
-                <div id="newsMessage" class="message"></div>
-            </form>
-            <div class="data-list" id="newsList">
-                <h3>Noticias Existentes:</h3>
-                <p>Cargando noticias...</p>
+                <textarea id="newsContent" rows="8" placeholder="Escribe el contenido completo de la noticia" required></textarea>
             </div>
-        </div>
-
-        <div class="container">
-            <h2>Administrar Top 10 Canciones (Videos de YouTube)</h2>
-            <form id="videosForm">
-                <label for="videoTitle">Título de la Canción/Video:</label>
-                <input type="text" id="videoTitle" required>
-
-                <label for="videoId">ID del Video de YouTube:</label>
-                <input type="text" id="videoId" placeholder="Ej: dQw4w9WgXcQ" required>
-
-                <label for="videoRank">Ranking (1-10):</label>
-                <input type="number" id="videoRank" min="1" max="10" required>
-
-                <button type="submit">Agregar Video</button>
-                <div id="videosMessage" class="message"></div>
-            </form>
-            <div class="data-list" id="videosList">
-                <h3>Videos Existentes:</h3>
-                <p>Cargando videos...</p>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="saveNewsBtn">Guardar Noticia</button>
+                <button type="button" class="btn btn-secondary" id="updateNewsBtn" style="display:none;">Actualizar Noticia</button>
+                <button type="button" class="btn btn-danger" id="deleteNewsBtn" style="display:none;">Eliminar Noticia</button>
             </div>
-        </div>
-
-        <div class="container">
-            <h2>Administrar Programas</h2>
-            <form id="programsForm">
-                <label for="programName">Nombre del Programa:</label>
-                <input type="text" id="programName" required>
-
-                <label for="programSchedule">Horario:</label>
-                <input type="text" id="programSchedule" placeholder="Ej: Lunes a Viernes 10:00 AM - 12:00 PM" required>
-
-                <label for="programDescription">Descripción:</label>
-                <textarea id="programDescription"></textarea>
-
-                <button type="submit">Agregar Programa</button>
-                <div id="programsMessage" class="message"></div>
-            </form>
-            <div class="data-list" id="programsList">
-                <h3>Programas Existentes:</h3>
-                <p>Cargando programas...</p>
-            </div>
-        </div>
-
-        <div class="container">
-            <h2>Administrar Otras Funciones</h2>
-            <form id="featuresForm">
-                <label for="featureName">Nombre de la Función:</label>
-                <input type="text" id="featureName" required>
-
-                <label for="featureOrder">Orden de Visualización:</label>
-                <input type="number" id="featureOrder" min="1" required>
-
-                <button type="submit">Agregar Función</button>
-                <div id="featuresMessage" class="message"></div>
-            </form>
-            <div class="data-list" id="featuresList">
-                <h3>Funciones Existentes:</h3>
-                <p>Cargando funciones...</p>
-            </div>
+        </form>
+        <div class="data-list" id="newsList">
+            <p class="no-data-message">Cargando noticias...</p>
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <div id="videos" class="tab-content">
+        <div class="section-header">
+            <h2>Gestión de Top 10 Videos</h2>
+            <button class="btn btn-secondary" onclick="clearVideoForm()">Nuevo</button>
+        </div>
+        <form id="videoForm">
+            <input type="hidden" id="videoIdKey">
+            <div class="form-group">
+                <label for="videoTitle">Título del Video:</label>
+                <input type="text" id="videoTitle" placeholder="Ingresa el título del video" required>
+            </div>
+            <div class="form-group">
+                <label for="youtubeId">ID de YouTube (Ej: dQw4w9WgXcQ):</label>
+                <input type="text" id="youtubeId" placeholder="Ingresa el ID de YouTube del video" required>
+            </div>
+            <div class="form-group">
+                <label for="videoRank">Ranking (1-10):</label>
+                <input type="number" id="videoRank" min="1" max="10" placeholder="Posición en el top 10" required>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="saveVideoBtn">Guardar Video</button>
+                <button type="button" class="btn btn-secondary" id="updateVideoBtn" style="display:none;">Actualizar Video</button>
+                <button type="button" class="btn btn-danger" id="deleteVideoBtn" style="display:none;">Eliminar Video</button>
+            </div>
+        </form>
+        <div class="data-list" id="videoList">
+            <p class="no-data-message">Cargando videos...</p>
+        </div>
+    </div>
 
-    <script>
-        // *** TU CONFIGURACIÓN DE FIREBASE (¡CÓPIALA EXACTAMENTE DE TU CONSOLA!) ***
-        const firebaseConfig = {
-            apiKey: "AIzaSyBHlQ6WQauQLTbvp_iHbkWZ8Bhv3fntSpM",
-            authDomain: "ekusfm-d1a9d.firebaseapp.com",
-            databaseURL: "https://ekusfm-d1a9d-default-rtdb.firebaseio.com",
-            projectId: "ekusfm-d1a9d",
-            storageBucket: "ekusfm-d1a9d.firebasestorage.app",
-            messagingSenderId: "849619346647",
-            appId: "1:849619346647:web:06559451c66950d9b03c92",
-            measurementId: "G-X59DPNG6N4"
-        };
+    <div id="programs" class="tab-content">
+        <div class="section-header">
+            <h2>Gestión de Programas</h2>
+            <button class="btn btn-secondary" onclick="clearProgramForm()">Nuevo</button>
+        </div>
+        <form id="programForm">
+            <input type="hidden" id="programId">
+            <div class="form-group">
+                <label for="programName">Nombre del Programa:</label>
+                <input type="text" id="programName" placeholder="Ej: Noticias del Día" required>
+            </div>
+            <div class="form-group">
+                <label for="programSchedule">Horario (Ej: Lunes a Viernes 08:00 AM - 09:00 AM):</label>
+                <input type="text" id="programSchedule" placeholder="Ej: Lunes a Viernes 08:00 AM - 09:00 AM" required>
+            </div>
+            <div class="form-group">
+                <label for="programDescription">Descripción:</label>
+                <textarea id="programDescription" rows="5" placeholder="Breve descripción del programa"></textarea>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="saveProgramBtn">Guardar Programa</button>
+                <button type="button" class="btn btn-secondary" id="updateProgramBtn" style="display:none;">Actualizar Programa</button>
+                <button type="button" class="btn btn-danger" id="deleteProgramBtn" style="display:none;">Eliminar Programa</button>
+            </div>
+        </form>
+        <div class="data-list" id="programList">
+            <p class="no-data-message">Cargando programas...</p>
+        </div>
+    </div>
 
-        // Inicializa Firebase solo si no está ya inicializado
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
+    <div id="features" class="tab-content">
+        <div class="section-header">
+            <h2>Gestión de Funciones Destacadas</h2>
+            <button class="btn btn-secondary" onclick="clearFeatureForm()">Nuevo</button>
+        </div>
+        <div class="explanation-text">
+            <p>Aquí puedes administrar las <strong>funciones o características destacadas</strong> de tu emisora. Estos elementos se mostrarán en la página principal (<code>noticias.htm</code>) para resaltar aspectos importantes de EKUSFM.</p>
+            <p>Utiliza el campo <strong>"Nombre de la Característica"</strong> para el texto visible (ej. "Calidad de Audio HD", "Interactividad con la Audiencia").</p>
+            <p>El campo <strong>"Orden de Visualización"</strong> determina la posición en la que aparecerá la característica en la lista (un número más bajo significa que aparecerá más arriba). Puedes asignar el mismo número a varias para que su orden sea el que quieras, pero te recomiendo que sean diferentes, para que no se mezclen o cambien de lugar inesperadamente.</p>
+        </div>
+        <form id="featureForm">
+            <input type="hidden" id="featureId">
+            <div class="form-group">
+                <label for="featureName">Nombre de la Característica:</label>
+                <input type="text" id="featureName" placeholder="Ej: Calidad de Audio HD" required>
+            </div>
+            <div class="form-group">
+                <label for="featureOrder">Orden de Visualización:</label>
+                <input type="number" id="featureOrder" min="1" placeholder="Número para ordenar la lista" required>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="saveFeatureBtn">Guardar Característica</button>
+                <button type="button" class="btn btn-secondary" id="updateFeatureBtn" style="display:none;">Actualizar Característica</button>
+                <button type="button" class="btn btn-danger" id="deleteFeatureBtn" style="display:none;">Eliminar Característica</button>
+            </div>
+        </form>
+        <div class="data-list" id="featureList">
+            <p class="no-data-message">Cargando funciones...</p>
+        </div>
+    </div>
+
+    <div class="back-to-home">
+        <a href="index.htm">Volver a la página principal</a>
+    </div>
+
+  </div>   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+  <script>
+    // *** TU CONFIGURACIÓN DE FIREBASE (¡CÓPIALA EXACTAMENTE DE TU CONSOLA!) ***
+    const firebaseConfig = {
+        apiKey: "AIzaSyBHlQ6WQauQLTbvp_iHbkWZ8Bhv3fntSpM",
+        authDomain: "ekusfm-d1a9d.firebaseapp.com",
+        databaseURL: "https://ekusfm-d1a9d-default-rtdb.firebaseio.com",
+        projectId: "ekusfm-d1a9d",
+        storageBucket: "ekusfm-d1a9d.firebasestorage.app",
+        messagingSenderId: "849619346647",
+        appId: "1:849619346647:web:06559451c66950d9b03c92",
+        measurementId: "G-X59DPNG6N4"
+    };
+
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+
+    const database = firebase.database();
+
+    // --- Control de Pestañas ---
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const tabId = button.dataset.tab;
+
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            button.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+
+            // Recargar datos cuando se cambia de pestaña para asegurar frescura
+            if (tabId === 'news') clearNewsForm(); loadNews();
+            else if (tabId === 'videos') clearVideoForm(); loadVideos();
+            else if (tabId === 'programs') clearProgramForm(); loadPrograms();
+            else if (tabId === 'features') clearFeatureForm(); loadFeatures();
+        });
+    });
+
+    // --- Funciones para Noticias ---
+    const newsForm = document.getElementById('newsForm');
+    const newsIdInput = document.getElementById('newsId');
+    const newsTitleInput = document.getElementById('newsTitle');
+    const newsContentInput = document.getElementById('newsContent');
+    const saveNewsBtn = document.getElementById('saveNewsBtn');
+    const updateNewsBtn = document.getElementById('updateNewsBtn');
+    const deleteNewsBtn = document.getElementById('deleteNewsBtn');
+    const newsListDiv = document.getElementById('newsList');
+
+    function clearNewsForm() {
+        newsIdInput.value = '';
+        newsTitleInput.value = '';
+        newsContentInput.value = '';
+        saveNewsBtn.style.display = 'inline-block';
+        updateNewsBtn.style.display = 'none';
+        deleteNewsBtn.style.display = 'none';
+        newsTitleInput.focus();
+    }
+
+    newsForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const title = newsTitleInput.value.trim();
+        const content = newsContentInput.value.trim();
+        const newsId = newsIdInput.value;
+
+        if (!title || !content) {
+            alert('Por favor, completa todos los campos de la noticia.');
+            return;
         }
 
-        const auth = firebase.auth(); // Inicializa Firebase Authentication
-        const database = firebase.database();
-
-        // Elementos del DOM para la interfaz de usuario
-        const loginFormContainer = document.getElementById('login-form-container');
-        const loginForm = document.getElementById('loginForm');
-        const loginMessage = document.getElementById('loginMessage');
-        const adminContent = document.getElementById('admin-content');
-        const userEmailDisplay = document.getElementById('userEmailDisplay');
-        const logoutButton = document.getElementById('logout-button');
-
-        // --- Funciones de Utilidad ---
-        function showMessage(elementId, message, type) {
-            const element = document.getElementById(elementId);
-            element.textContent = message;
-            element.className = `message ${type}`;
-            setTimeout(() => {
-                element.textContent = '';
-                element.className = 'message';
-            }, 3000); // Borra el mensaje después de 3 segundos
+        if (newsId) {
+            // Actualizar noticia existente
+            database.ref('noticias/' + newsId).update({
+                title: title,
+                content: content
+            }).then(() => {
+                alert('Noticia actualizada con éxito!');
+                clearNewsForm();
+                // loadNews(); // Ya se recarga con 'on' listener
+            }).catch(error => {
+                console.error("Error al actualizar noticia:", error);
+                alert('Error al actualizar noticia.');
+            });
+        } else {
+            // Guardar nueva noticia
+            database.ref('noticias').push({
+                title: title,
+                content: content,
+                date: firebase.database.ServerValue.TIMESTAMP 
+            }).then(() => {
+                alert('Noticia guardada con éxito!');
+                clearNewsForm();
+                // loadNews(); // Ya se recarga con 'on' listener
+            }).catch(error => {
+                console.error("Error al guardar noticia:", error);
+                alert('Error al guardar noticia.');
+            });
         }
+    });
 
-        // --- Manejo de la Autenticación ---
+    updateNewsBtn.addEventListener('click', function() {
+        newsForm.dispatchEvent(new Event('submit')); // Reusa el submit para actualizar
+    });
 
-        // Escucha cambios en el estado de autenticación (si el usuario está logueado o no)
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                // Usuario logueado
-                loginFormContainer.style.display = 'none'; // Oculta el formulario de login
-                adminContent.style.display = 'block';     // Muestra el contenido de administración
-                userEmailDisplay.textContent = user.email; // Muestra el email del usuario
-                // Carga todos los datos al iniciar sesión
-                loadNewsAdmin();
-                loadVideosAdmin();
-                loadProgramsAdmin();
-                loadFeaturesAdmin();
-            } else {
-                // Usuario no logueado
-                loginFormContainer.style.display = 'block'; // Muestra el formulario de login
-                adminContent.style.display = 'none';     // Oculta el contenido de administración
-                userEmailDisplay.textContent = '';
+    deleteNewsBtn.addEventListener('click', function() {
+        const newsId = newsIdInput.value;
+        if (newsId && confirm('¿Estás seguro de que quieres eliminar esta noticia?')) {
+            database.ref('noticias/' + newsId).remove()
+                .then(() => {
+                    alert('Noticia eliminada con éxito!');
+                    clearNewsForm();
+                    // loadNews(); // Ya se recarga con 'on' listener
+                }).catch(error => {
+                    console.error("Error al eliminar noticia:", error);
+                    alert('Error al eliminar noticia.');
+                });
+        }
+    });
+
+    function loadNews() {
+        newsListDiv.innerHTML = '<p class="no-data-message">Cargando noticias...</p>';
+        database.ref('noticias').orderByChild('date').on('value', snapshot => {
+            newsListDiv.innerHTML = '';
+            if (!snapshot.exists() || snapshot.val() === null) {
+                newsListDiv.innerHTML = '<p class="no-data-message">No hay noticias disponibles.</p>';
+                return;
             }
-        });
-
-        // Maneja el envío del formulario de login
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = loginForm.loginEmail.value;
-            const password = loginForm.loginPassword.value;
-
-            auth.signInWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    // console.log('Usuario logueado:', userCredential.user.email);
-                    showMessage('loginMessage', 'Sesión iniciada con éxito!', 'success');
-                    loginForm.reset();
-                })
-                .catch(error => {
-                    showMessage('loginMessage', 'Error al iniciar sesión: ' + error.message, 'error');
-                    console.error('Error logging in:', error);
-                });
-        });
-
-        // Maneja el clic en el botón de cerrar sesión
-        logoutButton.addEventListener('click', () => {
-            auth.signOut()
-                .then(() => {
-                    showMessage('loginMessage', 'Sesión cerrada con éxito.', 'success');
-                    // onAuthStateChanged se encargará de ocultar el contenido de admin
-                })
-                .catch(error => {
-                    showMessage('loginMessage', 'Error al cerrar sesión: ' + error.message, 'error');
-                    console.error('Error logging out:', error);
-                });
-        });
-
-
-        // --- Administración de Noticias ---
-        const newsForm = document.getElementById('newsForm');
-        const newsList = document.getElementById('newsList');
-
-        newsForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const title = newsForm.newsTitle.value;
-            const content = newsForm.newsContent.value;
-            const date = new Date(newsForm.newsDate.value).getTime(); // Guarda como timestamp
-
-            database.ref('noticias').push({ title, content, date })
-                .then(() => {
-                    showMessage('newsMessage', 'Noticia agregada con éxito!', 'success');
-                    newsForm.reset();
-                    loadNewsAdmin(); // Recarga la lista de noticias
-                })
-                .catch(error => {
-                    showMessage('newsMessage', 'Error al agregar noticia: ' + error.message, 'error');
-                    console.error('Error adding news:', error);
-                });
-        });
-
-        function loadNewsAdmin() {
-            newsList.innerHTML = '<h3>Noticias Existentes:</h3><p>Cargando noticias...</p>';
-            database.ref('noticias').orderByChild('date').once('value')
-                .then(snapshot => {
-                    newsList.innerHTML = '<h3>Noticias Existentes:</h3>';
-                    if (!snapshot.exists() || snapshot.val() === null) {
-                        newsList.innerHTML += '<p>No hay noticias.</p>';
-                        return;
-                    }
-                    const newsData = snapshot.val();
-                    const sortedNews = [];
-                    for (let key in newsData) {
-                        if (newsData.hasOwnProperty(key)) {
-                            sortedNews.push({ id: key, ...newsData[key] });
-                        }
-                    }
-                    sortedNews.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
-                    sortedNews.forEach(item => {
-                        const div = document.createElement('div');
-                        div.className = 'data-list-item';
-                        div.innerHTML = `
-                            <span>${item.title} (${new Date(item.date).toLocaleDateString()})</span>
-                            <button data-id="${item.id}" data-type="noticias">Borrar</button>
-                        `;
-                        newsList.appendChild(div);
-                    });
-                })
-                .catch(error => {
-                    newsList.innerHTML = '<h3>Noticias Existentes:</h3><p>Error al cargar noticias.</p>';
-                    console.error('Error loading news for admin:', error);
-                });
-        }
-
-        // --- Administración de Videos ---
-        const videosForm = document.getElementById('videosForm');
-        const videosList = document.getElementById('videosList');
-
-        videosForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const title = videosForm.videoTitle.value;
-            const videoId = videosForm.videoId.value;
-            const rank = parseInt(videosForm.videoRank.value); // Asegura que es un número
-
-            database.ref('top10videos').push({ title, videoId, rank })
-                .then(() => {
-                    showMessage('videosMessage', 'Video agregado con éxito!', 'success');
-                    videosForm.reset();
-                    loadVideosAdmin();
-                })
-                .catch(error => {
-                    showMessage('videosMessage', 'Error al agregar video: ' + error.message, 'error');
-                    console.error('Error adding video:', error);
-                });
-        });
-
-        function loadVideosAdmin() {
-            videosList.innerHTML = '<h3>Videos Existentes:</h3><p>Cargando videos...</p>';
-            database.ref('top10videos').orderByChild('rank').once('value')
-                .then(snapshot => {
-                    videosList.innerHTML = '<h3>Videos Existentes:</h3>';
-                    if (!snapshot.exists() || snapshot.val() === null) {
-                        videosList.innerHTML += '<p>No hay videos.</p>';
-                        return;
-                    }
-                    const videosData = snapshot.val();
-                    const sortedVideos = [];
-                    for (let key in videosData) {
-                        if (videosData.hasOwnProperty(key)) {
-                            sortedVideos.push({ id: key, ...videosData[key] });
-                        }
-                    }
-                    sortedVideos.sort((a, b) => (a.rank || 0) - (b.rank || 0));
-
-                    sortedVideos.forEach(item => {
-                        const div = document.createElement('div');
-                        div.className = 'data-list-item';
-                        div.innerHTML = `
-                            <span>#${item.rank} - ${item.title} (ID: ${item.videoId})</span>
-                            <button data-id="${item.id}" data-type="top10videos">Borrar</button>
-                        `;
-                        videosList.appendChild(div);
-                    });
-                })
-                .catch(error => {
-                    videosList.innerHTML = '<h3>Videos Existentes:</h3><p>Error al cargar videos.</p>';
-                    console.error('Error loading videos for admin:', error);
-                });
-        }
-
-        // --- Administración de Programas ---
-        const programsForm = document.getElementById('programsForm');
-        const programsList = document.getElementById('programsList');
-
-        programsForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const name = programsForm.programName.value;
-            const schedule = programsForm.programSchedule.value;
-            const description = programsForm.programDescription.value;
-
-            database.ref('programas').push({ name, schedule, description })
-                .then(() => {
-                    showMessage('programsMessage', 'Programa agregado con éxito!', 'success');
-                    programsForm.reset();
-                    loadProgramsAdmin();
-                })
-                .catch(error => {
-                    showMessage('programsMessage', 'Error al agregar programa: ' + error.message, 'error');
-                    console.error('Error adding program:', error);
-                });
-        });
-
-        function loadProgramsAdmin() {
-            programsList.innerHTML = '<h3>Programas Existentes:</h3><p>Cargando programas...</p>';
-            database.ref('programas').orderByChild('name').once('value')
-                .then(snapshot => {
-                    programsList.innerHTML = '<h3>Programas Existentes:</h3>';
-                    if (!snapshot.exists() || snapshot.val() === null) {
-                        programsList.innerHTML += '<p>No hay programas.</p>';
-                        return;
-                    }
-                    const programsData = snapshot.val();
-                    const sortedPrograms = [];
-                    for (let key in programsData) {
-                        if (programsData.hasOwnProperty(key)) {
-                            sortedPrograms.push({ id: key, ...programsData[key] });
-                        }
-                    }
-                    sortedPrograms.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-
-                    sortedPrograms.forEach(item => {
-                        const div = document.createElement('div');
-                        div.className = 'data-list-item';
-                        div.innerHTML = `
-                            <span>${item.name} (${item.schedule})</span>
-                            <button data-id="${item.id}" data-type="programas">Borrar</button>
-                        `;
-                        programsList.appendChild(div);
-                    });
-                })
-                .catch(error => {
-                    programsList.innerHTML = '<h3>Programas Existentes:</h3><p>Error al cargar programas.</p>';
-                    console.error('Error loading programs for admin:', error);
-                });
-        }
-
-        // --- Administración de Funciones/Características ---
-        const featuresForm = document.getElementById('featuresForm');
-        const featuresList = document.getElementById('featuresList');
-
-        featuresForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const name = featuresForm.featureName.value;
-            const order = parseInt(featuresForm.featureOrder.value);
-
-            database.ref('features').push({ name, order })
-                .then(() => {
-                    showMessage('featuresMessage', 'Función agregada con éxito!', 'success');
-                    featuresForm.reset();
-                    loadFeaturesAdmin();
-                })
-                .catch(error => {
-                    showMessage('featuresMessage', 'Error al agregar función: ' + error.message, 'error');
-                    console.error('Error adding feature:', error);
-                });
-        });
-
-        function loadFeaturesAdmin() {
-            featuresList.innerHTML = '<h3>Funciones Existentes:</h3><p>Cargando funciones...</p>';
-            database.ref('features').orderByChild('order').once('value')
-                .then(snapshot => {
-                    featuresList.innerHTML = '<h3>Funciones Existentes:</h3>';
-                    if (!snapshot.exists() || snapshot.val() === null) {
-                        featuresList.innerHTML += '<p>No hay funciones.</p>';
-                        return;
-                    }
-                    const featuresData = snapshot.val();
-                    const sortedFeatures = [];
-                    for (let key in featuresData) {
-                        if (featuresData.hasOwnProperty(key)) {
-                            sortedFeatures.push({ id: key, ...featuresData[key] });
-                        }
-                    }
-                    sortedFeatures.sort((a, b) => (a.order || 0) - (b.order || 0));
-
-                    sortedFeatures.forEach(item => {
-                        const div = document.createElement('div');
-                        div.className = 'data-list-item';
-                        div.innerHTML = `
-                            <span>${item.name} (Orden: ${item.order})</span>
-                            <button data-id="${item.id}" data-type="features">Borrar</button>
-                        `;
-                        featuresList.appendChild(div);
-                    });
-                })
-                .catch(error => {
-                    featuresList.innerHTML = '<h3>Funciones Existentes:</h3><p>Error al cargar funciones.</p>';
-                    console.error('Error loading features for admin:', error);
-                });
-        }
-
-        // --- Función Genérica para Borrar Ítems ---
-        document.body.addEventListener('click', (e) => {
-            if (e.target.tagName === 'BUTTON' && e.target.textContent === 'Borrar') {
-                const itemId = e.target.dataset.id;
-                const itemType = e.target.dataset.type; // 'noticias', 'top10videos', etc.
-
-                if (confirm(`¿Estás seguro de que quieres borrar este ${itemType.slice(0, -1)}?`)) {
-                    database.ref(`${itemType}/${itemId}`).remove()
-                        .then(() => {
-                            showMessage(`${itemType}Message`, `Item borrado con éxito!`, 'success');
-                            // Recargar la lista correspondiente
-                            if (itemType === 'noticias') loadNewsAdmin();
-                            else if (itemType === 'top10videos') loadVideosAdmin();
-                            else if (itemType === 'programas') loadProgramsAdmin();
-                            else if (itemType === 'features') loadFeaturesAdmin();
-                        })
-                        .catch(error => {
-                            showMessage(`${itemType}Message`, `Error al borrar item: ${error.message}`, 'error');
-                            console.error(`Error deleting ${itemType} item:`, error);
-                        });
+            const newsData = snapshot.val();
+            const sortedNews = [];
+            for (let key in newsData) {
+                if (newsData.hasOwnProperty(key)) {
+                    sortedNews.push({ id: key, ...newsData[key] });
                 }
             }
-        });
+            sortedNews.sort((a, b) => b.date - a.date); // Más reciente primero
 
-        // La carga inicial de datos ahora se maneja dentro de auth.onAuthStateChanged
-        // para asegurar que solo se carguen una vez que el usuario esté autenticado.
-    </script>
+            sortedNews.forEach(newsItem => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'data-item';
+                itemDiv.innerHTML = `
+                    <div class="data-item-content">
+                        <h3>${newsItem.title}</h3>
+                        <p>${new Date(newsItem.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                    </div>
+                `;
+                itemDiv.addEventListener('click', () => {
+                    newsIdInput.value = newsItem.id;
+                    newsTitleInput.value = newsItem.title;
+                    newsContentInput.value = newsItem.content;
+                    saveNewsBtn.style.display = 'none';
+                    updateNewsBtn.style.display = 'inline-block';
+                    deleteNewsBtn.style.display = 'inline-block';
+                });
+                newsListDiv.appendChild(itemDiv);
+            });
+        });
+    }
+
+    // --- Funciones para Top 10 Videos ---
+    const videoForm = document.getElementById('videoForm');
+    const videoIdKeyInput = document.getElementById('videoIdKey'); // ID único de Firebase
+    const videoTitleInput = document.getElementById('videoTitle');
+    const youtubeIdInput = document.getElementById('youtubeId'); // ID de YouTube
+    const videoRankInput = document.getElementById('videoRank');
+    const saveVideoBtn = document.getElementById('saveVideoBtn');
+    const updateVideoBtn = document.getElementById('updateVideoBtn');
+    const deleteVideoBtn = document.getElementById('deleteVideoBtn');
+    const videoListDiv = document.getElementById('videoList');
+
+    function clearVideoForm() {
+        videoIdKeyInput.value = '';
+        videoTitleInput.value = '';
+        youtubeIdInput.value = '';
+        videoRankInput.value = '';
+        saveVideoBtn.style.display = 'inline-block';
+        updateVideoBtn.style.display = 'none';
+        deleteVideoBtn.style.display = 'none';
+        videoTitleInput.focus();
+    }
+
+    videoForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const title = videoTitleInput.value.trim();
+        const videoId = youtubeIdInput.value.trim(); // Asegúrate de que esto es el ID de YouTube
+        const rank = parseInt(videoRankInput.value);
+        const videoIdKey = videoIdKeyInput.value;
+
+        if (!title || !videoId || isNaN(rank)) {
+            alert('Por favor, completa todos los campos del video y asegúrate que el ranking sea un número.');
+            return;
+        }
+
+        if (videoIdKey) {
+            // Actualizar video existente
+            database.ref('top10videos/' + videoIdKey).update({
+                title: title,
+                videoId: videoId,
+                rank: rank
+            }).then(() => {
+                alert('Video actualizado con éxito!');
+                clearVideoForm();
+                // loadVideos(); // Ya se recarga con 'on' listener
+            }).catch(error => {
+                console.error("Error al actualizar video:", error);
+                alert('Error al actualizar video.');
+            });
+        } else {
+            // Guardar nuevo video
+            database.ref('top10videos').push({
+                title: title,
+                videoId: videoId,
+                rank: rank
+            }).then(() => {
+                alert('Video guardado con éxito!');
+                clearVideoForm();
+                // loadVideos(); // Ya se recarga con 'on' listener
+            }).catch(error => {
+                console.error("Error al guardar video:", error);
+                alert('Error al guardar video.');
+            });
+        }
+    });
+
+    updateVideoBtn.addEventListener('click', function() {
+        videoForm.dispatchEvent(new Event('submit'));
+    });
+
+    deleteVideoBtn.addEventListener('click', function() {
+        const videoIdKey = videoIdKeyInput.value;
+        if (videoIdKey && confirm('¿Estás seguro de que quieres eliminar este video?')) {
+            database.ref('top10videos/' + videoIdKey).remove()
+                .then(() => {
+                    alert('Video eliminado con éxito!');
+                    clearVideoForm();
+                    // loadVideos(); // Ya se recarga con 'on' listener
+                }).catch(error => {
+                    console.error("Error al eliminar video:", error);
+                    alert('Error al eliminar video.');
+                });
+        }
+    });
+
+    function loadVideos() {
+        videoListDiv.innerHTML = '<p class="no-data-message">Cargando videos...</p>';
+        database.ref('top10videos').orderByChild('rank').on('value', snapshot => {
+            videoListDiv.innerHTML = '';
+            if (!snapshot.exists() || snapshot.val() === null) {
+                videoListDiv.innerHTML = '<p class="no-data-message">No hay videos en el Top 10 disponibles.</p>';
+                return;
+            }
+            const videosData = snapshot.val();
+            const sortedVideos = [];
+            for (let key in videosData) {
+                if (videosData.hasOwnProperty(key)) {
+                    sortedVideos.push({ id: key, ...videosData[key] });
+                }
+            }
+            sortedVideos.sort((a, b) => a.rank - b.rank); // Ordenar por ranking
+
+            sortedVideos.forEach(videoItem => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'data-item';
+                itemDiv.innerHTML = `
+                    <div class="data-item-content">
+                        <h3>#${videoItem.rank} - ${videoItem.title}</h3>
+                        <p>ID YouTube: ${videoItem.videoId}</p>
+                    </div>
+                `;
+                itemDiv.addEventListener('click', () => {
+                    videoIdKeyInput.value = videoItem.id;
+                    videoTitleInput.value = videoItem.title;
+                    youtubeIdInput.value = videoItem.videoId;
+                    videoRankInput.value = videoItem.rank;
+                    saveVideoBtn.style.display = 'none';
+                    updateVideoBtn.style.display = 'inline-block';
+                    deleteVideoBtn.style.display = 'inline-block';
+                });
+                videoListDiv.appendChild(itemDiv);
+            });
+        });
+    }
+
+    // --- Funciones para Programas ---
+    const programForm = document.getElementById('programForm');
+    const programIdInput = document.getElementById('programId');
+    const programNameInput = document.getElementById('programName');
+    const programScheduleInput = document.getElementById('programSchedule');
+    const programDescriptionInput = document.getElementById('programDescription');
+    const saveProgramBtn = document.getElementById('saveProgramBtn');
+    const updateProgramBtn = document.getElementById('updateProgramBtn');
+    const deleteProgramBtn = document.getElementById('deleteProgramBtn');
+    const programListDiv = document.getElementById('programList');
+
+    function clearProgramForm() {
+        programIdInput.value = '';
+        programNameInput.value = '';
+        programScheduleInput.value = '';
+        programDescriptionInput.value = '';
+        saveProgramBtn.style.display = 'inline-block';
+        updateProgramBtn.style.display = 'none';
+        deleteProgramBtn.style.display = 'none';
+        programNameInput.focus();
+    }
+
+    programForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = programNameInput.value.trim();
+        const schedule = programScheduleInput.value.trim();
+        const description = programDescriptionInput.value.trim();
+        const programId = programIdInput.value;
+
+        if (!name || !schedule) {
+            alert('Por favor, completa el nombre y el horario del programa.');
+            return;
+        }
+
+        if (programId) {
+            // Actualizar programa existente
+            database.ref('programas/' + programId).update({
+                name: name,
+                schedule: schedule,
+                description: description
+            }).then(() => {
+                alert('Programa actualizado con éxito!');
+                clearProgramForm();
+                // loadPrograms(); // Ya se recarga con 'on' listener
+            }).catch(error => {
+                console.error("Error al actualizar programa:", error);
+                alert('Error al actualizar programa.');
+            });
+        } else {
+            // Guardar nuevo programa
+            database.ref('programas').push({
+                name: name,
+                schedule: schedule,
+                description: description
+            }).then(() => {
+                alert('Programa guardado con éxito!');
+                clearProgramForm();
+                // loadPrograms(); // Ya se recarga con 'on' listener
+            }).catch(error => {
+                console.error("Error al guardar programa:", error);
+                alert('Error al guardar programa.');
+            });
+        }
+    });
+
+    updateProgramBtn.addEventListener('click', function() {
+        programForm.dispatchEvent(new Event('submit'));
+    });
+
+    deleteProgramBtn.addEventListener('click', function() {
+        const programId = programIdInput.value;
+        if (programId && confirm('¿Estás seguro de que quieres eliminar este programa?')) {
+            database.ref('programas/' + programId).remove()
+                .then(() => {
+                    alert('Programa eliminado con éxito!');
+                    clearProgramForm();
+                    // loadPrograms(); // Ya se recarga con 'on' listener
+                }).catch(error => {
+                    console.error("Error al eliminar programa:", error);
+                    alert('Error al eliminar programa.');
+                });
+        }
+    });
+
+    function loadPrograms() {
+        programListDiv.innerHTML = '<p class="no-data-message">Cargando programas...</p>';
+        database.ref('programas').orderByChild('name').on('value', snapshot => {
+            programListDiv.innerHTML = '';
+            if (!snapshot.exists() || snapshot.val() === null) {
+                programListDiv.innerHTML = '<p class="no-data-message">No hay programas disponibles.</p>';
+                return;
+            }
+            const programsData = snapshot.val();
+            const sortedPrograms = [];
+            for (let key in programsData) {
+                if (programsData.hasOwnProperty(key)) {
+                    sortedPrograms.push({ id: key, ...programsData[key] });
+                }
+            }
+            sortedPrograms.sort((a, b) => a.name.localeCompare(b.name));
+
+            sortedPrograms.forEach(programItem => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'data-item';
+                itemDiv.innerHTML = `
+                    <div class="data-item-content">
+                        <h3>${programItem.name}</h3>
+                        <p>${programItem.schedule}</p>
+                    </div>
+                `;
+                itemDiv.addEventListener('click', () => {
+                    programIdInput.value = programItem.id;
+                    programNameInput.value = programItem.name;
+                    programScheduleInput.value = programItem.schedule;
+                    programDescriptionInput.value = programItem.description || '';
+                    saveProgramBtn.style.display = 'none';
+                    updateProgramBtn.style.display = 'inline-block';
+                    deleteProgramBtn.style.display = 'inline-block';
+                });
+                programListDiv.appendChild(itemDiv);
+            });
+        });
+    }
+
+    // --- Funciones para Features (Características) ---
+    const featureForm = document.getElementById('featureForm');
+    const featureIdInput = document.getElementById('featureId');
+    const featureNameInput = document.getElementById('featureName');
+    const featureOrderInput = document.getElementById('featureOrder');
+    const saveFeatureBtn = document.getElementById('saveFeatureBtn');
+    const updateFeatureBtn = document.getElementById('updateFeatureBtn');
+    const deleteFeatureBtn = document.getElementById('deleteFeatureBtn');
+    const featureListUl = document.getElementById('featureList');
+
+    function clearFeatureForm() {
+        featureIdInput.value = '';
+        featureNameInput.value = '';
+        featureOrderInput.value = '';
+        saveFeatureBtn.style.display = 'inline-block';
+        updateFeatureBtn.style.display = 'none';
+        deleteFeatureBtn.style.display = 'none';
+        featureNameInput.focus();
+    }
+
+    featureForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = featureNameInput.value.trim();
+        const order = parseInt(featureOrderInput.value);
+        const featureId = featureIdInput.value;
+
+        if (!name || isNaN(order)) {
+            alert('Por favor, completa el nombre y el orden de la característica.');
+            return;
+        }
+
+        if (featureId) {
+            // Actualizar característica existente
+            database.ref('features/' + featureId).update({
+                name: name,
+                order: order
+            }).then(() => {
+                alert('Característica actualizada con éxito!');
+                clearFeatureForm();
+                // loadFeatures(); // Ya se recarga con 'on' listener
+            }).catch(error => {
+                console.error("Error al actualizar característica:", error);
+                alert('Error al actualizar característica.');
+            });
+        } else {
+            // Guardar nueva característica
+            database.ref('features').push({
+                name: name,
+                order: order
+            }).then(() => {
+                alert('Característica guardada con éxito!');
+                clearFeatureForm();
+                // loadFeatures(); // Ya se recarga con 'on' listener
+            }).catch(error => {
+                console.error("Error al guardar característica:", error);
+                alert('Error al guardar característica.');
+            });
+        }
+    });
+
+    updateFeatureBtn.addEventListener('click', function() {
+        featureForm.dispatchEvent(new Event('submit'));
+    });
+
+    deleteFeatureBtn.addEventListener('click', function() {
+        const featureId = featureIdInput.value;
+        if (featureId && confirm('¿Estás seguro de que quieres eliminar esta característica?')) {
+            database.ref('features/' + featureId).remove()
+                .then(() => {
+                    alert('Característica eliminada con éxito!');
+                    clearFeatureForm();
+                    // loadFeatures(); // Ya se recarga con 'on' listener
+                }).catch(error => {
+                    console.error("Error al eliminar característica:", error);
+                    alert('Error al eliminar característica.');
+                });
+        }
+    });
+
+    function loadFeatures() {
+        featureListUl.innerHTML = '<p class="no-data-message">Cargando funciones...</p>';
+        database.ref('features').orderByChild('order').on('value', snapshot => {
+            featureListUl.innerHTML = '';
+            if (!snapshot.exists() || snapshot.val() === null) {
+                featureListUl.innerHTML = '<p class="no-data-message">No hay funciones destacadas disponibles.</p>';
+                return;
+            }
+            const featuresData = snapshot.val();
+            const sortedFeatures = [];
+            for (let key in featuresData) {
+                if (featuresData.hasOwnProperty(key)) {
+                    sortedFeatures.push({ id: key, ...featuresData[key] });
+                }
+            }
+            sortedFeatures.sort((a, b) => a.order - b.order); // Ordenar por orden
+
+            sortedFeatures.forEach(featureItem => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'data-item';
+                itemDiv.innerHTML = `
+                    <div class="data-item-content">
+                        <h3>${featureItem.name}</h3>
+                        <p>Orden: ${featureItem.order}</p>
+                    </div>
+                `;
+                itemDiv.addEventListener('click', () => {
+                    featureIdInput.value = featureItem.id;
+                    featureNameInput.value = featureItem.name;
+                    featureOrderInput.value = featureItem.order;
+                    saveFeatureBtn.style.display = 'none';
+                    updateFeatureBtn.style.display = 'inline-block';
+                    deleteFeatureBtn.style.display = 'inline-block';
+                });
+                featureListUl.appendChild(itemDiv);
+            });
+        });
+    }
+
+    // Cargar los datos de la pestaña activa por defecto al cargar la página
+    document.addEventListener('DOMContentLoaded', () => {
+        loadNews(); // Carga las noticias por defecto al iniciar
+    });
+
+  </script>
 </body>
 </html>
