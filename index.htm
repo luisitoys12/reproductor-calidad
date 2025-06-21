@@ -498,6 +498,27 @@
             </button>
         </div>
     </div>
+    <!-- === NUEVO: MODAL HISTORIAL DE CANCIONES === -->
+    <div id="historyModal" style="display:none;position:fixed;z-index:9999;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;">
+      <div style="background:#fff;color:#222;padding:27px 20px 20px 20px;border-radius:19px;max-width:370px;width:90vw;position:relative;">
+        <button style="position:absolute;top:14px;right:15px;font-size:1.4em;border:none;background:none;color:#222;cursor:pointer;">&times;</button>
+        <h2>Historial de canciones</h2>
+        <ul id="historial-list" style="max-height:330px;overflow:auto;padding-left:14px;"></ul>
+      </div>
+    </div>
+    <!-- === NUEVO: MODAL ACERCA DE === -->
+    <div id="aboutModal" style="display:none;position:fixed;z-index:9999;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;">
+      <div style="background:#fff;color:#222;padding:27px 20px 20px 20px;border-radius:19px;max-width:370px;width:90vw;position:relative;">
+        <button style="position:absolute;top:14px;right:15px;font-size:1.4em;border:none;background:none;color:#222;cursor:pointer;">&times;</button>
+        <h2>Acerca de EstacionKUSFM</h2>
+        <p>
+          EstacionKUSFM es una emisora online con 5 años al aire, transmitiendo música y entretenimiento para todos.<br><br>
+          <b>Acerca de ti:</b><br>
+          Gracias por ser parte de nuestra audiencia y comunidad musical.<br><br>
+          Esta página es propiedad de EstacionKUSMedios, pensada especialmente para EstacionKUSFM.
+        </p>
+      </div>
+    </div>
     <audio id="audio" preload="auto" crossorigin="anonymous"></audio>
     <script src="script.js"></script>
 </body>
