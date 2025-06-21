@@ -389,6 +389,7 @@
             <div class="song-title" id="song-title">Cargando...</div>
             <div class="artist-name" id="artist-name">Espere un momento</div>
             <div class="now-playing" id="now-playing-text">Actualmente escuchas 🎶</div>
+            <div class="listeners-count" id="listenersCount" style="margin-top:6px; font-size:0.9rem; color:#94a3b8;"></div>
         </div>
         <div class="controls">
             <button class="control-btn" id="prevBtn" disabled><i class="fas fa-step-backward"></i></button>
@@ -498,26 +499,40 @@
             </button>
         </div>
     </div>
-    <!-- === NUEVO: MODAL HISTORIAL DE CANCIONES === -->
-    <div id="historyModal" style="display:none;position:fixed;z-index:9999;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;">
-      <div style="background:#fff;color:#222;padding:27px 20px 20px 20px;border-radius:19px;max-width:370px;width:90vw;position:relative;">
-        <button style="position:absolute;top:14px;right:15px;font-size:1.4em;border:none;background:none;color:#222;cursor:pointer;">&times;</button>
-        <h2>Historial de canciones</h2>
-        <ul id="historial-list" style="max-height:330px;overflow:auto;padding-left:14px;"></ul>
-      </div>
+
+    <!-- Modal Historial de Canciones -->
+    <div id="modalHistory" style="display:none;position:fixed;z-index:9999;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;overflow-y:auto;">
+        <div class="panelbox" style="background:#fff;color:#222;padding:20px;border-radius:19px;max-width:480px;width:90vw;position:relative;">
+            <button class="modal-close" id="closeHistoryModal" style="position:absolute;top:14px;right:15px;font-size:1.4em;border:none;background:none;color:#222;cursor:pointer;">&times;</button>
+            <h2>Historial de Canciones</h2>
+            <div id="historyList" style="max-height:400px;overflow-y:auto;"></div>
+        </div>
     </div>
-    <!-- === NUEVO: MODAL ACERCA DE === -->
-    <div id="aboutModal" style="display:none;position:fixed;z-index:9999;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;">
-      <div style="background:#fff;color:#222;padding:27px 20px 20px 20px;border-radius:19px;max-width:370px;width:90vw;position:relative;">
-        <button style="position:absolute;top:14px;right:15px;font-size:1.4em;border:none;background:none;color:#222;cursor:pointer;">&times;</button>
-        <h2>Acerca de EstacionKUSFM</h2>
-        <p>
-          EstacionKUSFM es una emisora online con 5 años al aire, transmitiendo música y entretenimiento para todos.<br><br>
-          <b>Acerca de ti:</b><br>
-          Gracias por ser parte de nuestra audiencia y comunidad musical.<br><br>
-          Esta página es propiedad de EstacionKUSMedios, pensada especialmente para EstacionKUSFM.
-        </p>
-      </div>
+
+    <!-- Modal Acerca de -->
+    <div id="modalAbout" style="display:none;position:fixed;z-index:9999;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;overflow-y:auto;">
+        <div class="panelbox" style="background:#fff;color:#222;padding:20px;border-radius:19px;max-width:480px;width:90vw;position:relative;">
+            <button class="modal-close" id="closeAboutModal" style="position:absolute;top:14px;right:15px;font-size:1.4em;border:none;background:none;color:#222;cursor:pointer;">&times;</button>
+            <h2>Acerca de EstacionKUSFM</h2>
+            <p>EstacionKUSFM es una emisora online con 5 años al aire, transmitiendo música y entretenimiento para todos.</p>
+            <p><b>Gracias a ti:</b><br>Gracias por ser parte de nuestra audiencia y comunidad musical.</p>
+            <p>Esta página es propiedad de EstacionKUSMedios, pensada especialmente para EstacionKUSFM.</p>
+        </div>
+    </div>
+
+    <!-- Modal Compartir -->
+    <div id="modalShare" style="display:none;position:fixed;z-index:9999;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;overflow-y:auto;">
+        <div class="panelbox" style="background:#fff;color:#222;padding:20px;border-radius:19px;max-width:480px;width:90vw;position:relative;">
+            <button class="modal-close" id="closeShareModal" style="position:absolute;top:14px;right:15px;font-size:1.4em;border:none;background:none;color:#222;cursor:pointer;">&times;</button>
+            <h2>Compartir EKUSFM</h2>
+            <p>Comparte esta estación con tus amigos:</p>
+            <input type="text" readonly id="shareLinkInput" value="https://estacionkusmedios.com/#" style="width:100%;padding:8px;border:1px solid #ccc;border-radius:6px;" onclick="this.select();" />
+            <div style="margin-top: 12px; display: flex; gap: 10px; justify-content: center;">
+                <button id="copyLinkBtn" style="padding: 8px 14px; border: none; border-radius: 6px; background: #22d3ee; color: #222; cursor: pointer;">Copiar enlace</button>
+                <button id="shareFacebookBtn" style="padding: 8px 14px; border: none; border-radius: 6px; background: #3b5998; color: #fff; cursor: pointer;">Facebook</button>
+                <button id="shareWhatsAppBtn" style="padding: 8px 14px; border: none; border-radius: 6px; background: #25d366; color: #fff; cursor: pointer;">WhatsApp</button>
+            </div>
+        </div>
     </div>
     <audio id="audio" preload="auto" crossorigin="anonymous"></audio>
     <script src="script.js"></script>
