@@ -1,449 +1,354 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Noticias - EKUSFM</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: var(--primary-color);
-      color: var(--text-color);
-      margin: 0;
-      padding: 20px;
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 24px;
-    }
-    .news-item {
-      background: #1e293b;
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    }
-    .news-item h2 {
-      margin-top: 0;
-      color: #38bdf8;
-    }
-    .news-item p {
-      margin-bottom: 0;
-    }
-    .news-date {
-      font-size: 0.85rem;
-      color: #94a3b8;
-      margin-bottom: 8px;
-    }
-    /* Mini-player styles */
-    #mini-reproductor {
-      position: fixed;
-      top: 15px;
-      left: 15px;
-      width: 220px;
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px #0002;
-      z-index: 10000;
-      padding: 7px 10px 7px 10px;
-      display: flex;
-      align-items: center;
-    }
-    #mini-reproductor audio {
-      width: 100%;
-      height: 32px;
-    }
-    .mini-player {
-      position: fixed;
-      top: 15px;
-      left: 15px;
-      width: 280px;
-      background: url('https://images.pexels.com/photos/3082341/pexels-photo-3082341.jpeg') no-repeat center center;
-      background-size: cover;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px #0008;
-      z-index: 10000;
-      padding: 8px 12px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: #fff;
-      font-family: 'Poppins', Arial, sans-serif;
-      position: relative;
-      overflow: hidden;
-    }
-    .mini-player::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 0;
-      border-radius: 10px;
-    }
-    .mini-play-btn {
-      background: #22d3ee;
-      border: none;
-      border-radius: 50%;
-      width: 36px;
-      height: 36px;
-      color: #222;
-      font-size: 1.2rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1;
-      position: relative;
-    }
-    .mini-song-info {
-      flex-grow: 1;
-      overflow: hidden;
-      z-index: 1;
-      position: relative;
-    }
-    .mini-song-title {
-      font-weight: 600;
-      font-size: 0.9rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .mini-artist-name {
-      font-size: 0.8rem;
-      color: #38bdf8;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .mini-volume-control {
-      width: 70px;
-      cursor: pointer;
-      z-index: 1;
-      position: relative;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Noticias - EKUSFM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0V4LLanw2qksYuMGFQ+PzTM8tL3mQ1c6C4L2C6S9uF9bF5Z5l4L0x0t5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .news-item {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .news-item h2 {
+            margin-top: 0;
+            color: #38bdf8;
+        }
+        .news-item p {
+            margin-bottom: 0;
+        }
+        .news-date {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        /* Mini-player styles */
+        #mini-reproductor {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            width: 220px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px #0002;
+            z-index: 10000;
+            padding: 7px 10px 7px 10px;
+            display: flex;
+            align-items: center;
+        }
+        #mini-reproductor audio {
+            width: 100%;
+            height: 32px;
+        }
+        .mini-player {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            width: 280px;
+            background: url('https://images.pexels.com/photos/3082341/pexels-photo-3082341.jpeg') no-repeat center center;
+            background-size: cover;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px #0008;
+            z-index: 10000;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+            font-family: 'Poppins', Arial, sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+        .mini-player::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 0;
+            border-radius: 10px;
+        }
+        .mini-play-btn {
+            background: #22d3ee;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            color: #222;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            position: relative;
+        }
+        .mini-song-info {
+            flex-grow: 1;
+            overflow: hidden;
+            z-index: 1;
+            position: relative;
+        }
+        .mini-song-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .mini-artist-name {
+            font-size: 0.8rem;
+            color: #38bdf8;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .mini-volume-control {
+            width: 70px;
+            cursor: pointer;
+            z-index: 1;
+            position: relative;
+        }
+    </style>
 </head>
 <body>
-  <div id="mini-reproductor" class="mini-player">
-    <button id="playPauseMiniBtn" class="mini-play-btn" title="Play/Pause">
-      <i id="miniPlayIcon" class="fa-solid fa-play"></i>
-    </button>
-    <div class="mini-song-info">
-      <div id="miniSongTitle" class="mini-song-title">Cargando...</div>
-      <div id="miniArtistName" class="mini-artist-name"></div>
+    <div id="mini-reproductor" class="mini-player">
+        <button id="playPauseMiniBtn" class="mini-play-btn" title="Play/Pause">
+            <i id="miniPlayIcon" class="fa-solid fa-play"></i>
+        </button>
+        <div class="mini-song-info">
+            <div id="miniSongTitle" class="mini-song-title">Cargando...</div>
+            <div id="miniArtistName" class="mini-artist-name"></div>
+        </div>
+        <input type="range" id="miniVolumeControl" class="mini-volume-control" min="0" max="1" step="0.01" value="1" title="Volume" />
+        <audio id="audio-mini" preload="auto" crossorigin="anonymous"></audio>
     </div>
-    <input type="range" id="miniVolumeControl" class="mini-volume-control" min="0" max="1" step="0.01" value="1" title="Volume" />
-    <audio id="audio-mini" preload="auto" crossorigin="anonymous"></audio>
-  </div>
-  <h1>Noticias EKUSFM</h1>
-  <div id="news-container">
-    <p>Cargando noticias...</p>
-  </div>
+    <h1>Noticias EKUSFM</h1>
+    <div id="news-container">
+        <p>Cargando noticias...</p>
+    </div>
 
-  <!-- YouTube Top 10 Videos Section -->
-  <section id="youtube-videos" style="margin-top: 40px;">
-    <h2>Top 10 Canciones Más Escuchadas</h2>
-    <div id="videos-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;"></div>
-  </section>
+    <section id="youtube-videos" style="margin-top: 40px;">
+        <h2>Top 10 Canciones Más Escuchadas</h2>
+        <div id="videos-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;"></div>
+    </section>
 
-  <!-- Programas Section -->
-  <section id="programas" style="margin-top: 40px;">
-    <h2>Revive Nuestros Programas</h2>
-    <div id="programs-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;"></div>
-  </section>
+    <section id="programas" style="margin-top: 40px;">
+        <h2>Revive Nuestros Programas</h2>
+        <div id="programs-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;"></div>
+    </section>
 
-  <!-- Placeholder for other 10 features -->
-  <section id="other-features" style="margin-top: 40px;">
-    <h2>Otras Funciones Geniales</h2>
-    <ul id="features-list" style="list-style: disc inside; color: #38bdf8;"></ul>
-  </section>
+    <section id="other-features" style="margin-top: 40px;">
+        <h2>Otras Funciones Geniales</h2>
+        <ul id="features-list" style="list-style: disc inside; color: #38bdf8;"></ul>
+    </section>
 
-  <script>
-    // Your Firebase configuration
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_AUTH_DOMAIN",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_STORAGE_BUCKET",
-      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-      appId: "YOUR_APP_ID"
-    };
+    <script>
+        // *** TU CONFIGURACIÓN DE FIREBASE (PEGA TUS VALORES REALES AQUÍ) ***
+        const firebaseConfig = {
+            apiKey: "AIzaSyBHlQ6WQauQLTbvp_iHbkWZ8Bhv3fntSpM",
+            authDomain: "ekusfm-d1a9d.firebaseapp.com",
+            databaseURL: "https://ekusfm-d1a9d-default-rtdb.firebaseio.com",
+            projectId: "ekusfm-d1a9d",
+            storageBucket: "ekusfm-d1a9d.firebasestorage.app",
+            messagingSenderId: "849619346647",
+            appId: "1:849619346647:web:06559451c66950d9b03c92",
+            measurementId: "G-X59DPNG6N4"
+        };
 
-    // Initialize Firebase only if not already initialized
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
+        // Inicializa Firebase solo si no está ya inicializado
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
 
-    const auth = firebase.auth();
-    const db = firebase.firestore();
+        // Inicializa Realtime Database
+        const database = firebase.database();
 
-    const newsContainer = document.getElementById('news-container');
+        const newsContainer = document.getElementById('news-container');
+        const videosContainer = document.getElementById('videos-container');
+        const programsContainer = document.getElementById('programs-container');
+        const featuresList = document.getElementById('features-list');
 
-    function formatDate(timestamp) {
-      const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-      return date.toLocaleDateString('es-ES', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-    }
+        function formatDate(timestamp) {
+            // Realtime Database devuelve timestamps como números si no son de Firestore.
+            // Aseguramos que es un objeto Date.
+            const date = typeof timestamp === 'number' ? new Date(timestamp) : (timestamp.toDate ? timestamp.toDate() : new Date(timestamp));
+            return date.toLocaleDateString('es-ES', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
 
-    function renderNewsItem(doc) {
-      const data = doc.data();
-      const div = document.createElement('div');
-      div.className = 'news-item';
+        // Función para cargar noticias de Realtime Database
+        function loadNews() {
+            newsContainer.innerHTML = '<p>Cargando noticias...</p>';
+            database.ref('noticias').orderByChild('date').once('value')
+                .then(snapshot => {
+                    newsContainer.innerHTML = '';
+                    if (!snapshot.exists() || snapshot.val() === null) {
+                        newsContainer.innerHTML = '<p>No hay noticias disponibles.</p>';
+                        return;
+                    }
+                    const newsData = snapshot.val();
+                    const sortedNews = [];
+                    for (let key in newsData) {
+                        sortedNews.push({ id: key, ...newsData[key] });
+                    }
+                    // Ordenar por fecha en orden descendente (más reciente primero)
+                    sortedNews.sort((a, b) => (b.date || 0) - (a.date || 0));
 
-      const title = document.createElement('h2');
-      title.textContent = data.title || 'Sin título';
+                    sortedNews.forEach(item => {
+                        const div = document.createElement('div');
+                        div.className = 'news-item';
 
-      const date = document.createElement('div');
-      date.className = 'news-date';
-      date.textContent = data.date ? formatDate(data.date) : '';
+                        const title = document.createElement('h2');
+                        title.textContent = item.title || 'Sin título';
 
-      const content = document.createElement('p');
-      content.textContent = data.content || '';
+                        const date = document.createElement('div');
+                        date.className = 'news-date';
+                        date.textContent = item.date ? formatDate(item.date) : '';
 
-      div.appendChild(title);
-      div.appendChild(date);
-      div.appendChild(content);
+                        const content = document.createElement('p');
+                        content.textContent = item.content || '';
 
-      newsContainer.appendChild(div);
-    }
+                        div.appendChild(title);
+                        div.appendChild(date);
+                        div.appendChild(content);
 
-    function loadNews() {
-      newsContainer.innerHTML = '<p>Cargando noticias...</p>';
-      db.collection('noticias').orderBy('date', 'desc').get()
-        .then(snapshot => {
-          newsContainer.innerHTML = '';
-          if (snapshot.empty) {
-            newsContainer.innerHTML = '<p>No hay noticias disponibles.</p>';
-            return;
-          }
-          snapshot.forEach(doc => {
-            renderNewsItem(doc);
-          });
-        })
-        .catch(error => {
-          newsContainer.innerHTML = '<p>Error al cargar las noticias.</p>';
-          console.error('Error loading news:', error);
-        });
-    }
+                        newsContainer.appendChild(div);
+                    });
+                })
+                .catch(error => {
+                    newsContainer.innerHTML = '<p>Error al cargar las noticias.</p>';
+                    console.error('Error loading news:', error);
+                });
+        }
 
-    // Load YouTube videos from Firebase collection 'top10videos'
-    function loadYouTubeVideos() {
-      const container = document.getElementById('videos-container');
-      container.innerHTML = '<p>Cargando videos...</p>';
-      db.collection('top10videos').orderBy('rank').get()
-        .then(snapshot => {
-          container.innerHTML = '';
-          if (snapshot.empty) {
-            container.innerHTML = '<p>No hay videos disponibles.</p>';
-            return;
-          }
-          snapshot.forEach(doc => {
-            const data = doc.data();
-            const videoId = data.videoId;
-            const title = data.title || '';
-            const videoDiv = document.createElement('div');
-            videoDiv.style.borderRadius = '12px';
-            videoDiv.style.overflow = 'hidden';
-            videoDiv.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
-            videoDiv.innerHTML = `
-              <iframe width="100%" height="160" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
-              <p style="padding: 8px; margin: 0; color: #fff;">${title}</p>
-            `;
-            container.appendChild(videoDiv);
-          });
-        })
-        .catch(error => {
-          container.innerHTML = '<p>Error al cargar los videos.</p>';
-          console.error('Error loading videos:', error);
-        });
-    }
+        // Función para cargar videos de YouTube de Realtime Database
+        function loadYouTubeVideos() {
+            videosContainer.innerHTML = '<p>Cargando videos...</p>';
+            database.ref('top10videos').orderByChild('rank').once('value')
+                .then(snapshot => {
+                    videosContainer.innerHTML = '';
+                    if (!snapshot.exists() || snapshot.val() === null) {
+                        videosContainer.innerHTML = '<p>No hay videos disponibles.</p>';
+                        return;
+                    }
+                    const videosData = snapshot.val();
+                    const sortedVideos = [];
+                    for (let key in videosData) {
+                        sortedVideos.push({ id: key, ...videosData[key] });
+                    }
+                    // Ordenar por rank si es necesario, si ya están ordenados en la DB por child('rank'), esto es redundante pero seguro.
+                    sortedVideos.sort((a, b) => (a.rank || 0) - (b.rank || 0));
 
-    // Load programs from Firebase collection 'programas'
-    function loadPrograms() {
-      const container = document.getElementById('programs-container');
-      container.innerHTML = '<p>Cargando programas...</p>';
-      db.collection('programas').orderBy('name').get()
-        .then(snapshot => {
-          container.innerHTML = '';
-          if (snapshot.empty) {
-            container.innerHTML = '<p>No hay programas disponibles.</p>';
-            return;
-          }
-          snapshot.forEach(doc => {
-            const data = doc.data();
-            const name = data.name || '';
-            const schedule = data.schedule || '';
-            const description = data.description || '';
-            const card = document.createElement('div');
-            card.style.background = '#1e293b';
-            card.style.borderRadius = '12px';
-            card.style.padding = '16px';
-            card.style.color = '#fff';
-            card.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
-            card.innerHTML = `
-              <h3>${name}</h3>
-              <p><strong>Horario:</strong> ${schedule}</p>
-              <p>${description}</p>
-            `;
-            container.appendChild(card);
-          });
-        })
-        .catch(error => {
-          container.innerHTML = '<p>Error al cargar los programas.</p>';
-          console.error('Error loading programs:', error);
-        });
-    }
+                    sortedVideos.forEach(item => {
+                        const videoId = item.videoId;
+                        const title = item.title || '';
+                        const videoDiv = document.createElement('div');
+                        videoDiv.style.borderRadius = '12px';
+                        videoDiv.style.overflow = 'hidden';
+                        videoDiv.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
+                        videoDiv.innerHTML = `
+                            <iframe width="100%" height="160" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <p style="padding: 8px; margin: 0; color: #fff;">${title}</p>
+                        `;
+                        videosContainer.appendChild(videoDiv);
+                    });
+                })
+                .catch(error => {
+                    videosContainer.innerHTML = '<p>Error al cargar los videos.</p>';
+                    console.error('Error loading videos:', error);
+                });
+        }
 
-    // Load other 10 features from Firebase collection 'features'
-    function loadOtherFeatures() {
-      const list = document.getElementById('features-list');
-      list.innerHTML = '<li>Cargando funciones...</li>';
-      db.collection('features').orderBy('order').get()
-        .then(snapshot => {
-          list.innerHTML = '';
-          if (snapshot.empty) {
-            list.innerHTML = '<li>No hay funciones disponibles.</li>';
-            return;
-          }
-          snapshot.forEach(doc => {
-            const data = doc.data();
-            const featureName = data.name || '';
-            const li = document.createElement('li');
-            li.textContent = featureName;
-            list.appendChild(li);
-          });
-        })
-        .catch(error => {
-          list.innerHTML = '<li>Error al cargar las funciones.</li>';
-          console.error('Error loading features:', error);
-        });
-    }
+        // Función para cargar programas de Realtime Database
+        function loadPrograms() {
+            programsContainer.innerHTML = '<p>Cargando programas...</p>';
+            database.ref('programas').orderByChild('name').once('value')
+                .then(snapshot => {
+                    programsContainer.innerHTML = '';
+                    if (!snapshot.exists() || snapshot.val() === null) {
+                        programsContainer.innerHTML = '<p>No hay programas disponibles.</p>';
+                        return;
+                    }
+                    const programsData = snapshot.val();
+                    const sortedPrograms = [];
+                    for (let key in programsData) {
+                        sortedPrograms.push({ id: key, ...programsData[key] });
+                    }
+                    sortedPrograms.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
 
-    // Authentication UI elements
-    const loginContainer = document.getElementById('login-container');
-    const userInfoContainer = document.getElementById('user-info');
-    const loginForm = document.getElementById('login-form');
-    const logoutButton = document.getElementById('logout-button');
+                    sortedPrograms.forEach(item => {
+                        const name = item.name || '';
+                        const schedule = item.schedule || '';
+                        const description = item.description || '';
+                        const card = document.createElement('div');
+                        card.style.background = '#1e293b';
+                        card.style.borderRadius = '12px';
+                        card.style.padding = '16px';
+                        card.style.color = '#fff';
+                        card.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
+                        card.innerHTML = `
+                            <h3>${name}</h3>
+                            <p><strong>Horario:</strong> ${schedule}</p>
+                            <p>${description}</p>
+                        `;
+                        programsContainer.appendChild(card);
+                    });
+                })
+                .catch(error => {
+                    programsContainer.innerHTML = '<p>Error al cargar los programas.</p>';
+                    console.error('Error loading programs:', error);
+                });
+        }
 
-    // Show or hide UI based on auth state
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        loginContainer.style.display = 'none';
-        userInfoContainer.style.display = 'block';
-        userInfoContainer.textContent = `Bienvenido, ${user.email}`;
-      } else {
-        loginContainer.style.display = 'block';
-        userInfoContainer.style.display = 'none';
-        userInfoContainer.textContent = '';
-      }
-    });
+        // Función para cargar otras 10 características de Realtime Database
+        function loadOtherFeatures() {
+            featuresList.innerHTML = '<li>Cargando funciones...</li>';
+            database.ref('features').orderByChild('order').once('value')
+                .then(snapshot => {
+                    featuresList.innerHTML = '';
+                    if (!snapshot.exists() || snapshot.val() === null) {
+                        featuresList.innerHTML = '<li>No hay funciones disponibles.</li>';
+                        return;
+                    }
+                    const featuresData = snapshot.val();
+                    const sortedFeatures = [];
+                    for (let key in featuresData) {
+                        sortedFeatures.push({ id: key, ...featuresData[key] });
+                    }
+                    sortedFeatures.sort((a, b) => (a.order || 0) - (b.order || 0));
 
-    // Handle login form submission
-    loginForm.addEventListener('submit', e => {
-      e.preventDefault();
-      const email = loginForm.email.value;
-      const password = loginForm.password.value;
-      auth.signInWithEmailAndPassword(email, password)
-        .then(() => {
-          loginForm.reset();
-        })
-        .catch(error => {
-          alert('Error al iniciar sesión: ' + error.message);
-        });
-    });
-
-    // Handle logout button click
-    logoutButton.addEventListener('click', () => {
-      auth.signOut();
-    });
-
-    // Initialize all
-    loadNews();
-    loadYouTubeVideos();
-    loadPrograms();
-    loadOtherFeatures();
-  </script>
-</body>
-</html>
-
-  <script>
-    // Your Firebase configuration
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_AUTH_DOMAIN",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_STORAGE_BUCKET",
-      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-      appId: "YOUR_APP_ID"
-    };
-
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-
-    const newsContainer = document.getElementById('news-container');
-    const db = firebase.firestore();
-
-    function formatDate(timestamp) {
-      const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-      return date.toLocaleDateString('es-ES', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-    }
-
-    function renderNewsItem(doc) {
-      const data = doc.data();
-      const div = document.createElement('div');
-      div.className = 'news-item';
-
-      const title = document.createElement('h2');
-      title.textContent = data.title || 'Sin título';
-
-      const date = document.createElement('div');
-      date.className = 'news-date';
-      date.textContent = data.date ? formatDate(data.date) : '';
-
-      const content = document.createElement('p');
-      content.textContent = data.content || '';
-
-      div.appendChild(title);
-      div.appendChild(date);
-      div.appendChild(content);
-
-      newsContainer.appendChild(div);
-    }
-
-    function loadNews() {
-      newsContainer.innerHTML = '<p>Cargando noticias...</p>';
-      db.collection('noticias').orderBy('date', 'desc').get()
-        .then(snapshot => {
-          newsContainer.innerHTML = '';
-          if (snapshot.empty) {
-            newsContainer.innerHTML = '<p>No hay noticias disponibles.</p>';
-            return;
-          }
-          snapshot.forEach(doc => {
-            renderNewsItem(doc);
-          });
-        })
-        .catch(error => {
-          newsContainer.innerHTML = '<p>Error al cargar las noticias.</p>';
-          console.error('Error loading news:', error);
-        });
-    }
-
-    loadNews();
-  </script>
-</body>
-</html>
+                    sortedFeatures.forEach(item => {
+                        const featureName = item.name || '';
+                        const li = document.createElement('li');
+                        li.textContent = featureName;
+                        featuresList.appendChild(li);
+                    });
+                })
+                .catch(error => {
+                    featuresList.innerHTML = '<li>Error al cargar
