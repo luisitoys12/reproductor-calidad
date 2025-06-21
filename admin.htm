@@ -520,7 +520,12 @@
                     li.innerHTML = `
                         <span><strong>${newsItem.title}</strong> (${formattedDate})</span>
                         <div class="item-buttons">
-                            <button class="edit-btn" data-id="${newsItem.id}" data-title="${newsItem.title}" data-content="${newsItem.content}" data-imageurl="${newsItem.imageUrl || ''}">Editar</button>
+                            <button class="edit-btn" 
+                                    data-id="${newsItem.id}" 
+                                    data-title="${newsItem.title}" 
+                                    data-content="${newsItem.content}" 
+                                    data-imageurl="${newsItem.imageUrl || ''}"
+                            >Editar</button>
                             <button class="delete-btn" data-id="${newsItem.id}">Eliminar</button>
                         </div>
                     `;
@@ -597,11 +602,13 @@
                 currentVideosData.sort((a, b) => a.rank - b.rank); 
                 
                 // Asignar ranks consecutivos y actualizarlos en DB si es necesario
+                // Esto asegura que los ranks siempre sean 1, 2, 3... sin huecos
                 let rankChanged = false;
                 currentVideosData.forEach((item, index) => {
                     const newRank = index + 1;
                     if (item.rank !== newRank) {
                         item.rank = newRank;
+                        // Solo actualizamos en DB si el rank realmente cambió para evitar escrituras innecesarias
                         database.ref(`top10videos/${item.id}/rank`).set(newRank);
                         rankChanged = true;
                     }
@@ -656,11 +663,20 @@
             const videoId = document.getElementById('youtubeId').value;
             const votes = parseInt(document.getElementById('videoVotes').value);
 
+            let newRank;
+            if (id) {
+                // Si es una edición, mantener el rank actual del video
+                newRank = currentVideosData.find(v => v.id === id)?.rank;
+            } else {
+                // Si es un nuevo video, asignarle el siguiente rank disponible
+                newRank = currentVideosData.length > 0 ? Math.max(...currentVideosData.map(v => v.rank)) + 1 : 1;
+            }
+
             const videoItem = {
                 title: title,
                 videoId: videoId,
                 votes: votes,
-                rank: id ? currentVideosData.find(v => v.id === id)?.rank : (currentVideosData.length > 0 ? Math.max(...currentVideosData.map(v => v.rank)) + 1 : 1) // Asigna el siguiente rank si es nuevo
+                rank: newRank 
             };
 
             if (id) {
