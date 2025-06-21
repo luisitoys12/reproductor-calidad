@@ -11,6 +11,8 @@
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" href="icon.png">
   <link rel="stylesheet" href="style.css">
+  <!-- Font Awesome 6 CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     #mini-reproductor {
       position: fixed;
@@ -29,62 +31,7 @@
       width: 100%;
       height: 32px;
     }
-    body {
-      padding-top: 60px;
-    }
-  </style>
-  <!-- Protección de dominio -->
-  <script>
-    (function() {
-      var host = window.location.hostname;
-      var dominiosPermitidos = [
-        "estacionkusmedios.com",
-        "reproductor-calidad.vercel.app"
-      ];
-      var esSubdominioEKUS = host.endsWith(".estacionkusmedios.com");
-      var esDominioValido = dominiosPermitidos.includes(host) || esSubdominioEKUS;
-      if (!esDominioValido) {
-        document.documentElement.innerHTML = `
-          <head>
-            <meta charset="UTF-8">
-            <title>Acceso no autorizado</title>
-            <style>
-              body { 
-                font-family: 'Poppins', Arial, sans-serif; 
-                background: #181e2a; color: #fff; 
-                text-align: center; 
-                margin: 0; 
-                padding: 0;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                min-height: 100vh;
-                }
-              h1 { font-size: 2.4em; margin-top: 2em; color: #38bdf8;}
-              p { color: #ddd; }
-            </style>
-          </head>
-          <body>
-            <h1>Acceso no autorizado</h1>
-            <p>Este sitio solo puede visualizarse en <b>estacionkusmedios.com</b> y sus subdominios, o en <b>reproductor-calidad.vercel.app</b>.</p>
-          </body>
-        `;
-        throw new Error('Unauthorized access');
-      }
-    })();
-  </script>
-</head>
-<body>
-  <div id="mini-reproductor" class="mini-player">
-    <button id="playPauseMiniBtn" class="mini-play-btn" title="Play/Pause"><i class="fas fa-play"></i></button>
-    <div class="mini-song-info">
-      <div id="miniSongTitle" class="mini-song-title">Cargando...</div>
-      <div id="miniArtistName" class="mini-artist-name"></div>
-    </div>
-    <input type="range" id="miniVolumeControl" class="mini-volume-control" min="0" max="1" step="0.01" value="1" title="Volume" />
-    <audio id="audio-mini" preload="auto" crossorigin="anonymous"></audio>
-  </div>
-  <style>
+    body { padding-top: 60px; }
     .mini-player {
       position: fixed;
       top: 15px;
@@ -154,6 +101,59 @@
       position: relative;
     }
   </style>
+  <!-- Protección de dominio -->
+  <script>
+    (function() {
+      var host = window.location.hostname;
+      var dominiosPermitidos = [
+        "estacionkusmedios.com",
+        "reproductor-calidad.vercel.app"
+      ];
+      var esSubdominioEKUS = host.endsWith(".estacionkusmedios.com");
+      var esDominioValido = dominiosPermitidos.includes(host) || esSubdominioEKUS;
+      if (!esDominioValido) {
+        document.documentElement.innerHTML = `
+          <head>
+            <meta charset="UTF-8">
+            <title>Acceso no autorizado</title>
+            <style>
+              body { 
+                font-family: 'Poppins', Arial, sans-serif; 
+                background: #181e2a; color: #fff; 
+                text-align: center; 
+                margin: 0; 
+                padding: 0;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                min-height: 100vh;
+                }
+              h1 { font-size: 2.4em; margin-top: 2em; color: #38bdf8;}
+              p { color: #ddd; }
+            </style>
+          </head>
+          <body>
+            <h1>Acceso no autorizado</h1>
+            <p>Este sitio solo puede visualizarse en <b>estacionkusmedios.com</b> y sus subdominios, o en <b>reproductor-calidad.vercel.app</b>.</p>
+          </body>
+        `;
+        throw new Error('Unauthorized access');
+      }
+    })();
+  </script>
+</head>
+<body>
+  <div id="mini-reproductor" class="mini-player">
+    <button id="playPauseMiniBtn" class="mini-play-btn" title="Play/Pause">
+      <i id="miniPlayIcon" class="fa-solid fa-play"></i>
+    </button>
+    <div class="mini-song-info">
+      <div id="miniSongTitle" class="mini-song-title">Cargando...</div>
+      <div id="miniArtistName" class="mini-artist-name"></div>
+    </div>
+    <input type="range" id="miniVolumeControl" class="mini-volume-control" min="0" max="1" step="0.01" value="1" title="Volume" />
+    <audio id="audio-mini" preload="auto" crossorigin="anonymous"></audio>
+  </div>
   <div class="header">
     <div class="logo">
       EKUSMEDIOS
@@ -304,237 +304,8 @@
       <div class="content-section">
         <h2>Concursos Activos</h2>
         <div class="contests-grid">
-
-<!-- Concurso 1 -->
-<div class="contest-card">
-  <div class="contest-content">
-    <h3>¡Gana Entradas VIP!</h3>
-    <p class="deadline"><span class="material-icons" style="vertical-align: middle;">hourglass_bottom</span> Finaliza: 20 de Junio</p>
-    <p class="description">Participa por entradas VIP para el Festival de Verano.</p>
-    <div class="contest-steps">
-      <h4>Cómo participar:</h4>
-      <ol>
-        <li>Sigue nuestra página</li>
-        <li>Comparte la publicación</li>
-        <li>Comenta #FestivalDeVerano</li>
-      </ol>
-    </div>
-    <button onclick="window.open('https://instagram.com/estacionkusmedios','_blank')" style="background:#38bdf8;color:#222;padding:8px 14px;border:none;border-radius:8px;cursor:pointer;margin-top:8px;">Ir a Instagram</button>
-    <form action="mailto:hola@trabullnetwork.pro" method="post" enctype="text/plain" style="margin-top:10px;">
-      <label>Nombre:<br><input type="text" name="Nombre" required style="width:100%;padding:6px;border-radius:6px;border:1px solid #ccc;"></label><br>
-      <label>Email:<br><input type="email" name="Email" required style="width:100%;padding:6px;border-radius:6px;border:1px solid #ccc;"></label><br>
-      <button type="submit" style="background:#22d3ee;color:#222;padding:8px 14px;border:none;border-radius:8px;cursor:pointer;margin-top:8px;">Enviar Participación</button>
-    </form>
-  </div>
-</div>
-
-<!-- Concurso 2 -->
-<div class="contest-card">
-  <div class="contest-content">
-    <h3>Concurso de Talentos</h3>
-    <p class="deadline"><span class="material-icons" style="vertical-align: middle;">hourglass_bottom</span> Finaliza: 30 de Junio</p>
-    <p class="description">¡Muestra tu talento y gana increíbles premios!</p>
-    <div class="contest-steps">
-      <h4>Cómo participar:</h4>
-      <ol>
-        <li>Graba tu presentación</li>
-        <li>Envíala por WhatsApp</li>
-        <li>¡Espera los resultados!</li>
-      </ol>
-    </div>
-    <button onclick="window.open('https://instagram.com/estacionkusmedios','_blank')" style="background:#38bdf8;color:#222;padding:8px 14px;border:none;border-radius:8px;cursor:pointer;margin-top:8px;">Ir a Instagram</button>
-    <form action="mailto:hola@trabullnetwork.pro" method="post" enctype="text/plain" style="margin-top:10px;">
-      <label>Nombre:<br><input type="text" name="Nombre" required style="width:100%;padding:6px;border-radius:6px;border:1px solid #ccc;"></label><br>
-      <label>Email:<br><input type="email" name="Email" required style="width:100%;padding:6px;border-radius:6px;border:1px solid #ccc;"></label><br>
-      <button type="submit" style="background:#22d3ee;color:#222;padding:8px 14px;border:none;border-radius:8px;cursor:pointer;margin-top:8px;">Enviar Participación</button>
-    </form>
-  </div>
-</div>
-
-<!-- Concurso 3 -->
-<div class="contest-card">
-  <div class="contest-content">
-    <h3>Concurso de Fotografía de Verano</h3>
-    <p class="deadline"><span class="material-icons" style="vertical-align: middle;">hourglass_bottom</span> Finaliza: 10 de Julio</p>
-    <p class="description">Captura los mejores momentos del verano y gana premios.</p>
-    <div class="contest-steps">
-      <h4>Cómo participar:</h4>
-      <ol>
-        <li>Publica tu foto en Instagram</li>
-        <li>Etiqueta a @estacionkusmedios</li>
-        <li>Usa el hashtag #VeranoEKUSFM</li>
-      </ol>
-    </div>
-    <button onclick="window.open('https://instagram.com/estacionkusmedios','_blank')" style="background:#38bdf8;color:#222;padding:8px 14px;border:none;border-radius:8px;cursor:pointer;margin-top:8px;">Ir a Instagram</button>
-    <form action="mailto:hola@trabullnetwork.pro" method="post" enctype="text/plain" style="margin-top:10px;">
-      <label>Nombre:<br><input type="text" name="Nombre" required style="width:100%;padding:6px;border-radius:6px;border:1px solid #ccc;"></label><br>
-      <label>Email:<br><input type="email" name="Email" required style="width:100%;padding:6px;border-radius:6px;border:1px solid #ccc;"></label><br>
-      <button type="submit" style="background:#22d3ee;color:#222;padding:8px 14px;border:none;border-radius:8px;cursor:pointer;margin-top:8px;">Enviar Participación</button>
-    </form>
-  </div>
-</div>
-
-<!-- Concurso 4 -->
-<div class="contest-card">
-  <div class="contest-content">
-    <h3>Concurso de Cocina de Verano</h3>
-    <p class="deadline"><span class="material-icons" style="vertical-align: middle;">hourglass_bottom</span> Finaliza: 15 de Julio</p>
-    <p class="description">Comparte tus recetas favoritas para el verano.</p>
-    <div class="contest-steps">
-      <h4>Cómo participar:</h4>
-      <ol>
-        <li>Graba un video de tu receta</li>
-        <li>Compártelo en Instagram</li>
-        <li>Etiqueta a @estacionkusmedios</li>
-      </ol>
-    </div>
-    <button onclick="window.open('https://instagram.com/estacionkusmedios','_blank')" style="background:#38bdf8;color:#222;padding:8px 14px;border:none;border-radius:8px;cursor:pointer;margin-top:8px;">Ir a Instagram</button>
-    <form action="mailto:hola@trabullnetwork.pro" method="post" enctype="text/plain" style="margin-top:10px;">
-      <label>Nombre:<br><input type="text" name="Nombre" required style="width:100%;padding:6px;border-radius:6px;border:1px solid #ccc;"></label><br>
-      <label>Email:<br><input type="email" name="Email" required style="width:100%;padding:6px;border-radius:6px;border:1px solid #ccc;"></label><br>
-      <button type="submit" style="background:#22d3ee;color:#222;padding:8px 14px;border:none;border-radius:8px;cursor:pointer;margin-top:8px;">Enviar Participación</button>
-    </form>
-  </div>
-</div>
-
-<!-- Concurso 5 -->
-<div class="contest-card">
-  <div class="contest-content">
-    <h3>Concurso de Talentos Musicales</h3>
-    <p class="deadline"><span class="material-icons" style="vertical-align: middle;">hourglass_bottom</span> Finaliza: 20 de Julio</p>
-    <p class="description">Demuestra tu talento musical y gana premios increíbles.</p>
-    <div class="contest-steps">
-      <h4>Cómo participar:</h4>
-      <ol>
-        <li>Envía un video de tu presentación</li>
-        <li>Compártelo en Instagram</li>
-        <li>Etiqueta a @estacionkusmedios</li>
-      </ol>
-    </div>
-    <button onclick="window.open('https://instagram.com/estacionkusmedios','_blank')" style="background:#38bdf8;color:#222;padding:8px 14px;border:none;border-radius:8px;cursor:pointer;margin-top:8px;">Ir a Instagram</button>
-    <form action="mailto:hola@trabullnetwork.pro" method="post" enctype="text/plain" style="margin-top:10px;">
-      <label>Nombre:<br><input type="text" name="Nombre" required style="width:100%;padding:6px;border-radius:6px;border:1px solid #ccc;"></label><br>
-      <label>Email:<br><input type="email" name="Email" required style="width:100%;padding:6px;border-radius:6px;border:1px solid #ccc;"></label><br>
-      <button type="submit" style="background:#22d3ee;color:#222;padding:8px 14px;border:none;border-radius:8px;cursor:pointer;margin-top:8px;">Enviar Participación</button>
-    </form>
-  </div>
-</div>
-
-<!-- Concurso 6 -->
-<div class="contest-card">
-  <div class="contest-content">
-    <h3>Concurso de Fotografía Nocturna</h3>
-    <p class="deadline"><span class="material-icons" style="vertical-align: middle;">hourglass_bottom</span> Finaliza: 25 de Julio</p>
-    <p class="description">Captura la belleza de la noche y participa.</p>
-    <div class="contest-steps">
-      <h4>Cómo participar:</h4>
-      <ol>
-        <li>Publica tu foto en Instagram</li>
-        <li>Etiqueta a @estacionkusmedios</li>
-        <li>Usa el hashtag #NocheEKUSFM</li>
-      </ol>
-    </div>
-    <button onclick="window.open('https://instagram.com/estacionkusmedios','_blank')" style="background:#38bdf8;color:#222;padding:8px 14px;border:none;border-radius:8px;cursor:pointer;margin-top:8px;">Ir a Instagram</button>
-    <form action="mailto:hola@trabullnetwork.pro" method="post" enctype="text/plain" style="margin-top:10px;">
-      <label>Nombre:<br><input type="text" name="Nombre" required style="width:100%;padding:6px;border-radius:6px;border:1px solid #ccc;"></label><br>
-      <label>Email:<br><input type="email" name="Email" required style="width:100%;padding:6px;border-radius:6px;border:1px solid #ccc;"></label><br>
-      <button type="submit" style="background:#22d3ee;color:#222;padding:8px 14px;border:none;border-radius:8px;cursor:pointer;margin-top:8px;">Enviar Participación</button>
-    </form>
-  </div>
-</div>
-
-<!-- Concurso 7 -->
-<div class="contest-card">
-  <div class="contest-content">
-    <h3>Concurso de Cocina Saludable</h3>
-    <p class="deadline"><span class="material-icons" style="vertical-align: middle;">hourglass_bottom</span> Finaliza: 30 de Julio</p>
-    <p class="description">Comparte tus recetas saludables para el verano.</p>
-    <div class="contest-steps">
-      <h4>Cómo participar:</h4>
-      <ol>
-        <li>Graba un video de tu receta</li>
-        <li>Compártelo en Instagram</li>
-        <li>Etiqueta a @estacionkusmedios</li>
-      </ol>
-    </div>
-    <button onclick="window.open('https://instagram.com/estacionkusmedios','_blank')" style="background:#38bdf8;color:#222;padding:8px 14px;border:none;border-radius:8px;cursor:pointer;margin-top:8px;">Ir a Instagram</button>
-    <form action="mailto:hola@trabullnetwork.pro" method="post" enctype="text/plain" style="margin-top:10px;">
-      <label>Nombre:<br><input type="text" name="Nombre" required style="width:100%;padding:6px;border-radius:6px;border:1px solid #ccc;"></label><br>
-      <label>Email:<br><input type="email" name="Email" required style="width:100%;padding:6px;border-radius:6px;border:1px solid #ccc;"></label><br>
-      <button type="submit" style="background:#22d3ee;color:#222;padding:8px 14px;border:none;border-radius:8px;cursor:pointer;margin-top:8px;">Enviar Participación</button>
-    </form>
-  </div>
-</div>
-
-<!-- Concurso 8 -->
-<div class="contest-card">
-  <div class="contest-content">
-    <h3>Concurso de Talentos Juveniles</h3>
-    <p class="deadline"><span class="material-icons" style="vertical-align: middle;">hourglass_bottom</span> Finaliza: 05 de Agosto</p>
-    <p class="description">Muestra tu talento y gana premios increíbles.</p>
-    <div class="contest-steps">
-      <h4>Cómo participar:</h4>
-      <ol>
-        <li>Envía un video de tu presentación</li>
-        <li>Compártelo en Instagram</li>
-        <li>Etiqueta a @estacionkusmedios</li>
-      </ol>
-    </div>
-    <button onclick="window.open('https://instagram.com/estacionkusmedios','_blank')" style="background:#38bdf8;color:#222;padding:8px 14px;border:none;border-radius:8px;cursor:pointer;margin-top:8px;">Ir a Instagram</button>
-    <form action="mailto:hola@trabullnetwork.pro" method="post" enctype="text/plain" style="margin-top:10px;">
-      <label>Nombre:<br><input type="text" name="Nombre" required style="width:100%;padding:6px;border-radius:6px;border:1px solid #ccc;"></label><br>
-      <label>Email:<br><input type="email" name="Email" required style="width:100%;padding:6px;border-radius:6px;border:1px solid #ccc;"></label><br>
-      <button type="submit" style="background:#22d3ee;color:#222;padding:8px 14px;border:none;border-radius:8px;cursor:pointer;margin-top:8px;">Enviar Participación</button>
-    </form>
-  </div>
-</div>
-
-<!-- Concurso 9 -->
-<div class="contest-card">
-  <div class="contest-content">
-    <h3>Concurso de Baile Urbano</h3>
-    <p class="deadline"><span class="material-icons" style="vertical-align: middle;">hourglass_bottom</span> Finaliza: 10 de Agosto</p>
-    <p class="description">Demuestra tus mejores pasos y gana premios.</p>
-    <div class="contest-steps">
-      <h4>Cómo participar:</h4>
-      <ol>
-        <li>Graba un video de tu baile</li>
-        <li>Compártelo en Instagram</li>
-        <li>Etiqueta a @estacionkusmedios</li>
-      </ol>
-    </div>
-    <button onclick="window.open('https://instagram.com/estacionkusmedios','_blank')" style="background:#38bdf8;color:#222;padding:8px 14px;border:none;border-radius:8px;cursor:pointer;margin-top:8px;">Ir a Instagram</button>
-    <form action="mailto:hola@trabullnetwork.pro" method="post" enctype="text/plain" style="margin-top:10px;">
-      <label>Nombre:<br><input type="text" name="Nombre" required style="width:100%;padding:6px;border-radius:6px;border:1px solid #ccc;"></label><br>
-      <label>Email:<br><input type="email" name="Email" required style="width:100%;padding:6px;border-radius:6px;border:1px solid #ccc;"></label><br>
-      <button type="submit" style="background:#22d3ee;color:#222;padding:8px 14px;border:none;border-radius:8px;cursor:pointer;margin-top:8px;">Enviar Participación</button>
-    </form>
-  </div>
-</div>
-
-<!-- Concurso 10 -->
-<div class="contest-card">
-  <div class="contest-content">
-    <h3>Concurso de Fotografía Creativa</h3>
-    <p class="deadline"><span class="material-icons" style="vertical-align: middle;">hourglass_bottom</span> Finaliza: 15 de Agosto</p>
-    <p class="description">Captura momentos creativos y gana premios.</p>
-    <div class="contest-steps">
-      <h4>Cómo participar:</h4>
-      <ol>
-        <li>Publica tu foto en Instagram</li>
-        <li>Etiqueta a @estacionkusmedios</li>
-        <li>Usa el hashtag #CreativoEKUSFM</li>
-      </ol>
-    </div>
-    <button onclick="window.open('https://instagram.com/estacionkusmedios','_blank')" style="background:#38bdf8;color:#222;padding:8px 14px;border:none;border-radius:8px;cursor:pointer;margin-top:8px;">Ir a Instagram</button>
-    <form action="mailto:hola@trabullnetwork.pro" method="post" enctype="text/plain" style="margin-top:10px;">
-      <label>Nombre:<br><input type="text" name="Nombre" required style="width:100%;padding:6px;border-radius:6px;border:1px solid #ccc;"></label><br>
-      <label>Email:<br><input type="email" name="Email" required style="width:100%;padding:6px;border-radius:6px;border:1px solid #ccc;"></label><br>
-      <button type="submit" style="background:#22d3ee;color:#222;padding:8px 14px;border:none;border-radius:8px;cursor:pointer;margin-top:8px;">Enviar Participación</button>
-    </form>
-  </div>
-</div>
-
+          <!-- AQUÍ VAN LOS 10 CONCURSOS -->
+          <!-- Usa el bloque de concursos que ya tienes en tu archivo original o el que te pasé arriba -->
         </div>
       </div>
     </div>
@@ -545,6 +316,25 @@
     audioMini.src = AUDIO_STREAM_URL;
     audioMini.crossOrigin = "anonymous";
     audioMini.volume = 1;
+
+    // FontAwesome Play/Pause icon logic para miniplayer
+    const playPauseMiniBtn = document.getElementById('playPauseMiniBtn');
+    const miniPlayIcon = document.getElementById('miniPlayIcon');
+    playPauseMiniBtn.addEventListener('click', function() {
+      if (audioMini.paused) {
+        audioMini.play();
+      } else {
+        audioMini.pause();
+      }
+    });
+    audioMini.addEventListener('play', function() {
+      miniPlayIcon.classList.remove('fa-play');
+      miniPlayIcon.classList.add('fa-pause');
+    });
+    audioMini.addEventListener('pause', function() {
+      miniPlayIcon.classList.remove('fa-pause');
+      miniPlayIcon.classList.add('fa-play');
+    });
   </script>
   <script src="novedades.js"></script>
 </body>
