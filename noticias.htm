@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Noticias y Top 10 - EKUSFM</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>Noticias - EKUSFM</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -54,440 +53,171 @@
             background-color: #06b6d4;
         }
 
-        .container {
-            max-width: 1200px; /* Un poco más ancho para más contenido */
+        .news-container {
+            max-width: 960px;
             margin: 20px auto;
             padding: 0 20px;
-            display: grid;
-            grid-template-columns: 2fr 1fr; /* Dos columnas: noticias y top10/programas */
-            gap: 30px;
         }
-        @media (max-width: 900px) {
-            .container {
-                grid-template-columns: 1fr; /* Una columna en pantallas pequeñas */
-            }
-        }
-
-        h1, h2 {
+        .section-title {
+            text-align: center;
             color: #22d3ee;
-            margin-bottom: 25px;
-            font-size: 2.2rem;
-            border-bottom: 2px solid #38bdf8;
-            padding-bottom: 10px;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
         }
-        h2 {
-            font-size: 1.8rem;
-        }
-
-        /* Sección de Noticias */
-        .news-section {
-            grid-column: 1 / 2;
-        }
-        .news-list {
+        #news-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
         }
         .news-card {
             background-color: #1e293b;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between; /* Para empujar el botón al final */
-        }
-        .news-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.7);
-        }
-        .news-card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            display: block;
-        }
-        .news-card-content {
             padding: 20px;
-            flex-grow: 1; /* Para que el contenido ocupe el espacio restante */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            color: #f8fafc;
             display: flex;
             flex-direction: column;
+            position: relative; /* Necesario para la animación del botón */
         }
         .news-card h3 {
             color: #38bdf8;
             margin-top: 0;
             margin-bottom: 10px;
-            font-size: 1.4rem;
-            line-height: 1.3;
-            border-bottom: none; /* Eliminar el borde inferior de los h3 en las tarjetas */
-            padding-bottom: 0;
+            font-size: 1.5rem;
         }
         .news-card .news-date {
-            font-size: 0.85rem;
-            color: #94a3b8;
-            margin-bottom: 15px;
-            display: block;
-        }
-        .news-card .news-content {
-            font-size: 0.95rem;
+            font-size: 0.9em;
             color: #cbd5e1;
             margin-bottom: 15px;
-            max-height: 80px; /* Limitar altura para mostrar un resumen */
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 3; /* Limita a 3 líneas */
-            -webkit-box-orient: vertical;
         }
-        .read-more-btn {
-            background-color: #22d3ee;
-            color: #1e293b;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: background-color 0.3s ease;
-            width: 100%; /* Ocupa todo el ancho */
-            margin-top: auto; /* Empuja el botón al final */
-        }
-        .read-more-btn:hover {
-            background-color: #06b6d4;
-        }
-
-        /* Sección Lateral (Top 10 y Programas) */
-        .sidebar {
-            grid-column: 2 / 3;
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-        }
-        @media (max-width: 900px) {
-            .sidebar {
-                grid-column: 1 / 2; /* Vuelve a una columna en móviles */
-            }
-        }
-        .top10-videos, .programs-section, .features-section {
-            background-color: #1e293b;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-        }
-        .top10-videos h2, .programs-section h2, .features-section h2 {
-            text-align: center;
-            border-bottom: 1px solid #475569;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-        .video-list {
-            list-style: none;
-            padding: 0;
-        }
-        .video-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            gap: 15px;
-            background-color: #2d3748;
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            flex-wrap: wrap; /* Para envolver los elementos en pantallas pequeñas */
-        }
-        .video-item .rank {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #22d3ee;
-            width: 40px;
-            text-align: center;
-        }
-        .video-item .video-thumbnail {
-            width: 80px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 5px;
-            flex-shrink: 0; /* No se encoge */
-        }
-        .video-item .video-info {
-            flex-grow: 1;
-            min-width: 150px; /* Asegura que el título y descripción tengan espacio */
-        }
-        .video-item .video-info h4 {
-            margin: 0;
-            color: #f8fafc;
-            font-size: 1rem;
-        }
-        .video-item .video-info p {
-            margin: 0;
-            color: #cbd5e1;
-            font-size: 0.85rem;
-        }
-        .video-item .actions {
-            display: flex;
-            flex-direction: column; /* Botones apilados */
-            gap: 5px;
-            margin-left: auto; /* Empuja los botones a la derecha */
-        }
-        .video-item .view-video-btn,
-        .video-item .vote-btn {
-            padding: 8px 12px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            font-weight: 600;
-            transition: background-color 0.3s ease;
-        }
-        .video-item .view-video-btn {
-            background-color: #38bdf8;
-            color: #1e293b;
-        }
-        .video-item .view-video-btn:hover {
-            background-color: #22d3ee;
-        }
-        .video-item .vote-btn {
-            background-color: #4CAF50; /* Verde para votar */
-            color: white;
-        }
-        .video-item .vote-btn:hover {
-            background-color: #45a049;
-        }
-        .video-item .vote-btn.voted {
-            background-color: #607d8b; /* Gris si ya votó */
-            cursor: not-allowed;
-        }
-        #viewMoreVideos {
-            background-color: #06b6d4;
-            color: #fff;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.95rem;
+        .news-card .news-image {
             width: 100%;
-            margin-top: 20px;
-            transition: background-color 0.3s ease;
-        }
-        #viewMoreVideos:hover {
-            background-color: #0891b2;
-        }
-
-        /* Programas */
-        .programs-list {
-            list-style: none;
-            padding: 0;
-        }
-        .program-item {
-            background-color: #2d3748;
-            padding: 15px;
+            height: 180px;
+            object-fit: cover;
             border-radius: 8px;
-            margin-bottom: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            margin-bottom: 15px;
+            cursor: pointer; /* Para indicar que es clickeable */
+            transition: transform 0.2s ease;
         }
-        .program-item h4 {
-            margin-top: 0;
-            margin-bottom: 5px;
-            color: #f8fafc;
-            font-size: 1.1rem;
+        .news-card .news-image:hover {
+            transform: scale(1.02);
         }
-        .program-item .program-schedule {
-            color: #22d3ee;
-            font-size: 0.9rem;
-            margin-bottom: 8px;
+        .news-card .news-summary,
+        .news-card .news-content-full {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            flex-grow: 1;
+            margin-bottom: 15px; /* Espacio antes del botón */
+            white-space: pre-wrap; /* Para respetar saltos de línea del contenido */
         }
-        .program-item p {
-            font-size: 0.85rem;
-            color: #cbd5e1;
-            margin-bottom: 0;
-        }
-
-        /* Funciones Destacadas */
-        .features-list {
-            list-style: none;
-            padding: 0;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Columnas para las features */
-            gap: 15px;
-        }
-        .feature-item {
-            background-color: #2d3748;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100px;
-        }
-        .feature-item h4 {
-            margin: 0;
-            color: #f8fafc;
-            font-size: 1rem;
-        }
-        .no-data-message, .loading-message {
-            text-align: center;
-            color: #94a3b8;
-            font-style: italic;
-            padding: 20px;
-        }
-
-        /* --- Modales --- */
-        .modal {
+        .news-card .news-content-full {
             display: none; /* Oculto por defecto */
-            position: fixed; /* Fijo en la pantalla */
-            z-index: 10000; /* Por encima de todo */
+        }
+        .read-more-btn, .read-less-btn {
+            background-color: #22d3ee;
+            color: #1e293b;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 5px; /* Ajuste para el espaciado */
+            align-self: flex-start;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .read-more-btn:hover, .read-less-btn:hover {
+            background-color: #06b6d4;
+            transform: translateY(-2px);
+        }
+        .read-less-btn {
+            background-color: #607d8b; /* Color diferente para "Leer Menos" */
+            color: #fff;
+        }
+        .read-less-btn:hover {
+            background-color: #475569;
+        }
+
+        /* Estilos del Modal (Pop-up de Imagen) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 10000; /* Sit on top */
+            padding-top: 60px; /* Location of the box */
             left: 0;
             top: 0;
-            width: 100%; /* Ancho completo */
-            height: 100%; /* Altura completa */
-            overflow: auto; /* Permite scroll si el contenido es grande */
-            background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semitransparente */
-            justify-content: center; /* Centrar contenido horizontalmente */
-            align-items: center; /* Centrar contenido verticalmente */
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
             backdrop-filter: blur(5px); /* Efecto de desenfoque */
-        }
-        .modal.show {
-            display: flex;
         }
 
         .modal-content {
-            background-color: #1e293b;
             margin: auto;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-            width: 90%;
-            max-width: 700px; /* Ancho máximo para el modal */
-            position: relative;
-            animation: fadeInScale 0.3s ease-out;
-            max-height: 90vh; /* Altura máxima del contenido */
-            overflow-y: auto; /* Scroll dentro del modal si es necesario */
+            display: block;
+            width: 80%;
+            max-width: 700px;
+            max-height: 80vh; /* Limita la altura de la imagen */
+            object-fit: contain; /* Asegura que la imagen se ajuste */
+            border-radius: 10px;
         }
 
-        .modal-content::-webkit-scrollbar {
-            width: 8px;
-        }
-        .modal-content::-webkit-scrollbar-track {
-            background: #2d3748;
-            border-radius: 10px;
-        }
-        .modal-content::-webkit-scrollbar-thumb {
-            background: #38bdf8;
-            border-radius: 10px;
-        }
-        .modal-content::-webkit-scrollbar-thumb:hover {
-            background: #22d3ee;
+        #caption {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+            text-align: center;
+            color: #ccc;
+            padding: 10px 0;
+            height: auto;
+            white-space: pre-wrap; /* Mantiene saltos de línea del contenido */
+            font-size: 1.1em;
         }
 
         .close-button {
-            color: #cbd5e1;
-            font-size: 2rem;
-            font-weight: bold;
             position: absolute;
             top: 15px;
-            right: 25px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
             cursor: pointer;
-            transition: color 0.3s ease;
         }
+
         .close-button:hover,
         .close-button:focus {
-            color: #22d3ee;
+            color: #bbb;
             text-decoration: none;
-            cursor: pointer;
         }
 
-        .modal-content h3 {
-            color: #22d3ee;
-            margin-top: 0;
-            font-size: 2rem;
-            text-align: center;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #38bdf8;
-            padding-bottom: 10px;
+        /* Animación del modal */
+        .modal-content, #caption {
+            -webkit-animation-name: zoom;
+            -webkit-animation-duration: 0.6s;
+            animation-name: zoom;
+            animation-duration: 0.6s;
         }
-        .modal-content .modal-date {
-            font-size: 0.9rem;
+
+        @-webkit-keyframes zoom {
+            from {-webkit-transform:scale(0)}
+            to {-webkit-transform:scale(1)}
+        }
+
+        @keyframes zoom {
+            from {transform:scale(0)}
+            to {transform:scale(1)}
+        }
+
+        .loading-message, .no-data-message {
+            text-align: center;
             color: #94a3b8;
-            text-align: center;
-            margin-bottom: 20px;
-            display: block;
-        }
-        .modal-content img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .modal-content p {
-            color: #f8fafc;
-            font-size: 1rem;
-            margin-bottom: 15px;
-            white-space: pre-wrap; /* Mantiene los saltos de línea y espacios del contenido */
-        }
-        .modal-content iframe {
-            width: 100%;
-            height: 350px;
-            border: none;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        @keyframes fadeInScale {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
+            font-style: italic;
+            grid-column: 1 / -1; /* Para centrar en el grid */
+            padding: 20px;
         }
     </style>
-
-    <script>
-        (function() {
-            var host = window.location.hostname;
-            var dominiosPermitidos = [
-                "estacionkusmedios.com",
-                "reproductor-calidad.vercel.app",
-                "localhost" // Para desarrollo local
-            ];
-            var esSubdominioEKUS = host.endsWith(".estacionkusmedios.com");
-            var esDominioValido = dominiosPermitidos.includes(host) || esSubdominioEKUS;
-            if (!esDominioValido) {
-                document.documentElement.innerHTML = `
-                    <head>
-                        <meta charset="UTF-8">
-                        <title>Acceso no autorizado</title>
-                        <style>
-                            body {
-                                font-family: 'Poppins', Arial, sans-serif;
-                                background: #181e2a; color: #fff;
-                                text-align: center;
-                                margin: 0; padding: 0;
-                                display: flex; flex-direction: column; justify-content: center; min-height: 100vh;
-                            }
-                            h1 { font-size: 2.4em; margin-top: 2em; color: #38bdf8;}
-                            p { color: #ddd; }
-                        </style>
-                    </head>
-                    <body>
-                        <h1>Acceso no autorizado</h1>
-                        <p>Este contenido solo puede visualizarse en <b>estacionkusmedios.com</b> y sus subdominios, o en <b>reproductor-calidad.vercel.app</b>.</p>
-                    </body>
-                `;
-                throw new Error('Unauthorized access');
-            }
-        })();
-    </script>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
@@ -495,64 +225,24 @@
 <body>
     <div class="header">
         <div class="logo">
-            EKUSFM
+            EKUSFM NOTICIAS
         </div>
         <a href="index.htm" class="back-btn">
             <i class="fas fa-arrow-left"></i> Volver al Inicio
         </a>
     </div>
 
-    <div class="container">
-        <div class="news-section">
-            <h1>Últimas Noticias</h1>
-            <div id="newsList" class="news-list">
-                <p class="loading-message">Cargando noticias...</p>
-            </div>
-        </div>
-
-        <div class="sidebar">
-            <div class="top10-videos">
-                <h2>Top 10 Videos Musicales</h2>
-                <ul id="videosList" class="video-list">
-                    <p class="loading-message">Cargando Top 10...</p>
-                </ul>
-                <button id="viewMoreVideos">Ver Top 10 Completo</button>
-            </div>
-
-            <div class="programs-section">
-                <h2>Nuestros Programas</h2>
-                <ul id="programsList" class="programs-list">
-                    <p class="loading-message">Cargando programas...</p>
-                </ul>
-            </div>
-
-            <div class="features-section">
-                <h2>Funciones Destacadas</h2>
-                <ul id="featuresList" class="features-list">
-                    <p class="loading-message">Cargando funciones...</p>
-                </ul>
-            </div>
+    <div class="news-container">
+        <h1 class="section-title">Últimas Noticias</h1>
+        <div id="news-grid">
+            <p class="loading-message">Cargando noticias...</p>
         </div>
     </div>
 
-    <div id="newsModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">×</span>
-            <img id="modalNewsImage" src="" alt="Imagen de la noticia" style="display: none;">
-            <h3 id="modalNewsTitle"></h3>
-            <span id="modalNewsDate" class="modal-date"></span>
-            <p id="modalNewsContent"></p>
-        </div>
-    </div>
-
-    <div id="videoModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">×</span>
-            <h3 id="modalVideoTitle"></h3>
-            <div class="video-wrapper">
-                <iframe id="modalVideoIframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-            </div>
+    <div id="imageModal" class="modal">
+        <span class="close-button">×</span>
+        <img class="modal-content" id="modalImage">
+        <div id="caption"></div>
     </div>
 
     <script>
@@ -573,263 +263,95 @@
         }
         const database = firebase.database();
 
-        // --- Elementos del DOM para Modales ---
-        const newsModal = document.getElementById('newsModal');
-        const modalNewsTitle = document.getElementById('modalNewsTitle');
-        const modalNewsDate = document.getElementById('modalNewsDate');
-        const modalNewsImage = document.getElementById('modalNewsImage');
-        const modalNewsContent = document.getElementById('modalNewsContent');
+        const newsGrid = document.getElementById('news-grid');
+        const imageModal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modalImage');
+        const captionText = document.getElementById('caption');
+        const closeButton = document.querySelector('.close-button');
 
-        const videoModal = document.getElementById('videoModal');
-        const modalVideoTitle = document.getElementById('modalVideoTitle');
-        const modalVideoIframe = document.getElementById('modalVideoIframe');
-
-        // Cerrar modales al hacer clic en la "x" o fuera
-        document.querySelectorAll('.close-button').forEach(button => {
-            button.addEventListener('click', () => {
-                newsModal.classList.remove('show');
-                videoModal.classList.remove('show');
-                modalVideoIframe.src = ''; // Detener reproducción al cerrar video
-            });
-        });
-
-        window.addEventListener('click', (event) => {
-            if (event.target == newsModal) {
-                newsModal.classList.remove('show');
-            }
-            if (event.target == videoModal) {
-                videoModal.classList.remove('show');
-                modalVideoIframe.src = ''; // Detener reproducción al cerrar video
-            }
-        });
-
-        // --- Funciones para abrir modales ---
-        function openNewsModal(title, date, content, imageUrl) {
-            modalNewsTitle.textContent = title;
-            modalNewsDate.textContent = date;
-            modalNewsContent.textContent = content; // Muestra el contenido completo
-
-            if (imageUrl && imageUrl.startsWith('http')) { // Asegúrate de que sea una URL válida
-                modalNewsImage.src = imageUrl;
-                modalNewsImage.style.display = 'block'; 
-            } else {
-                modalNewsImage.style.display = 'none'; 
-                modalNewsImage.src = ''; 
-            }
-            newsModal.classList.add('show');
+        closeButton.onclick = function() {
+            imageModal.style.display = "none";
         }
 
-        function openVideoModal(title, videoId) {
-            modalVideoTitle.textContent = title;
-            modalVideoIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-            videoModal.classList.add('show');
+        window.onclick = function(event) {
+            if (event.target == imageModal) {
+                imageModal.style.display = "none";
+            }
         }
 
-        // --- Carga de Noticias ---
-        const newsListDiv = document.getElementById('newsList');
-
-        function loadNews() {
-            newsListDiv.innerHTML = '<p class="loading-message">Cargando noticias...</p>';
+        function loadNewsForDisplay() {
+            newsGrid.innerHTML = '<p class="loading-message">Cargando noticias...</p>';
             database.ref('noticias').orderByChild('date').on('value', (snapshot) => {
-                newsListDiv.innerHTML = ''; // Limpiar mensajes de carga
+                newsGrid.innerHTML = '';
                 if (!snapshot.exists()) {
-                    newsListDiv.innerHTML = '<p class="no-data-message">No hay noticias disponibles en este momento.</p>';
+                    newsGrid.innerHTML = '<p class="no-data-message">No hay noticias disponibles en este momento.</p>';
                     return;
                 }
                 const newsData = [];
                 snapshot.forEach(childSnapshot => {
                     newsData.push({ id: childSnapshot.key, ...childSnapshot.val() });
                 });
-                newsData.sort((a, b) => b.date - a.date); // Ordenar por fecha descendente (más reciente primero)
+                newsData.sort((a, b) => b.date - a.date); // Más recientes primero
 
                 newsData.forEach(newsItem => {
-                    const articleDiv = document.createElement('div');
-                    articleDiv.className = 'news-card';
+                    const newsCard = document.createElement('div');
+                    newsCard.className = 'news-card';
+                    const formattedDate = new Date(newsItem.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
 
-                    const formattedDate = new Date(newsItem.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-                    const imageUrlHtml = (newsItem.imageUrl && newsItem.imageUrl.startsWith('http')) 
-                        ? `<img src="${newsItem.imageUrl}" alt="${newsItem.title}" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x200?text=No+Image';">` 
-                        : '';
+                    let imageHtml = '';
+                    if (newsItem.imageUrl) {
+                        imageHtml = `<img src="${newsItem.imageUrl}" alt="${newsItem.title}" class="news-image" data-full-content="${newsItem.content.replace(/"/g, '&quot;').replace(/\n/g, '&#10;')}" data-title="${newsItem.title.replace(/"/g, '&quot;')}">`;
+                    }
 
-                    articleDiv.innerHTML = `
-                        ${imageUrlHtml}
-                        <div class="news-card-content">
-                            <h3>${newsItem.title}</h3>
-                            <span class="news-date">${formattedDate}</span>
-                            <p class="news-content">${newsItem.content}</p>
-                            <button class="read-more-btn" 
-                                    data-title="${newsItem.title}" 
-                                    data-date="${formattedDate}" 
-                                    data-content="${newsItem.content}" 
-                                    data-imageurl="${newsItem.imageUrl || ''}">Ver más</button>
-                        </div>
+                    // Limita el resumen a 150 caracteres y agrega puntos suspensivos
+                    const summary = newsItem.content.length > 150 ? newsItem.content.substring(0, 150) + '...' : newsItem.content;
+
+                    newsCard.innerHTML = `
+                        <h3>${newsItem.title}</h3>
+                        <p class="news-date">${formattedDate}</p>
+                        ${imageHtml}
+                        <p class="news-summary">${summary}</p>
+                        <p class="news-content-full" style="display:none;">${newsItem.content}</p>
+                        ${newsItem.content.length > 150 ? '<button class="read-more-btn">Ver Más</button>' : ''}
                     `;
-                    newsListDiv.appendChild(articleDiv);
+                    newsGrid.appendChild(newsCard);
 
-                    // Añadir event listener al botón "Ver más"
-                    articleDiv.querySelector('.read-more-btn').addEventListener('click', function() {
-                        openNewsModal(
-                            this.dataset.title,
-                            this.dataset.date,
-                            this.dataset.content,
-                            this.dataset.imageurl
-                        );
-                    });
-                });
-            });
-        }
+                    const readMoreBtn = newsCard.querySelector('.read-more-btn');
+                    if (readMoreBtn) {
+                        readMoreBtn.addEventListener('click', function() {
+                            const summaryP = newsCard.querySelector('.news-summary');
+                            const fullContentP = newsCard.querySelector('.news-content-full');
+                            
+                            if (fullContentP.style.display === 'none') {
+                                summaryP.style.display = 'none';
+                                fullContentP.style.display = 'block';
+                                this.textContent = 'Ver Menos';
+                                this.classList.remove('read-more-btn');
+                                this.classList.add('read-less-btn');
+                            } else {
+                                summaryP.style.display = 'block';
+                                fullContentP.style.display = 'none';
+                                this.textContent = 'Ver Más';
+                                this.classList.remove('read-less-btn');
+                                this.classList.add('read-more-btn');
+                            }
+                        });
+                    }
 
-        // --- Carga de Top 10 Videos ---
-        const videosListUl = document.getElementById('videosList');
-        const viewMoreVideosBtn = document.getElementById('viewMoreVideos');
-        let allVideos = [];
-        const initialVideoCount = 3; // Mostrar solo los primeros 3
-
-        function loadTop10Videos() {
-            videosListUl.innerHTML = '<p class="loading-message">Cargando Top 10...</p>';
-            database.ref('top10videos').orderByChild('rank').on('value', (snapshot) => {
-                allVideos = [];
-                if (!snapshot.exists()) {
-                    videosListUl.innerHTML = '<p class="no-data-message">No hay videos en el Top 10.</p>';
-                    viewMoreVideosBtn.style.display = 'none';
-                    return;
-                }
-                snapshot.forEach(childSnapshot => {
-                    allVideos.push({ id: childSnapshot.key, ...childSnapshot.val() });
-                });
-
-                // Ordenar por rank para mostrar siempre el orden correcto
-                allVideos.sort((a, b) => a.rank - b.rank); 
-
-                renderVideos(initialVideoCount);
-                if (allVideos.length > initialVideoCount) {
-                    viewMoreVideosBtn.style.display = 'block';
-                    viewMoreVideosBtn.textContent = 'Ver Top 10 Completo';
-                } else {
-                    viewMoreVideosBtn.style.display = 'none';
-                }
-            });
-        }
-
-        function renderVideos(count) {
-            videosListUl.innerHTML = ''; // Limpiar lista antes de renderizar
-            const videosToDisplay = allVideos.slice(0, count);
-
-            videosToDisplay.forEach(videoItem => {
-                const li = document.createElement('li');
-                li.className = 'video-item';
-                const thumbnailUrl = `https://img.youtube.com/vi/${videoItem.videoId}/mqdefault.jpg`;
-                const hasVoted = localStorage.getItem(`votedFor_${videoItem.id}`) === 'true';
-
-                li.innerHTML = `
-                    <span class="rank">#${videoItem.rank}</span>
-                    <img src="${thumbnailUrl}" alt="Miniatura de ${videoItem.title}" class="video-thumbnail" onerror="this.onerror=null;this.src='https://via.placeholder.com/80x60?text=No+Img';">
-                    <div class="video-info">
-                        <h4>${videoItem.title}</h4>
-                        <p>Votos: ${videoItem.votes || 0}</p>
-                    </div>
-                    <div class="actions">
-                        <button class="view-video-btn" data-title="${videoItem.title}" data-videoid="${videoItem.videoId}">Ver Video</button>
-                        <button class="vote-btn ${hasVoted ? 'voted' : ''}" data-id="${videoItem.id}" ${hasVoted ? 'disabled' : ''}>${hasVoted ? 'Ya Votaste' : 'Votar'}</button>
-                    </div>
-                `;
-                videosListUl.appendChild(li);
-
-                li.querySelector('.view-video-btn').addEventListener('click', function() {
-                    openVideoModal(this.dataset.title, this.dataset.videoid);
-                });
-
-                li.querySelector('.vote-btn').addEventListener('click', function() {
-                    const videoId = this.dataset.id;
-                    if (!localStorage.getItem(`votedFor_${videoId}`)) {
-                        database.ref(`top10videos/${videoId}/votes`).transaction((currentVotes) => {
-                            return (currentVotes || 0) + 1;
-                        }).then(() => {
-                            localStorage.setItem(`votedFor_${videoId}`, 'true');
-                            loadTop10Videos(); // Recargar para actualizar los votos y el estado del botón
-                        }).catch(error => {
-                            console.error("Error al votar:", error);
-                            alert("Hubo un error al procesar tu voto. Inténtalo de nuevo.");
+                    // Event listener para abrir el modal al hacer clic en la imagen
+                    const newsImage = newsCard.querySelector('.news-image');
+                    if (newsImage) {
+                        newsImage.addEventListener('click', function() {
+                            modalImage.src = this.src;
+                            captionText.innerHTML = `<strong>${this.dataset.title}</strong><br>${this.dataset.fullContent.replace(/&#10;/g, '\n')}`;
+                            imageModal.style.display = "block";
                         });
                     }
                 });
             });
         }
 
-        viewMoreVideosBtn.addEventListener('click', () => {
-            if (videosListUl.children.length === initialVideoCount) {
-                renderVideos(allVideos.length); // Muestra todos los videos
-                viewMoreVideosBtn.textContent = 'Mostrar Menos';
-            } else {
-                renderVideos(initialVideoCount); // Vuelve a mostrar solo los primeros 3
-                viewMoreVideosBtn.textContent = 'Ver Top 10 Completo';
-            }
-        });
-
-        // --- Carga de Programas ---
-        const programsListUl = document.getElementById('programsList');
-
-        function loadPrograms() {
-            programsListUl.innerHTML = '<p class="loading-message">Cargando programas...</p>';
-            database.ref('programas').orderByChild('name').on('value', (snapshot) => {
-                programsListUl.innerHTML = '';
-                if (!snapshot.exists()) {
-                    programsListUl.innerHTML = '<p class="no-data-message">No hay programas disponibles.</p>';
-                    return;
-                }
-                const programsData = [];
-                snapshot.forEach(childSnapshot => {
-                    programsData.push({ id: childSnapshot.key, ...childSnapshot.val() });
-                });
-
-                programsData.forEach(programItem => {
-                    const li = document.createElement('li');
-                    li.className = 'program-item';
-                    li.innerHTML = `
-                        <h4>${programItem.name}</h4>
-                        <span class="program-schedule">${programItem.schedule}</span>
-                        <p>${programItem.description || 'Sin descripción.'}</p>
-                    `;
-                    programsListUl.appendChild(li);
-                });
-            });
-        }
-
-        // --- Carga de Funciones Destacadas ---
-        const featuresListUl = document.getElementById('featuresList');
-
-        function loadFeatures() {
-            featuresListUl.innerHTML = '<p class="loading-message">Cargando funciones...</p>';
-            database.ref('features').orderByChild('order').on('value', (snapshot) => {
-                featuresListUl.innerHTML = '';
-                if (!snapshot.exists()) {
-                    featuresListUl.innerHTML = '<p class="no-data-message">No hay funciones destacadas.</p>';
-                    return;
-                }
-                const featuresData = [];
-                snapshot.forEach(childSnapshot => {
-                    featuresData.push({ id: childSnapshot.key, ...childSnapshot.val() });
-                });
-                featuresData.sort((a, b) => a.order - b.order); // Asegurarse de que estén ordenados por orden
-
-                featuresData.forEach(featureItem => {
-                    const li = document.createElement('li');
-                    li.className = 'feature-item';
-                    li.innerHTML = `
-                        <h4>${featureItem.name}</h4>
-                    `;
-                    featuresListUl.appendChild(li);
-                });
-            });
-        }
-
-        // Cargar todos los datos al iniciar la página
-        document.addEventListener('DOMContentLoaded', () => {
-            loadNews();
-            loadTop10Videos();
-            loadPrograms();
-            loadFeatures();
-        });
+        document.addEventListener('DOMContentLoaded', loadNewsForDisplay);
     </script>
 </body>
 </html>
