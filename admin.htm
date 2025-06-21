@@ -1,4 +1,4 @@
-<DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -732,4 +732,164 @@
         }
 
         // --- Programas ---
-        const programsForm
+        const programsForm = document.getElementById('programsForm');
+        const programsList = document.getElementById('programsList');
+
+        function loadProgramsAdmin() {
+            programsList.innerHTML = '<p class="no-data-message">Cargando programas...</p>';
+            database.ref('programas').on('value', (snapshot) => {
+                programsList.innerHTML = '';
+                if (!snapshot.exists()) {
+                    programsList.innerHTML = '<p class="no-data-message">No hay programas para administrar.</p>';
+                    return;
+                }
+                snapshot.forEach(childSnapshot => {
+                    const programItem = { id: childSnapshot.key, ...childSnapshot.val() };
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span><strong>${programItem.name}</strong> (${programItem.schedule})</span>
+                        <div class="item-buttons">
+                            <button class="edit-btn"
+                                     data-id="${programItem.id}"
+                                     data-name="${programItem.name}"
+                                     data-schedule="${programItem.schedule}"
+                                     data-description="${programItem.description || ''}"
+                            >Editar</button>
+                            <button class="delete-btn" data-id="${programItem.id}">Eliminar</button>
+                        </div>
+                    `;
+                    programsList.appendChild(li);
+                });
+
+                document.querySelectorAll('#programsList .edit-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        document.getElementById('programId').value = e.target.dataset.id;
+                        document.getElementById('programName').value = e.target.dataset.name;
+                        document.getElementById('programSchedule').value = e.target.dataset.schedule;
+                        document.getElementById('programDescription').value = e.target.dataset.description;
+                    });
+                });
+                document.querySelectorAll('#programsList .delete-btn').forEach(button => {
+                    button.addEventListener('click', (e) => deleteItem('programas', e.target.dataset.id));
+                });
+            });
+        }
+
+        programsForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = document.getElementById('programId').value;
+            const name = document.getElementById('programName').value;
+            const schedule = document.getElementById('programSchedule').value;
+            const description = document.getElementById('programDescription').value;
+
+            const programItem = {
+                name: name,
+                schedule: schedule,
+                description: description || null
+            };
+
+            if (id) {
+                database.ref('programas/' + id).update(programItem)
+                    .then(() => {
+                        showMessage('Programa actualizado con éxito.');
+                        programsForm.reset();
+                        document.getElementById('programId').value = '';
+                    })
+                    .catch(error => showMessage('Error al actualizar programa: ' + error.message, 'error'));
+            } else {
+                database.ref('programas').push(programItem)
+                    .then(() => {
+                        showMessage('Programa añadido con éxito.');
+                        programsForm.reset();
+                    })
+                    .catch(error => showMessage('Error al añadir programa: ' + error.message, 'error'));
+            }
+        });
+
+        // --- Funciones Destacadas ---
+        const featuresForm = document.getElementById('featuresForm');
+        const featuresList = document.getElementById('featuresList');
+
+        function loadFeaturesAdmin() {
+            featuresList.innerHTML = '<p class="no-data-message">Cargando funciones...</p>';
+            database.ref('funcionesDestacadas').orderByChild('order').on('value', (snapshot) => {
+                featuresList.innerHTML = '';
+                if (!snapshot.exists()) {
+                    featuresList.innerHTML = '<p class="no-data-message">No hay funciones destacadas para administrar.</p>';
+                    return;
+                }
+                const featuresData = [];
+                snapshot.forEach(childSnapshot => {
+                    featuresData.push({ id: childSnapshot.key, ...childSnapshot.val() });
+                });
+                // Aunque se ordena por 'order' en la consulta, la re-renderización local mantiene el orden visual.
+                // Si la "orden" puede cambiar a menudo, se podría re-ordenar aquí también.
+
+                featuresData.forEach(featureItem => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span><strong>${featureItem.name}</strong> (Orden: ${featureItem.order})</span>
+                        <div class="item-buttons">
+                            <button class="edit-btn"
+                                     data-id="${featureItem.id}"
+                                     data-name="${featureItem.name}"
+                                     data-order="${featureItem.order}"
+                            >Editar</button>
+                            <button class="delete-btn" data-id="${featureItem.id}">Eliminar</button>
+                        </div>
+                    `;
+                    featuresList.appendChild(li);
+                });
+
+                document.querySelectorAll('#featuresList .edit-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        document.getElementById('featureId').value = e.target.dataset.id;
+                        document.getElementById('featureName').value = e.target.dataset.name;
+                        document.getElementById('featureOrder').value = e.target.dataset.order;
+                    });
+                });
+                document.querySelectorAll('#featuresList .delete-btn').forEach(button => {
+                    button.addEventListener('click', (e) => deleteItem('funcionesDestacadas', e.target.dataset.id));
+                });
+            });
+        }
+
+        featuresForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = document.getElementById('featureId').value;
+            const name = document.getElementById('featureName').value;
+            const order = parseInt(document.getElementById('featureOrder').value);
+
+            const featureItem = {
+                name: name,
+                order: order
+            };
+
+            if (id) {
+                database.ref('funcionesDestacadas/' + id).update(featureItem)
+                    .then(() => {
+                        showMessage('Función destacada actualizada con éxito.');
+                        featuresForm.reset();
+                        document.getElementById('featureId').value = '';
+                    })
+                    .catch(error => showMessage('Error al actualizar función: ' + error.message, 'error'));
+            } else {
+                database.ref('funcionesDestacadas').push(featureItem)
+                    .then(() => {
+                        showMessage('Función destacada añadida con éxito.');
+                        featuresForm.reset();
+                    })
+                    .catch(error => showMessage('Error al añadir función: ' + error.message, 'error'));
+            }
+        });
+
+        // --- Cargar todos los datos al iniciar ---
+        document.addEventListener('DOMContentLoaded', () => {
+            loadNewsAdmin();
+            loadVideosAdmin();
+            loadProgramsAdmin();
+            loadFeaturesAdmin();
+        });
+    </script>
+</body>
+</html>
