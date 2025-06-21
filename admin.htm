@@ -367,7 +367,7 @@
                 <h3>Instrucciones de Uso - Top 10 Videos</h3>
                 <ul>
                     <li><strong>Título:</strong> Nombre de la canción y/o artista.</li>
-                    <li><strong>ID de Video (YouTube):</strong> Pega SOLO el identificador único del video de YouTube (la parte después de <code>v=</code> y antes de cualquier <code>&</code> o <code>?</code>). Por ejemplo, si la URL es <code>https://www.youtube.com/watch?v=ABC123XYZ</code>, el ID es <code>ABC123XYZ</code>.</li>
+                    <li><strong>ID de Video (YouTube):</strong> Pega SOLO el identificador único del video de YouTube (la parte después de <code>v=</code> y antes de cualquier <code>&</code> o <code>?</code>). Por ejemplo, si la URL es `https://www.youtube.com/watch?v=ABC123XYZ`, el ID es `ABC123XYZ`.</li>
                     <li><strong>Votos:</strong> Valor numérico de los votos. Se incrementa automáticamente con los votos de los usuarios y se puede ajustar manualmente aquí.</li>
                     <li><strong>Orden (Flechas):</strong> Usa las flechas <i class="fas fa-arrow-up"></i> y <i class="fas fa-arrow-down"></i> para **cambiar el rank** de las canciones. Las canciones con más votos o rank más bajo aparecen más arriba en el Top 10.</li>
                     <li>Al <strong>guardar</strong>, el video se añadirá o actualizará. El campo `Rank` se autogenera y se ajusta automáticamente al mover con las flechas.</li>
@@ -386,9 +386,9 @@
                     <input type="text" id="youtubeId" placeholder="Ej. ABC123XYZ" required>
                 </div>
                  <div class="form-group">
-                    <label for="videoVotes">Votos:</label>
-                    <input type="number" id="videoVotes" min="0" value="0" required>
-                </div>
+                     <label for="videoVotes">Votos:</label>
+                     <input type="number" id="videoVotes" min="0" value="0" required>
+                 </div>
                 <button type="submit" class="btn-primary">Guardar Video</button>
             </form>
             <ul id="videosList" class="data-list">
@@ -496,6 +496,14 @@
             }, 3000);
         }
 
+        function deleteItem(path, id) {
+            if (confirm('¿Estás seguro de que quieres eliminar este elemento?')) {
+                database.ref(path + '/' + id).remove()
+                    .then(() => showMessage('Elemento eliminado con éxito.'))
+                    .catch(error => showMessage('Error al eliminar elemento: ' + error.message, 'error'));
+            }
+        }
+
         // --- Noticias ---
         const newsForm = document.getElementById('newsForm');
         const newsList = document.getElementById('newsList');
@@ -520,11 +528,11 @@
                     li.innerHTML = `
                         <span><strong>${newsItem.title}</strong> (${formattedDate})</span>
                         <div class="item-buttons">
-                            <button class="edit-btn" 
-                                    data-id="${newsItem.id}" 
-                                    data-title="${newsItem.title}" 
-                                    data-content="${newsItem.content}" 
-                                    data-imageurl="${newsItem.imageUrl || ''}"
+                            <button class="edit-btn"
+                                     data-id="${newsItem.id}"
+                                     data-title="${newsItem.title}"
+                                     data-content="${newsItem.content}"
+                                     data-imageurl="${newsItem.imageUrl || ''}"
                             >Editar</button>
                             <button class="delete-btn" data-id="${newsItem.id}">Eliminar</button>
                         </div>
@@ -599,7 +607,7 @@
                 });
 
                 // Ordenar por rank
-                currentVideosData.sort((a, b) => a.rank - b.rank); 
+                currentVideosData.sort((a, b) => a.rank - b.rank);
                 
                 // Asignar ranks consecutivos y actualizarlos en DB si es necesario
                 // Esto asegura que los ranks siempre sean 1, 2, 3... sin huecos
@@ -724,167 +732,4 @@
         }
 
         // --- Programas ---
-        const programsForm = document.getElementById('programsForm');
-        const programsList = document.getElementById('programsList');
-
-        function loadProgramsAdmin() {
-            programsList.innerHTML = '<p class="no-data-message">Cargando programas...</p>';
-            database.ref('programas').orderByChild('name').on('value', (snapshot) => {
-                programsList.innerHTML = '';
-                if (!snapshot.exists()) {
-                    programsList.innerHTML = '<p class="no-data-message">No hay programas para administrar.</p>';
-                    return;
-                }
-                const programsData = [];
-                snapshot.forEach(childSnapshot => {
-                    programsData.push({ id: childSnapshot.key, ...childSnapshot.val() });
-                });
-
-                programsData.forEach(programItem => {
-                    const li = document.createElement('li');
-                    li.innerHTML = `
-                        <span><strong>${programItem.name}</strong> (${programItem.schedule})</span>
-                        <div class="item-buttons">
-                            <button class="edit-btn" data-id="${programItem.id}" data-name="${programItem.name}" data-schedule="${programItem.schedule}" data-description="${programItem.description || ''}">Editar</button>
-                            <button class="delete-btn" data-id="${programItem.id}">Eliminar</button>
-                        </div>
-                    `;
-                    programsList.appendChild(li);
-                });
-
-                document.querySelectorAll('#programsList .edit-btn').forEach(button => {
-                    button.addEventListener('click', (e) => {
-                        document.getElementById('programId').value = e.target.dataset.id;
-                        document.getElementById('programName').value = e.target.dataset.name;
-                        document.getElementById('programSchedule').value = e.target.dataset.schedule;
-                        document.getElementById('programDescription').value = e.target.dataset.description;
-                    });
-                });
-                document.querySelectorAll('#programsList .delete-btn').forEach(button => {
-                    button.addEventListener('click', (e) => deleteItem('programas', e.target.dataset.id));
-                });
-            });
-        }
-
-        programsForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const id = document.getElementById('programId').value;
-            const name = document.getElementById('programName').value;
-            const schedule = document.getElementById('programSchedule').value;
-            const description = document.getElementById('programDescription').value;
-
-            const programItem = {
-                name: name,
-                schedule: schedule,
-                description: description
-            };
-
-            if (id) {
-                database.ref('programas/' + id).update(programItem)
-                    .then(() => {
-                        showMessage('Programa actualizado con éxito.');
-                        programsForm.reset();
-                        document.getElementById('programId').value = '';
-                    })
-                    .catch(error => showMessage('Error al actualizar programa: ' + error.message, 'error'));
-            } else {
-                database.ref('programas').push(programItem)
-                    .then(() => {
-                        showMessage('Programa añadido con éxito.');
-                        programsForm.reset();
-                    })
-                    .catch(error => showMessage('Error al añadir programa: ' + error.message, 'error'));
-            }
-        });
-
-        // --- Funciones Destacadas ---
-        const featuresForm = document.getElementById('featuresForm');
-        const featuresList = document.getElementById('featuresList');
-
-        function loadFeaturesAdmin() {
-            featuresList.innerHTML = '<p class="no-data-message">Cargando funciones...</p>';
-            database.ref('features').orderByChild('order').on('value', (snapshot) => {
-                featuresList.innerHTML = '';
-                if (!snapshot.exists()) {
-                    featuresList.innerHTML = '<p class="no-data-message">No hay funciones destacadas para administrar.</p>';
-                    return;
-                }
-                const featuresData = [];
-                snapshot.forEach(childSnapshot => {
-                    featuresData.push({ id: childSnapshot.key, ...childSnapshot.val() });
-                });
-                featuresData.sort((a, b) => a.order - b.order); // Asegurarse de que estén ordenados por orden
-
-                featuresData.forEach(featureItem => {
-                    const li = document.createElement('li');
-                    li.innerHTML = `
-                        <span><strong>${featureItem.name}</strong> (Orden: ${featureItem.order})</span>
-                        <div class="item-buttons">
-                            <button class="edit-btn" data-id="${featureItem.id}" data-name="${featureItem.name}" data-order="${featureItem.order}">Editar</button>
-                            <button class="delete-btn" data-id="${featureItem.id}">Eliminar</button>
-                        </div>
-                    `;
-                    featuresList.appendChild(li);
-                });
-
-                document.querySelectorAll('#featuresList .edit-btn').forEach(button => {
-                    button.addEventListener('click', (e) => {
-                        document.getElementById('featureId').value = e.target.dataset.id;
-                        document.getElementById('featureName').value = e.target.dataset.name;
-                        document.getElementById('featureOrder').value = e.target.dataset.order;
-                    });
-                });
-                document.querySelectorAll('#featuresList .delete-btn').forEach(button => {
-                    button.addEventListener('click', (e) => deleteItem('features', e.target.dataset.id));
-                });
-            });
-        }
-
-        featuresForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const id = document.getElementById('featureId').value;
-            const name = document.getElementById('featureName').value;
-            const order = parseInt(document.getElementById('featureOrder').value);
-
-            const featureItem = {
-                name: name,
-                order: order
-            };
-
-            if (id) {
-                database.ref('features/' + id).update(featureItem)
-                    .then(() => {
-                        showMessage('Función actualizada con éxito.');
-                        featuresForm.reset();
-                        document.getElementById('featureId').value = '';
-                    })
-                    .catch(error => showMessage('Error al actualizar función: ' + error.message, 'error'));
-            } else {
-                database.ref('features').push(featureItem)
-                    .then(() => {
-                        showMessage('Función añadida con éxito.');
-                        featuresForm.reset();
-                    })
-                    .catch(error => showMessage('Error al añadir función: ' + error.message, 'error'));
-            }
-        });
-
-        // --- Función para Eliminar Genérica ---
-        function deleteItem(path, id) {
-            if (confirm('¿Estás seguro de que quieres eliminar este elemento?')) {
-                database.ref(`${path}/${id}`).remove()
-                    .then(() => showMessage('Elemento eliminado con éxito.'))
-                    .catch(error => showMessage(`Error al eliminar elemento de ${path}: ${error.message}`, 'error'));
-            }
-        }
-
-        // Cargar datos al iniciar
-        document.addEventListener('DOMContentLoaded', () => {
-            loadNewsAdmin();
-            loadVideosAdmin();
-            loadProgramsAdmin();
-            loadFeaturesAdmin();
-        });
-    </script>
-</body>
-</html>
+        const programsForm
