@@ -175,10 +175,12 @@
             display: flex;
             gap: 10px;
             margin-top: 10px; /* Espacio si los botones bajan de línea */
+            align-items: center; /* Alinea los botones verticalmente */
         }
 
         .data-list .edit-btn,
-        .data-list .delete-btn {
+        .data-list .delete-btn,
+        .data-list .move-btn {
             padding: 8px 12px;
             border: none;
             border-radius: 5px;
@@ -201,6 +203,17 @@
         }
         .data-list .delete-btn:hover {
             background-color: #dc2626;
+        }
+        .data-list .move-btn {
+            background-color: #607d8b; /* Color para los botones de mover */
+            color: #fff;
+            padding: 8px 10px; /* Ligeramente más pequeño para las flechas */
+        }
+        .data-list .move-btn:hover {
+            background-color: #546a78;
+        }
+        .data-list .move-btn i {
+            font-size: 1.1em; /* Ajusta el tamaño del icono */
         }
 
         .message {
@@ -320,7 +333,7 @@
                 <h3>Instrucciones de Uso - Noticias</h3>
                 <ul>
                     <li><strong>Título:</strong> Ingresa el título principal de tu noticia.</li>
-                    <li><strong>Contenido:</strong> Escribe el cuerpo completo de la noticia. Usa párrafos (`\n\n`) para separar ideas, tu código lo respetará.</li>
+                    <li><strong>Contenido:</strong> Escribe el cuerpo completo de la noticia. Usa párrafos (presiona Enter) para separar ideas, tu código lo respetará.</li>
                     <li><strong>URL de Imagen (Opcional):</strong> Pega la URL directa de la imagen que quieres asociar con esta noticia. Si no pones ninguna, la noticia se mostrará sin imagen.</li>
                     <li>Al <strong>guardar</strong>, la noticia se añadirá o actualizará.</li>
                     <li>Usa los botones <strong>"Editar"</strong> y <strong>"Eliminar"</strong> para gestionar las noticias existentes.</li>
@@ -354,9 +367,10 @@
                 <h3>Instrucciones de Uso - Top 10 Videos</h3>
                 <ul>
                     <li><strong>Título:</strong> Nombre de la canción y/o artista.</li>
-                    <li><strong>ID de Video (YouTube):</strong> Pega SOLO el identificador único del video de YouTube (la parte después de <code>v=</code> y antes de cualquier <code>&</code> o <code>?</code>). Por ejemplo, si la URL es <code>https://www.youtube.com/watch?v=**ABC123XYZ**&ab_channel=Canal</code>, el ID es <code>ABC123XYZ</code>.</li>
-                    <li><strong>Rank:</strong> Asigna un número (del 1 al 10) para el orden en el Top. Si asignas un rank ya existente, la canción con ese rank se actualizará.</li>
-                    <li>Al <strong>guardar</strong>, el video se añadirá o actualizará.</li>
+                    <li><strong>ID de Video (YouTube):</strong> Pega SOLO el identificador único del video de YouTube (la parte después de <code>v=</code> y antes de cualquier <code>&</code> o <code>?</code>). Por ejemplo, si la URL es <code>https://www.youtube.com/watch?v=ABC123XYZ</code>, el ID es <code>ABC123XYZ</code>.</li>
+                    <li><strong>Votos:</strong> Valor numérico de los votos. Se incrementa automáticamente con los votos de los usuarios y se puede ajustar manualmente aquí.</li>
+                    <li><strong>Orden (Flechas):</strong> Usa las flechas <i class="fas fa-arrow-up"></i> y <i class="fas fa-arrow-down"></i> para **cambiar el rank** de las canciones. Las canciones con más votos o rank más bajo aparecen más arriba en el Top 10.</li>
+                    <li>Al <strong>guardar</strong>, el video se añadirá o actualizará. El campo `Rank` se autogenera y se ajusta automáticamente al mover con las flechas.</li>
                     <li>Usa los botones <strong>"Editar"</strong> y <strong>"Eliminar"</strong> para gestionar las canciones existentes.</li>
                     <li>En la página principal solo se muestran las primeras 3, pero un botón "Ver Más" revela el resto.</li>
                 </ul>
@@ -371,9 +385,9 @@
                     <label for="youtubeId">ID de Video (YouTube):</label>
                     <input type="text" id="youtubeId" placeholder="Ej. ABC123XYZ" required>
                 </div>
-                <div class="form-group">
-                    <label for="videoRank">Rank (1-10):</label>
-                    <input type="number" id="videoRank" min="1" max="10" required>
+                 <div class="form-group">
+                    <label for="videoVotes">Votos:</label>
+                    <input type="number" id="videoVotes" min="0" value="0" required>
                 </div>
                 <button type="submit" class="btn-primary">Guardar Video</button>
             </form>
@@ -564,6 +578,7 @@
         // --- Top 10 Videos ---
         const videosForm = document.getElementById('videosForm');
         const videosList = document.getElementById('videosList');
+        let currentVideosData = []; // Para almacenar los videos y sus IDs
 
         function loadVideosAdmin() {
             videosList.innerHTML = '<p class="no-data-message">Cargando videos...</p>';
@@ -573,35 +588,64 @@
                     videosList.innerHTML = '<p class="no-data-message">No hay videos en el Top 10 para administrar.</p>';
                     return;
                 }
-                const videosData = [];
+                currentVideosData = [];
                 snapshot.forEach(childSnapshot => {
-                    videosData.push({ id: childSnapshot.key, ...childSnapshot.val() });
+                    currentVideosData.push({ id: childSnapshot.key, ...childSnapshot.val() });
                 });
 
-                videosData.forEach(videoItem => {
+                // Ordenar por rank
+                currentVideosData.sort((a, b) => a.rank - b.rank); 
+                
+                // Asignar ranks consecutivos y actualizarlos en DB si es necesario
+                let rankChanged = false;
+                currentVideosData.forEach((item, index) => {
+                    const newRank = index + 1;
+                    if (item.rank !== newRank) {
+                        item.rank = newRank;
+                        database.ref(`top10videos/${item.id}/rank`).set(newRank);
+                        rankChanged = true;
+                    }
+                });
+
+                currentVideosData.forEach((videoItem, index) => {
                     const li = document.createElement('li');
                     li.innerHTML = `
                         <span class="rank-display">#${videoItem.rank}</span>
-                        <span><strong>${videoItem.title}</strong> (ID: ${videoItem.videoId})</span>
+                        <span><strong>${videoItem.title}</strong> (Votos: ${videoItem.votes || 0})</span>
                         <div class="item-buttons">
-                            <button class="edit-btn" data-id="${videoItem.id}" data-title="${videoItem.title}" data-videoid="${videoItem.videoId}" data-rank="${videoItem.rank}">Editar</button>
+                            <button class="move-btn move-up" data-id="${videoItem.id}" data-current-rank="${videoItem.rank}" ${index === 0 ? 'disabled' : ''}><i class="fas fa-arrow-up"></i></button>
+                            <button class="move-btn move-down" data-id="${videoItem.id}" data-current-rank="${videoItem.rank}" ${index === currentVideosData.length - 1 ? 'disabled' : ''}><i class="fas fa-arrow-down"></i></button>
+                            <button class="edit-btn" data-id="${videoItem.id}" data-title="${videoItem.title}" data-videoid="${videoItem.videoId}" data-votes="${videoItem.votes || 0}">Editar</button>
                             <button class="delete-btn" data-id="${videoItem.id}">Eliminar</button>
                         </div>
                     `;
                     videosList.appendChild(li);
                 });
 
+                // Event Listeners para Editar y Eliminar
                 document.querySelectorAll('#videosList .edit-btn').forEach(button => {
                     button.addEventListener('click', (e) => {
                         document.getElementById('videoId').value = e.target.dataset.id;
                         document.getElementById('videoTitle').value = e.target.dataset.title;
                         document.getElementById('youtubeId').value = e.target.dataset.videoid;
-                        document.getElementById('videoRank').value = e.target.dataset.rank;
+                        document.getElementById('videoVotes').value = e.target.dataset.votes;
                     });
                 });
                 document.querySelectorAll('#videosList .delete-btn').forEach(button => {
                     button.addEventListener('click', (e) => deleteItem('top10videos', e.target.dataset.id));
                 });
+
+                // Event Listeners para Mover
+                document.querySelectorAll('#videosList .move-up').forEach(button => {
+                    button.addEventListener('click', (e) => moveVideoRank(e.target.dataset.id, 'up'));
+                });
+                document.querySelectorAll('#videosList .move-down').forEach(button => {
+                    button.addEventListener('click', (e) => moveVideoRank(e.target.dataset.id, 'down'));
+                });
+
+                if (rankChanged) {
+                    showMessage('Ranks actualizados automáticamente para mantener la secuencia.');
+                }
             });
         }
 
@@ -610,12 +654,13 @@
             const id = document.getElementById('videoId').value;
             const title = document.getElementById('videoTitle').value;
             const videoId = document.getElementById('youtubeId').value;
-            const rank = parseInt(document.getElementById('videoRank').value);
+            const votes = parseInt(document.getElementById('videoVotes').value);
 
             const videoItem = {
                 title: title,
                 videoId: videoId,
-                rank: rank
+                votes: votes,
+                rank: id ? currentVideosData.find(v => v.id === id)?.rank : (currentVideosData.length > 0 ? Math.max(...currentVideosData.map(v => v.rank)) + 1 : 1) // Asigna el siguiente rank si es nuevo
             };
 
             if (id) {
@@ -635,6 +680,32 @@
                     .catch(error => showMessage('Error al añadir video: ' + error.message, 'error'));
             }
         });
+
+        function moveVideoRank(videoId, direction) {
+            const videoIndex = currentVideosData.findIndex(v => v.id === videoId);
+            if (videoIndex === -1) return;
+
+            const targetIndex = direction === 'up' ? videoIndex - 1 : videoIndex + 1;
+
+            if (targetIndex >= 0 && targetIndex < currentVideosData.length) {
+                const currentVideo = currentVideosData[videoIndex];
+                const targetVideo = currentVideosData[targetIndex];
+
+                // Intercambiar ranks
+                const tempRank = currentVideo.rank;
+                currentVideo.rank = targetVideo.rank;
+                targetVideo.rank = tempRank;
+
+                // Actualizar en Firebase
+                const updates = {};
+                updates[`top10videos/${currentVideo.id}/rank`] = currentVideo.rank;
+                updates[`top10videos/${targetVideo.id}/rank`] = targetVideo.rank;
+
+                database.ref().update(updates)
+                    .then(() => showMessage('Rank del video actualizado.'))
+                    .catch(error => showMessage('Error al mover el video: ' + error.message, 'error'));
+            }
+        }
 
         // --- Programas ---
         const programsForm = document.getElementById('programsForm');
@@ -726,6 +797,7 @@
                 snapshot.forEach(childSnapshot => {
                     featuresData.push({ id: childSnapshot.key, ...childSnapshot.val() });
                 });
+                featuresData.sort((a, b) => a.order - b.order); // Asegurarse de que estén ordenados por orden
 
                 featuresData.forEach(featureItem => {
                     const li = document.createElement('li');
