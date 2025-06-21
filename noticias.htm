@@ -1,427 +1,466 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Noticias - EKUSFM</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css" />
-    
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script> 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0V4LLanw2qksYuMGFQ+PzTM8tL3mQ1c6C4L2C6S9uF9bF5Z5l4L0x0t5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Noticias - EKUSFM</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="icon.png">
+  <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    /* Estilos específicos para el mini-reproductor en noticias.htm */
+    .mini-player {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      width: 280px;
+      background: url('https://images.pexels.com/photos/3082341/pexels-photo-3082341.jpeg') no-repeat center center;
+      background-size: cover;
+      filter: brightness(1.2); /* Ajusta el brillo si es necesario */
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      z-index: 10000;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+      font-family: 'Poppins', Arial, sans-serif;
+      position: relative;
+      overflow: hidden;
+    }
+    .mini-player::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 0;
+      border-radius: 10px;
+    }
+    .mini-play-btn {
+      background: #22d3ee;
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      color: #222;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+      position: relative;
+    }
+    .mini-song-info {
+      flex-grow: 1;
+      overflow: hidden;
+      z-index: 1;
+      position: relative;
+    }
+    .mini-song-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .mini-artist-name {
+      font-size: 0.8rem;
+      color: #38bdf8;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .mini-volume-control {
+      width: 70px;
+      cursor: pointer;
+      z-index: 1;
+      position: relative;
+    }
+    body { padding-top: 60px; } /* Ajuste para el header si el mini-reproductor está en la esquina */
 
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--primary-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        h1 {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-        .news-item {
-            background: #1e293b;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        }
-        .news-item h2 {
-            margin-top: 0;
-            color: #38bdf8;
-        }
-        .news-item p {
-            margin-bottom: 0;
-        }
-        .news-date {
-            font-size: 0.85rem;
-            color: #94a3b8;
-            margin-bottom: 8px;
-        }
-        /* Mini-player styles */
-        #mini-reproductor {
-            position: fixed;
-            top: 15px;
-            left: 15px;
-            width: 220px;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px #0002;
-            z-index: 10000;
-            padding: 7px 10px 7px 10px;
-            display: flex;
-            align-items: center;
-        }
-        #mini-reproductor audio {
-            width: 100%;
-            height: 32px;
-        }
-        .mini-player {
-            position: fixed;
-            top: 15px;
-            left: 15px;
-            width: 280px;
-            background: url('https://images.pexels.com/photos/3082341/pexels-photo-3082341.jpeg') no-repeat center center;
-            background-size: cover;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px #0008;
-            z-index: 10000;
-            padding: 8px 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #fff;
-            font-family: 'Poppins', Arial, sans-serif;
-            position: relative;
-            overflow: hidden;
-        }
-        .mini-player::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 0;
-            border-radius: 10px;
-        }
-        .mini-play-btn {
-            background: #22d3ee;
-            border: none;
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            color: #222;
-            font-size: 1.2rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1;
-            position: relative;
-        }
-        .mini-song-info {
-            flex-grow: 1;
-            overflow: hidden;
-            z-index: 1;
-            position: relative;
-        }
-        .mini-song-title {
-            font-weight: 600;
-            font-size: 0.9rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .mini-artist-name {
-            font-size: 0.8rem;
-            color: #38bdf8;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .mini-volume-control {
-            width: 70px;
-            cursor: pointer;
-            z-index: 1;
-            position: relative;
-        }
-    </style>
+    /* Estilos para el contenido de noticias */
+    .news-container {
+        max-width: 900px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #1e293b; /* Fondo similar al admin */
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        color: #f8fafc;
+    }
+    .news-article {
+        background-color: #2d3748;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .news-article h2 {
+        color: #22d3ee;
+        margin-top: 0;
+        font-size: 1.8rem;
+    }
+    .news-article p {
+        margin-bottom: 10px;
+    }
+    .news-date {
+        font-size: 0.9rem;
+        color: #94a3b8;
+        margin-bottom: 15px;
+        display: block;
+    }
+    .no-news {
+        text-align: center;
+        color: #94a3b8;
+        font-style: italic;
+    }
+  </style>
+    <script>
+    (function() {
+      var host = window.location.hostname;
+      var dominiosPermitidos = [
+        "estacionkusmedios.com",
+        "reproductor-calidad.vercel.app"
+      ];
+      var esSubdominioEKUS = host.endsWith(".estacionkusmedios.com");
+      var esDominioValido = dominiosPermitidos.includes(host) || esSubdominioEKUS;
+      if (!esDominioValido) {
+        document.documentElement.innerHTML = `
+          <head>
+            <meta charset="UTF-8">
+            <title>Acceso no autorizado</title>
+            <style>
+              body { 
+                font-family: 'Poppins', Arial, sans-serif; 
+                background: #181e2a; color: #fff; 
+                text-align: center; 
+                margin: 0; 
+                padding: 0;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                min-height: 100vh;
+                }
+              h1 { font-size: 2.4em; margin-top: 2em; color: #38bdf8;}
+              p { color: #ddd; }
+            </style>
+          </head>
+          <body>
+            <h1>Acceso no autorizado</h1>
+            <p>Este sitio solo puede visualizarse en <b>estacionkusmedios.com</b> y sus subdominios, o en <b>reproductor-calidad.vercel.app</b>.</p>
+          </body>
+        `;
+        throw new Error('Unauthorized access');
+      }
+    })();
+  </script>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
 </head>
 <body>
-    <div id="mini-reproductor" class="mini-player">
-        <button id="playPauseMiniBtn" class="mini-play-btn" title="Play/Pause">
-            <i id="miniPlayIcon" class="fa-solid fa-play"></i>
-        </button>
-        <div class="mini-song-info">
-            <div id="miniSongTitle" class="mini-song-title">Cargando...</div>
-            <div id="miniArtistName" class="mini-artist-name"></div>
-        </div>
-        <input type="range" id="miniVolumeControl" class="mini-volume-control" min="0" max="1" step="0.01" value="1" title="Volume" />
-        <audio id="audio-mini" preload="auto" crossorigin="anonymous"></audio>
-    </div>
-    <h1>Noticias EKUSFM</h1>
-    <div id="news-container">
-        <p>Cargando noticias...</p>
-    </div>
+  <div id="mini-reproductor" class="mini-player">
+    <button id="playPauseMiniBtn" class="mini-play-btn" title="Play/Pause">
+      <i id="miniPlayIcon" class="fa-solid fa-play"></i>
+    </button>
+    <div class="mini-song-info">
+      <div id="miniSongTitle" class="mini-song-title">Cargando programa...</div>
+      <div id="miniArtistName" class="mini-artist-name"></div>
+    </div>
+    <input type="range" id="miniVolumeControl" class="mini-volume-control" min="0" max="1" step="0.01" value="1" title="Volume" />
+    <audio id="audio-mini" preload="auto" crossorigin="anonymous"></audio>
+  </div>
 
-    <section id="youtube-videos" style="margin-top: 40px;">
-        <h2>Top 10 Canciones Más Escuchadas</h2>
-        <div id="videos-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;"></div>
-    </section>
+  <div class="header">
+    <div class="logo">
+      EKUSMEDIOS
+    </div>
+    <a href="index.htm" class="back-btn">
+      <i class="fas fa-arrow-left"></i> Volver
+    </a>
+  </div>
 
-    <section id="programas" style="margin-top: 40px;">
-        <h2>Revive Nuestros Programas</h2>
-        <div id="programs-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;"></div>
-    </section>
+  <div class="news-container" id="newsContainer">
+    <h1 class="page-title">Últimas Noticias de EKUSFM</h1>
+        <p class="no-news">Cargando noticias...</p>
+  </div>
+  
+  <script>
+    // *** TU CONFIGURACIÓN DE FIREBASE (¡CÓPIALA EXACTAMENTE DE TU CONSOLA!) ***
+    const firebaseConfig = {
+        apiKey: "AIzaSyBHlQ6WQauQLTbvp_iHbkWZ8Bhv3fntSpM",
+        authDomain: "ekusfm-d1a9d.firebaseapp.com",
+        databaseURL: "https://ekusfm-d1a9d-default-rtdb.firebaseio.com",
+        projectId: "ekusfm-d1a9d",
+        storageBucket: "ekusfm-d1a9d.firebasestorage.app",
+        messagingSenderId: "849619346647",
+        appId: "1:849619346647:web:06559451c66950d9b03c92",
+        measurementId: "G-X59DPNG6N4"
+    };
 
-    <section id="other-features" style="margin-top: 40px;">
-        <h2>Otras Funciones Geniales</h2>
-        <ul id="features-list" style="list-style: disc inside; color: #38bdf8;"></ul>
-    </section>
+    // Inicializa Firebase solo si no está ya inicializado
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
 
-    <script>
-        // *** TU CONFIGURACIÓN DE FIREBASE (¡AHORA YA CON TUS VALORES REALES!) ***
-        const firebaseConfig = {
-            apiKey: "AIzaSyBHlQ6WQauQLTbvp_iHbkWZ8Bhv3fntSpM",
-            authDomain: "ekusfm-d1a9d.firebaseapp.com",
-            databaseURL: "https://ekusfm-d1a9d-default-rtdb.firebaseio.com",
-            projectId: "ekusfm-d1a9d",
-            storageBucket: "ekusfm-d1a9d.firebasestorage.app",
-            messagingSenderId: "849619346647",
-            appId: "1:849619346647:web:06559451c66950d9b03c92",
-            measurementId: "G-X59DPNG6N4"
-        };
+    const database = firebase.database(); // Solo necesitamos Realtime Database aquí
 
-        // Inicializa Firebase solo si no está ya inicializado
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
+    const AUDIO_STREAM_URL = "https://radio.trabullnetwork.pro/listen/esmerosound/radio.mp3";
+    const audioMini = document.getElementById('audio-mini');
+    audioMini.src = AUDIO_STREAM_URL;
+    audioMini.crossOrigin = "anonymous";
+    audioMini.volume = 1;
+
+    // FontAwesome Play/Pause icon logic para miniplayer
+    const playPauseMiniBtn = document.getElementById('playPauseMiniBtn');
+    const miniPlayIcon = document.getElementById('miniPlayIcon');
+    const miniSongTitle = document.getElementById('miniSongTitle');
+    const miniArtistName = document.getElementById('miniArtistName');
+
+    playPauseMiniBtn.addEventListener('click', function() {
+        if (audioMini.paused) {
+            audioMini.play();
+        } else {
+            audioMini.pause();
+        }
+    });
+    audioMini.addEventListener('play', function() {
+        miniPlayIcon.classList.remove('fa-play');
+        miniPlayIcon.classList.add('fa-pause');
+    });
+    audioMini.addEventListener('pause', function() {
+        miniPlayIcon.classList.remove('fa-pause');
+        miniPlayIcon.classList.add('fa-play');
+    });
+
+    // Control de volumen para el mini-reproductor
+    const miniVolumeControl = document.getElementById('miniVolumeControl');
+    miniVolumeControl.addEventListener('input', function() {
+        audioMini.volume = this.value;
+    });
+
+
+    // --- Lógica para obtener el programa actual de Firebase ---
+
+    function getDayOfWeek(date) {
+        const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+        return days[date.getDay()];
+    }
+
+    function parseTime(timeStr) {
+        const [hourStr, minuteStr] = timeStr.split(':');
+        const hour = parseInt(hourStr);
+        const minute = parseInt(minuteStr);
+        return hour * 60 + minute; // Tiempo en minutos desde la medianoche
+    }
+
+    // Función auxiliar para convertir a formato 24 horas
+    function convertTo24Hour(timeStr) {
+        // Manejar casos donde AM/PM no está presente
+        if (!/\s*(AM|PM)/i.test(timeStr)) {
+            // Asumir formato 24h si no hay AM/PM
+            return timeStr.replace(/\s*(AM|PM)/i, '');
         }
 
-        // Inicializa Realtime Database
-        const database = firebase.database();
+        let [time, modifier] = timeStr.split(' ');
+        let [hours, minutes] = time.split(':');
 
-        const newsContainer = document.getElementById('news-container');
-        const videosContainer = document.getElementById('videos-container');
-        const programsContainer = document.getElementById('programs-container');
-        const featuresList = document.getElementById('features-list');
+        if (hours === '12') {
+            hours = '00';
+        }
+        if (modifier && modifier.toLowerCase() === 'pm') {
+            hours = parseInt(hours, 10) + 12;
+        }
+        return `${hours}:${minutes}`;
+    }
 
-        function formatDate(timestamp) {
-            // Realtime Database devuelve timestamps como números (milisegundos desde Epoch).
-            // Aseguramos que es un objeto Date válido.
-            const date = typeof timestamp === 'number' ? new Date(timestamp) : new Date(timestamp);
-            return date.toLocaleDateString('es-ES', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
+
+    function checkCurrentProgram() {
+        const now = new Date();
+        const currentDay = getDayOfWeek(now); // Ej: "Lunes"
+        const currentTimeInMinutes = now.getHours() * 60 + now.getMinutes();
+
+        database.ref('programas').once('value')
+            .then(snapshot => {
+                if (snapshot.exists()) {
+                    const programs = snapshot.val();
+                    let foundProgram = null;
+
+                    for (let key in programs) {
+                        if (programs.hasOwnProperty(key)) {
+                            const program = programs[key];
+                            const schedule = program.schedule; // Ej: "Lunes a Viernes 10:00 AM - 12:00 PM", "Sábados 20:00 - 22:00"
+
+                            // Regex para extraer la parte de los días y la parte de los tiempos
+                            const dayMatch = schedule.match(/^(.*?)\s*(\d{1,2}:\d{2}\s*(AM|PM)?\s*-\s*\d{1,2}:\d{2}\s*(AM|PM)?)$/i);
+                            
+                            if (!dayMatch || dayMatch.length < 3) continue; // Si no coincide con el patrón esperado, saltar
+
+                            let daysPart = dayMatch[1].trim();
+                            let timePartStr = dayMatch[2].trim();
+
+                            let [startTimeStr, endTimeStr] = timePartStr.split(' - ');
+
+                            // Convertir AM/PM a formato 24h para facilitar comparación
+                            startTimeStr = convertTo24Hour(startTimeStr);
+                            endTimeStr = convertTo24Hour(endTimeStr);
+
+                            const programStartTime = parseTime(startTimeStr);
+                            const programEndTime = parseTime(endTimeStr);
+
+                            const daysOfWeek = [];
+                            if (daysPart.includes('Lunes a Viernes')) {
+                                daysOfWeek.push('Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes');
+                            } else if (daysPart.includes('Sábados y Domingos')) {
+                                daysOfWeek.push('Sábado', 'Domingo');
+                            } else {
+                                // Para días individuales o rangos específicos como "Lunes, Miércoles"
+                                // Esto es un poco más complejo si hay "a" o "y" dentro de la parte de los días
+                                // Intentar dividir por comas o "y"
+                                daysPart.split(/,|\s+y\s+/).forEach(dayRange => {
+                                    const trimmedDayRange = dayRange.trim();
+                                    if (trimmedDayRange.includes('a')) {
+                                        // Rango de días como "Lunes a Miércoles"
+                                        const [startDay, endDay] = trimmedDayRange.split('a').map(d => d.trim());
+                                        const allDays = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+                                        const startIndex = allDays.indexOf(startDay);
+                                        const endIndex = allDays.indexOf(endDay);
+                                        if (startIndex !== -1 && endIndex !== -1) {
+                                            for (let i = startIndex; i <= endIndex; i++) {
+                                                daysOfWeek.push(allDays[i]);
+                                            }
+                                        }
+                                    } else if (trimmedDayRange) {
+                                        daysOfWeek.push(trimmedDayRange);
+                                    }
+                                });
+                            }
+                            
+                            // Asegurarse de que los días estén capitalizados correctamente y sin acentos
+                            const formattedDaysOfWeek = daysOfWeek.map(d => {
+                                let day = d.charAt(0).toUpperCase() + d.slice(1).toLowerCase();
+                                // Normalizar para quitar acentos si los hubiera al ingresar
+                                return day.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                            });
+
+
+                            // Ajuste para horarios que cruzan la medianoche
+                            let isOvernight = programEndTime < programStartTime;
+                            let isCurrentDay = formattedDaysOfWeek.includes(currentDay);
+
+                            if (isCurrentDay) {
+                                if (isOvernight) {
+                                    // Si el programa va de un día a otro (ej. 22:00 - 02:00)
+                                    // Considera que es el día actual si está después de la hora de inicio O antes de la hora de fin (del día siguiente)
+                                    if (currentTimeInMinutes >= programStartTime || currentTimeInMinutes < programEndTime) {
+                                        foundProgram = program;
+                                        break;
+                                    }
+                                } else {
+                                    // Programa dentro del mismo día
+                                    if (currentTimeInMinutes >= programStartTime && currentTimeInMinutes < programEndTime) {
+                                        foundProgram = program;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (foundProgram) {
+                        miniSongTitle.textContent = foundProgram.name;
+                        miniArtistName.textContent = foundProgram.schedule;
+                    } else {
+                        // Si no se encuentra ningún programa, mostrar un mensaje por defecto
+                        miniSongTitle.textContent = "¡Sintoniza EKUSFM!";
+                        miniArtistName.textContent = "La mejor música y contenido";
+                    }
+                } else {
+                    miniSongTitle.textContent = "¡Sintoniza EKUSFM!";
+                    miniArtistName.textContent = "Cargando programación...";
+                }
+            })
+            .catch(error => {
+                console.error("Error al cargar programas:", error);
+                miniSongTitle.textContent = "Error al cargar programa";
+                miniArtistName.textContent = "Por favor, recarga la página.";
             });
-        }
+    }
 
-        // Función para cargar noticias de Realtime Database
-        function loadNews() {
-            newsContainer.innerHTML = '<p>Cargando noticias...</p>';
-            database.ref('noticias').orderByChild('date').once('value')
-                .then(snapshot => {
-                    newsContainer.innerHTML = '';
-                    if (!snapshot.exists() || snapshot.val() === null) {
-                        newsContainer.innerHTML = '<p>No hay noticias disponibles.</p>';
-                        return;
+    // Llama a la función al cargar la página
+    checkCurrentProgram();
+    // Opcional: Actualizar cada cierto tiempo (ej. cada minuto)
+    setInterval(checkCurrentProgram, 60 * 1000); // Actualiza cada 1 minuto
+
+
+    // --- Lógica para cargar las Noticias desde Firebase ---
+    const newsContainer = document.getElementById('newsContainer');
+
+    function loadNews() {
+        newsContainer.querySelector('.no-news').textContent = 'Cargando noticias...';
+        // Limpiar el contenido existente, excepto el título y el mensaje de carga
+        const existingArticles = newsContainer.querySelectorAll('.news-article');
+        existingArticles.forEach(article => article.remove());
+
+        database.ref('noticias').orderByChild('date').once('value')
+            .then(snapshot => {
+                if (!snapshot.exists() || snapshot.val() === null) {
+                    newsContainer.querySelector('.no-news').textContent = 'No hay noticias disponibles en este momento.';
+                    return;
+                }
+                newsContainer.querySelector('.no-news').style.display = 'none'; // Ocultar el mensaje de "Cargando..."
+
+                const newsData = snapshot.val();
+                const sortedNews = [];
+                for (let key in newsData) {
+                    if (newsData.hasOwnProperty(key)) {
+                        sortedNews.push({ id: key, ...newsData[key] });
                     }
-                    const newsData = snapshot.val();
-                    const sortedNews = [];
-                    // Convertir el objeto de Firebase en un array para poder ordenar
-                    for (let key in newsData) {
-                        if (newsData.hasOwnProperty(key)) { // Asegúrate de que la propiedad pertenece al objeto
-                            sortedNews.push({ id: key, ...newsData[key] });
-                        }
-                    }
-                    // Ordenar por fecha en orden descendente (más reciente primero)
-                    // Asumiendo que 'date' en tu DB es un timestamp numérico o una cadena ISO
-                    sortedNews.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+                }
+                // Ordenar por fecha, la más reciente primero
+                sortedNews.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-                    sortedNews.forEach(item => {
-                        const div = document.createElement('div');
-                        div.className = 'news-item';
+                sortedNews.forEach(newsItem => {
+                    const articleDiv = document.createElement('div');
+                    articleDiv.className = 'news-article';
+                    
+                    const titleElement = document.createElement('h2');
+                    titleElement.textContent = newsItem.title;
+                    articleDiv.appendChild(titleElement);
 
-                        const title = document.createElement('h2');
-                        title.textContent = item.title || 'Sin título';
-
-                        const date = document.createElement('div');
-                        date.className = 'news-date';
-                        date.textContent = item.date ? formatDate(item.date) : '';
-
-                        const content = document.createElement('p');
-                        content.textContent = item.content || '';
-
-                        div.appendChild(title);
-                        div.appendChild(date);
-                        div.appendChild(content);
-
-                        newsContainer.appendChild(div);
+                    const dateElement = document.createElement('span');
+                    dateElement.className = 'news-date';
+                    // Formatea la fecha al idioma local
+                    dateElement.textContent = new Date(newsItem.date).toLocaleDateString('es-ES', { 
+                        year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' 
                     });
-                })
-                .catch(error => {
-                    newsContainer.innerHTML = '<p>Error al cargar las noticias.</p>';
-                    console.error('Error loading news:', error);
+                    articleDiv.appendChild(dateElement);
+
+                    const contentElement = document.createElement('p');
+                    contentElement.textContent = newsItem.content;
+                    articleDiv.appendChild(contentElement);
+
+                    newsContainer.appendChild(articleDiv);
                 });
-        }
+            })
+            .catch(error => {
+                console.error("Error al cargar noticias:", error);
+                newsContainer.querySelector('.no-news').textContent = 'Error al cargar las noticias. Por favor, inténtalo de nuevo más tarde.';
+                newsContainer.querySelector('.no-news').style.display = 'block'; // Asegurarse de que el mensaje de error sea visible
+            });
+    }
 
-        // Función para cargar videos de YouTube de Realtime Database
-        function loadYouTubeVideos() {
-            videosContainer.innerHTML = '<p>Cargando videos...</p>';
-            database.ref('top10videos').orderByChild('rank').once('value')
-                .then(snapshot => {
-                    videosContainer.innerHTML = '';
-                    if (!snapshot.exists() || snapshot.val() === null) {
-                        videosContainer.innerHTML = '<p>No hay videos disponibles.</p>';
-                        return;
-                    }
-                    const videosData = snapshot.val();
-                    const sortedVideos = [];
-                    for (let key in videosData) {
-                        if (videosData.hasOwnProperty(key)) {
-                            sortedVideos.push({ id: key, ...videosData[key] });
-                        }
-                    }
-                    // Ordenar por rank numérico
-                    sortedVideos.sort((a, b) => (a.rank || 0) - (b.rank || 0));
+    // Cargar las noticias al cargar la página
+    document.addEventListener('DOMContentLoaded', loadNews);
 
-                    sortedVideos.forEach(item => {
-                        const videoId = item.videoId;
-                        const title = item.title || '';
-                        const videoDiv = document.createElement('div');
-                        videoDiv.style.borderRadius = '12px';
-                        videoDiv.style.overflow = 'hidden';
-                        videoDiv.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
-                        // URL de YouTube corregida
-                        videoDiv.innerHTML = `
-                            <iframe width="100%" height="160" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            <p style="padding: 8px; margin: 0; color: #fff;">${title}</p>
-                        `;
-                        videosContainer.appendChild(videoDiv);
-                    });
-                })
-                .catch(error => {
-                    videosContainer.innerHTML = '<p>Error al cargar los videos.</p>';
-                    console.error('Error loading videos:', error);
-                });
-        }
-
-        // Función para cargar programas de Realtime Database
-        function loadPrograms() {
-            programsContainer.innerHTML = '<p>Cargando programas...</p>';
-            database.ref('programas').orderByChild('name').once('value')
-                .then(snapshot => {
-                    programsContainer.innerHTML = '';
-                    if (!snapshot.exists() || snapshot.val() === null) {
-                        programsContainer.innerHTML = '<p>No hay programas disponibles.</p>';
-                        return;
-                    }
-                    const programsData = snapshot.val();
-                    const sortedPrograms = [];
-                    for (let key in programsData) {
-                        if (programsData.hasOwnProperty(key)) {
-                            sortedPrograms.push({ id: key, ...programsData[key] });
-                        }
-                    }
-                    // Ordenar por nombre alfabéticamente
-                    sortedPrograms.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-
-                    sortedPrograms.forEach(item => {
-                        const name = item.name || '';
-                        const schedule = item.schedule || '';
-                        const description = item.description || '';
-                        const card = document.createElement('div');
-                        card.style.background = '#1e293b';
-                        card.style.borderRadius = '12px';
-                        card.style.padding = '16px';
-                        card.style.color = '#fff';
-                        card.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
-                        card.innerHTML = `
-                            <h3>${name}</h3>
-                            <p><strong>Horario:</strong> ${schedule}</p>
-                            <p>${description}</p>
-                        `;
-                        programsContainer.appendChild(card);
-                    });
-                })
-                .catch(error => {
-                    programsContainer.innerHTML = '<p>Error al cargar los programas.</p>';
-                    console.error('Error loading programs:', error);
-                });
-        }
-
-        // Función para cargar otras 10 características de Realtime Database
-        function loadOtherFeatures() {
-            featuresList.innerHTML = '<li>Cargando funciones...</li>';
-            database.ref('features').orderByChild('order').once('value')
-                .then(snapshot => {
-                    featuresList.innerHTML = '';
-                    if (!snapshot.exists() || snapshot.val() === null) {
-                        featuresList.innerHTML = '<li>No hay funciones disponibles.</li>';
-                        return;
-                    }
-                    const featuresData = snapshot.val();
-                    const sortedFeatures = [];
-                    for (let key in featuresData) {
-                        if (featuresData.hasOwnProperty(key)) {
-                            sortedFeatures.push({ id: key, ...featuresData[key] });
-                        }
-                    }
-                    // Ordenar por 'order' numéricamente
-                    sortedFeatures.sort((a, b) => (a.order || 0) - (b.order || 0));
-
-                    sortedFeatures.forEach(item => {
-                        const featureName = item.name || '';
-                        const li = document.createElement('li');
-                        li.textContent = featureName;
-                        featuresList.appendChild(li);
-                    });
-                })
-                .catch(error => {
-                    featuresList.innerHTML = '<li>Error al cargar las funciones.</li>';
-                    console.error('Error loading features:', error);
-                });
-        }
-
-        // Script para el mini-reproductor (asegúrate de que las rutas de audio sean correctas)
-        const audioMini = document.getElementById('audio-mini');
-        const playPauseMiniBtn = document.getElementById('playPauseMiniBtn');
-        const miniPlayIcon = document.getElementById('miniPlayIcon');
-        const miniVolumeControl = document.getElementById('miniVolumeControl');
-        const miniSongTitle = document.getElementById('miniSongTitle');
-        const miniArtistName = document.getElementById('miniArtistName');
-
-        // Puedes configurar la fuente de audio aquí. Por ejemplo, una URL de streaming de tu radio.
-        // O cargarla desde Firebase si tienes una ruta para eso.
-        audioMini.src = 'URL_DE_TU_STREAMING_DE_RADIO_AQUI'; // ¡CAMBIA ESTO! Ejemplo: 'https://stream.ekusfm.com/live'
-
-        playPauseMiniBtn.addEventListener('click', () => {
-            if (audioMini.paused) {
-                audioMini.play();
-                miniPlayIcon.classList.remove('fa-play');
-                miniPlayIcon.classList.add('fa-pause');
-            } else {
-                audioMini.pause();
-                miniPlayIcon.classList.remove('fa-pause');
-                miniPlayIcon.classList.add('fa-play');
-            }
-        });
-
-        miniVolumeControl.addEventListener('input', () => {
-            audioMini.volume = miniVolumeControl.value;
-        });
-
-        audioMini.addEventListener('play', () => {
-            miniSongTitle.textContent = 'EKUSFM En Vivo'; // Puedes actualizar esto dinámicamente si tienes metadatos del stream
-            miniArtistName.textContent = '¡Tu Radio Favorita!';
-        });
-
-        audioMini.addEventListener('pause', () => {
-            miniSongTitle.textContent = 'Pausado';
-            miniArtistName.textContent = '';
-        });
-
-        audioMini.addEventListener('error', (e) => {
-            console.error('Error en el mini-reproductor:', e);
-            miniSongTitle.textContent = 'Error al cargar audio';
-            miniArtistName.textContent = 'Verifica la URL del stream';
-            miniPlayIcon.classList.remove('fa-pause');
-            miniPlayIcon.classList.add('fa-play');
-        });
-
-        // Inicializa todas las funciones de carga de datos cuando el DOM esté listo
-        document.addEventListener('DOMContentLoaded', () => {
-            loadNews();
-            loadYouTubeVideos();
-            loadPrograms();
-            loadOtherFeatures();
-        });
-    </script>
+  </script>
 </body>
 </html>
