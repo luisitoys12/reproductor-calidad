@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Guía de Configuración de Firebase para noticias.html - EKUSFM</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+      line-height: 1.6;
+      background-color: #f9f9f9;
+      color: #222;
+    }
+    h1, h2, h3 {
+      color: #1e293b;
+    }
+    code {
+      background-color: #e2e8f0;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+    pre {
+      background-color: #e2e8f0;
+      padding: 1rem;
+      border-radius: 6px;
+      overflow-x: auto;
+    }
+    ul {
+      margin-left: 1.5rem;
+    }
+    a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>Guía de Configuración de Firebase para <code>noticias.html</code></h1>
+
+  <p>Esta guía explica cómo configurar correctamente Firebase para que funcione con la página <code>noticias.html</code> de EKUSFM, que muestra noticias, videos de YouTube, programas y otras funciones dinámicas.</p>
+
+  <h2>1. Crear un Proyecto en Firebase</h2>
+  <ol>
+    <li>Accede a <a href="https://console.firebase.google.com/" target="_blank">Firebase Console</a> y crea un nuevo proyecto.</li>
+    <li>Asigna un nombre al proyecto, por ejemplo <em>ekusfm-web</em>, y sigue los pasos para crear el proyecto.</li>
+  </ol>
+
+  <h2>2. Configurar Firestore</h2>
+  <ol>
+    <li>En el panel del proyecto, selecciona <strong>Firestore Database</strong> y crea una base de datos en modo <em>Producción</em> o <em>Prueba</em> según prefieras.</li>
+    <li>Define las siguientes colecciones y documentos para alimentar la página:</li>
+  </ol>
+
+  <h3>Colecciones y Documentos</h3>
+  <ul>
+    <li><code>noticias</code>: Contendrá documentos con las noticias.
+      <ul>
+        <li><code>title</code> (string): Título de la noticia.</li>
+        <li><code>content</code> (string): Contenido o resumen de la noticia.</li>
+        <li><code>date</code> (timestamp): Fecha de publicación.</li>
+      </ul>
+    </li>
+    <li><code>top10videos</code>: Videos de YouTube del top 10 canciones más escuchadas.
+      <ul>
+        <li><code>videoId</code> (string): ID del video de YouTube.</li>
+        <li><code>title</code> (string): Título del video.</li>
+        <li><code>rank</code> (number): Posición en el top 10 (1 a 10).</li>
+      </ul>
+    </li>
+    <li><code>programas</code>: Información de los programas de radio.
+      <ul>
+        <li><code>name</code> (string): Nombre del programa.</li>
+        <li><code>schedule</code> (string): Horario del programa.</li>
+        <li><code>description</code> (string): Descripción breve.</li>
+      </ul>
+    </li>
+    <li><code>features</code>: Lista de otras funciones geniales para mostrar.
+      <ul>
+        <li><code>name</code> (string): Nombre de la función.</li>
+        <li><code>order</code> (number): Orden para mostrar en la lista.</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h2>3. Configurar Reglas de Seguridad</h2>
+  <p>Para permitir lectura pública (solo lectura), configura las reglas de Firestore así:</p>
+  <pre><code>service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}</code></pre>
+
+  <h2>4. Obtener la Configuración de Firebase para la Web</h2>
+  <ol>
+    <li>En el panel de Firebase, ve a <strong>Configuración del proyecto</strong> > <strong>General</strong>.</li>
+    <li>En la sección <strong>Tus apps</strong>, agrega una nueva app web si no existe.</li>
+    <li>Copiar el objeto de configuración que contiene <code>apiKey</code>, <code>authDomain</code>, <code>projectId</code>, etc.</li>
+    <li>Reemplaza el objeto <code>firebaseConfig</code> en <code>noticias.html</code> con esta configuración.</li>
+  </ol>
+
+  <h2>5. Funciones Futuras Sugeridas</h2>
+  <p>Además de las funciones actuales, puedes agregar estas funcionalidades en el futuro usando Firebase:</p>
+  <ul>
+    <li><strong>Comentarios en noticias:</strong> Permitir a los usuarios comentar en cada noticia.</li>
+    <li><strong>Favoritos:</strong> Usuarios pueden marcar noticias o programas favoritos.</li>
+    <li><strong>Notificaciones push:</strong> Enviar alertas de nuevas noticias o programas.</li>
+    <li><strong>Integración con chat en vivo:</strong> Para interacción en tiempo real con la audiencia.</li>
+    <li><strong>Encuestas y votaciones:</strong> Para que los oyentes participen en decisiones o concursos.</li>
+  </ul>
+
+  <h2>6. Recursos Adicionales</h2>
+  <ul>
+    <li><a href="https://firebase.google.com/docs/firestore" target="_blank">Documentación oficial de Firestore</a></li>
+    <li><a href="https://firebase.google.com/docs/web/setup" target="_blank">Configurar Firebase en aplicaciones web</a></li>
+    <li><a href="https://firebase.google.com/docs/security/rules" target="_blank">Reglas de seguridad de Firebase</a></li>
+  </ul>
+
+  <p>Si necesitas ayuda adicional para extender la funcionalidad, no dudes en consultarme.</p>
+</body>
+</html>
