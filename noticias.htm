@@ -194,6 +194,7 @@
             padding: 10px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            flex-wrap: wrap; /* Para envolver los elementos en pantallas pequeñas */
         }
         .video-item .rank {
             font-size: 1.5rem;
@@ -207,9 +208,11 @@
             height: 60px;
             object-fit: cover;
             border-radius: 5px;
+            flex-shrink: 0; /* No se encoge */
         }
         .video-item .video-info {
             flex-grow: 1;
+            min-width: 150px; /* Asegura que el título y descripción tengan espacio */
         }
         .video-item .video-info h4 {
             margin: 0;
@@ -221,9 +224,14 @@
             color: #cbd5e1;
             font-size: 0.85rem;
         }
-        .video-item .view-video-btn {
-            background-color: #38bdf8;
-            color: #1e293b;
+        .video-item .actions {
+            display: flex;
+            flex-direction: column; /* Botones apilados */
+            gap: 5px;
+            margin-left: auto; /* Empuja los botones a la derecha */
+        }
+        .video-item .view-video-btn,
+        .video-item .vote-btn {
             padding: 8px 12px;
             border: none;
             border-radius: 5px;
@@ -232,8 +240,23 @@
             font-weight: 600;
             transition: background-color 0.3s ease;
         }
+        .video-item .view-video-btn {
+            background-color: #38bdf8;
+            color: #1e293b;
+        }
         .video-item .view-video-btn:hover {
             background-color: #22d3ee;
+        }
+        .video-item .vote-btn {
+            background-color: #4CAF50; /* Verde para votar */
+            color: white;
+        }
+        .video-item .vote-btn:hover {
+            background-color: #45a049;
+        }
+        .video-item .vote-btn.voted {
+            background-color: #607d8b; /* Gris si ya votó */
+            cursor: not-allowed;
         }
         #viewMoreVideos {
             background-color: #06b6d4;
@@ -306,7 +329,7 @@
             color: #f8fafc;
             font-size: 1rem;
         }
-        .no-data-message {
+        .no-data-message, .loading-message {
             text-align: center;
             color: #94a3b8;
             font-style: italic;
@@ -427,14 +450,6 @@
                 transform: scale(1);
             }
         }
-        
-        /* Mensajes de carga/no datos */
-        .loading-message, .no-data-message {
-            text-align: center;
-            color: #94a3b8;
-            font-style: italic;
-            padding: 20px;
-        }
     </style>
 
     <script>
@@ -522,7 +537,7 @@
 
     <div id="newsModal" class="modal">
         <div class="modal-content">
-            <span class="close-button">&times;</span>
+            <span class="close-button">×</span>
             <img id="modalNewsImage" src="" alt="Imagen de la noticia" style="display: none;">
             <h3 id="modalNewsTitle"></h3>
             <span id="modalNewsDate" class="modal-date"></span>
@@ -532,7 +547,7 @@
 
     <div id="videoModal" class="modal">
         <div class="modal-content">
-            <span class="close-button">&times;</span>
+            <span class="close-button">×</span>
             <h3 id="modalVideoTitle"></h3>
             <div class="video-wrapper">
                 <iframe id="modalVideoIframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -606,7 +621,7 @@
 
         function openVideoModal(title, videoId) {
             modalVideoTitle.textContent = title;
-            modalVideoIframe.src = `http://www.youtube.com/embed/${videoId}?autoplay=1`;
+            modalVideoIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
             videoModal.classList.add('show');
         }
 
@@ -633,7 +648,7 @@
 
                     const formattedDate = new Date(newsItem.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
                     const imageUrlHtml = (newsItem.imageUrl && newsItem.imageUrl.startsWith('http')) 
-                        ? `<img src="${newsItem.imageUrl}" alt="${newsItem.title}" onerror="this.style.display='none';">` 
+                        ? `<img src="${newsItem.imageUrl}" alt="${newsItem.title}" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x200?text=No+Image';">` 
                         : '';
 
                     articleDiv.innerHTML = `
@@ -683,7 +698,8 @@
                     allVideos.push({ id: childSnapshot.key, ...childSnapshot.val() });
                 });
 
-                allVideos.sort((a, b) => a.rank - b.rank); // Asegurarse de que estén ordenados por rank
+                // Ordenar por rank para mostrar siempre el orden correcto
+                allVideos.sort((a, b) => a.rank - b.rank); 
 
                 renderVideos(initialVideoCount);
                 if (allVideos.length > initialVideoCount) {
@@ -703,18 +719,39 @@
                 const li = document.createElement('li');
                 li.className = 'video-item';
                 const thumbnailUrl = `https://img.youtube.com/vi/${videoItem.videoId}/mqdefault.jpg`;
+                const hasVoted = localStorage.getItem(`votedFor_${videoItem.id}`) === 'true';
+
                 li.innerHTML = `
                     <span class="rank">#${videoItem.rank}</span>
                     <img src="${thumbnailUrl}" alt="Miniatura de ${videoItem.title}" class="video-thumbnail" onerror="this.onerror=null;this.src='https://via.placeholder.com/80x60?text=No+Img';">
                     <div class="video-info">
                         <h4>${videoItem.title}</h4>
+                        <p>Votos: ${videoItem.votes || 0}</p>
                     </div>
-                    <button class="view-video-btn" data-title="${videoItem.title}" data-videoid="${videoItem.videoId}">Ver Video</button>
+                    <div class="actions">
+                        <button class="view-video-btn" data-title="${videoItem.title}" data-videoid="${videoItem.videoId}">Ver Video</button>
+                        <button class="vote-btn ${hasVoted ? 'voted' : ''}" data-id="${videoItem.id}" ${hasVoted ? 'disabled' : ''}>${hasVoted ? 'Ya Votaste' : 'Votar'}</button>
+                    </div>
                 `;
                 videosListUl.appendChild(li);
 
                 li.querySelector('.view-video-btn').addEventListener('click', function() {
                     openVideoModal(this.dataset.title, this.dataset.videoid);
+                });
+
+                li.querySelector('.vote-btn').addEventListener('click', function() {
+                    const videoId = this.dataset.id;
+                    if (!localStorage.getItem(`votedFor_${videoId}`)) {
+                        database.ref(`top10videos/${videoId}/votes`).transaction((currentVotes) => {
+                            return (currentVotes || 0) + 1;
+                        }).then(() => {
+                            localStorage.setItem(`votedFor_${videoId}`, 'true');
+                            loadTop10Videos(); // Recargar para actualizar los votos y el estado del botón
+                        }).catch(error => {
+                            console.error("Error al votar:", error);
+                            alert("Hubo un error al procesar tu voto. Inténtalo de nuevo.");
+                        });
+                    }
                 });
             });
         }
