@@ -75,8 +75,6 @@ function makeSpotifyAppleBtns(title, artist) {
     `;
 }
 
-let lastMetadata = { title: "", artist: "" }; // Para historial
-
 async function updateMetadata() {
     try {
         const url = `${config.azuracastURL}/api/nowplaying/${config.azuracastStation}`;
@@ -87,6 +85,7 @@ async function updateMetadata() {
         let title = data.now_playing?.song?.title || data.now_playing?.song?.text || "Sin datos";
         let artist = data.now_playing?.song?.artist || "";
         let artUrl = data.now_playing?.song?.art || "";
+        let listeners = data.listeners?.current || 0;
 
         // Fallbacks
         if ((!title || title === "Sin datos") && data.song?.title) title = data.song.title;
@@ -105,22 +104,20 @@ async function updateMetadata() {
         coverImg.src = artUrl;
         serviceBtns.innerHTML = makeSpotifyAppleBtns(title, artist);
 
-        // === AGREGAR AL HISTORIAL SOLO SI CAMBIA LA CANCIÓN ===
-        if (title && artist && (title !== lastMetadata.title || artist !== lastMetadata.artist)) {
-            addSongToHistory({
-                title,
-                artist,
-                spotify: `https://open.spotify.com/search/${encodeURIComponent(title + " " + artist)}`,
-                apple: `https://music.apple.com/search?term=${encodeURIComponent(title + " " + artist)}`,
-                cover: artUrl
-            });
-            lastMetadata = { title, artist };
+        // Update listeners count display
+        const listenersCount = document.getElementById('listenersCount');
+        if (listenersCount) {
+            listenersCount.textContent = `Oyentes actuales: ${listeners}`;
         }
     } catch (e) {
         songTitle.textContent = "Sin datos";
         artistName.textContent = "";
         coverImg.src = config.albumCover;
         serviceBtns.innerHTML = "";
+        const listenersCount = document.getElementById('listenersCount');
+        if (listenersCount) {
+            listenersCount.textContent = "";
+        }
     }
 }
 setInterval(updateMetadata, 10000);
@@ -170,22 +167,21 @@ closeMenuBtn.addEventListener('click', () => {
 
 // === REDES SOCIALES ===
 const menuSocialLinks = document.getElementById('menu-social-links');
-const redesTextos = {
-    "web.facebook.com/ekusfm": "Síguenos en Facebook",
-    "www.instagram.com/estacionkusfm/": "Síguenos en Instagram",
-    "www.youtube.com/estacionkusfm": "Síguenos en YouTube",
-    "chat.whatsapp.com/JSk9LFoclGrFxY7rb4TFWu": "Únete al WhatsApp"
-};
 config.redesSociales.forEach(({ url, icon }) => {
     const a = document.createElement('a');
     a.href = url;
     a.target = '_blank';
     a.rel = 'noopener noreferrer';
     a.className = 'menu-link';
-    // Elegir el texto adecuado para el enlace
-    const key = url.replace(/^https?:\/\//, '');
-    const texto = redesTextos[key] || "Red social";
-    a.innerHTML = `<i class="${icon}"></i> ${texto}`;
+    // Extract social network name from URL for display text
+    let displayName = '';
+    if (url.includes('facebook.com')) displayName = 'Síguenos en Facebook';
+    else if (url.includes('instagram.com')) displayName = 'Síguenos en Instagram';
+    else if (url.includes('youtube.com')) displayName = 'Síguenos en YouTube';
+    else if (url.includes('whatsapp.com')) displayName = 'Únete a WhatsApp';
+    else displayName = 'Síguenos';
+
+    a.innerHTML = `<i class="${icon}"></i> ${displayName}`;
     menuSocialLinks.appendChild(a);
 });
 
@@ -255,83 +251,140 @@ closeBastaModal.addEventListener('click', () => {
     modalBasta.style.display = 'none';
 });
 
+// === MODAL HISTORIAL ===
+const modalHistory = document.getElementById('modalHistory');
+const historyLink = document.getElementById('historyLink');
+const closeHistoryModal = document.getElementById('closeHistoryModal');
+const historyList = document.getElementById('historyList');
 
-/* === HISTORIAL DE CANCIONES PROFESIONAL === */
-
-// Mostrar historial de canciones
-document.getElementById("historyLink").addEventListener("click", function(e) {
+historyLink.addEventListener('click', (e) => {
     e.preventDefault();
-    showHistory();
+    // For demo, show placeholder items with professional design
+    historyList.innerHTML = '';
+    const songs = [
+        {
+            title: 'Canción 1',
+            artist: 'Artista A',
+            time: '10:15 AM',
+            cover: 'https://aventura.estacionkusmedios.com/img/default.jpg'
+        },
+        {
+            title: 'Canción 2',
+            artist: 'Artista B',
+            time: '10:20 AM',
+            cover: 'https://aventura.estacionkusmedios.com/img/default.jpg'
+        },
+        {
+            title: 'Canción 3',
+            artist: 'Artista C',
+            time: '10:25 AM',
+            cover: 'https://aventura.estacionkusmedios.com/img/default.jpg'
+        },
+        {
+            title: 'Canción 4',
+            artist: 'Artista D',
+            time: '10:30 AM',
+            cover: 'https://aventura.estacionkusmedios.com/img/default.jpg'
+        }
+    ];
+    songs.forEach(song => {
+        const li = document.createElement('li');
+        li.style.display = 'flex';
+        li.style.alignItems = 'center';
+        li.style.marginBottom = '12px';
+        li.style.gap = '12px';
+
+        const img = document.createElement('img');
+        img.src = song.cover;
+        img.alt = `${song.title} cover`;
+        img.style.width = '50px';
+        img.style.height = '50px';
+        img.style.borderRadius = '8px';
+        img.style.objectFit = 'cover';
+
+        const infoDiv = document.createElement('div');
+        infoDiv.style.flexGrow = '1';
+
+        const titleDiv = document.createElement('div');
+        titleDiv.textContent = song.title;
+        titleDiv.style.fontWeight = 'bold';
+        titleDiv.style.fontSize = '1.1em';
+
+        const artistDiv = document.createElement('div');
+        artistDiv.textContent = song.artist;
+        artistDiv.style.color = '#38bdf8';
+
+        infoDiv.appendChild(titleDiv);
+        infoDiv.appendChild(artistDiv);
+
+        const timeDiv = document.createElement('div');
+        timeDiv.textContent = song.time;
+        timeDiv.style.fontSize = '0.9em';
+        timeDiv.style.color = '#94a3b8';
+
+        li.appendChild(img);
+        li.appendChild(infoDiv);
+        li.appendChild(timeDiv);
+
+        historyList.appendChild(li);
+    });
+    modalHistory.style.display = 'flex';
+});
+closeHistoryModal.addEventListener('click', () => {
+    modalHistory.style.display = 'none';
 });
 
-function showHistory() {
-    const history = JSON.parse(localStorage.getItem("ekusfm_historial") || "[]");
-    const ul = document.getElementById("historial-list");
-    if (!history.length) {
-        ul.innerHTML = `<div style="padding:22px 0;text-align:center;color:#64748b;">No hay historial aún.</div>`;
-        document.getElementById("historyModal").style.display = "flex";
-        return;
-    }
-    ul.innerHTML = history.map(song => `
-      <div class="song-card">
-        <img class="song-cover" src="${song.cover ? song.cover : 'https://aventura.estacionkusmedios.com/img/default.jpg'}" alt="cover">
-        <div class="song-info-hist">
-          <div class="song-title-hist" title="${song.title}">${song.title}</div>
-          <div class="song-artist-hist" title="${song.artist}">${song.artist}</div>
-          <div class="song-meta-row">
-            <span class="song-time-hist"><i class="fas fa-clock"></i>${song.time}</span>
-            <div class="song-btns-hist">
-              <a class="song-btn-hist spotify" href="${song.spotify}" target="_blank"><i class="fab fa-spotify"></i>Spotify</a>
-              <a class="song-btn-hist apple" href="${song.apple}" target="_blank"><i class="fab fa-apple"></i>Apple</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    `).join("");
-    document.getElementById("historyModal").style.display = "flex";
-}
+// === MODAL ACERCA DE ===
+const modalAbout = document.getElementById('modalAbout');
+const aboutLink = document.getElementById('aboutLink');
+const closeAboutModal = document.getElementById('closeAboutModal');
 
-function addSongToHistory({ title, artist, spotify, apple, cover }) {
-    const history = JSON.parse(localStorage.getItem("ekusfm_historial") || "[]");
-    const now = new Date();
-    const hora = now.toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
-    // Evita repetidos consecutivos
-    if (history[0] && history[0].title === title && history[0].artist === artist) return;
-    history.unshift({ title, artist, time: hora, spotify, apple, cover });
-    if (history.length > 15) history.pop();
-    localStorage.setItem("ekusfm_historial", JSON.stringify(history));
-}
-
-// Cerrar modal historial
-document.getElementById("historyModal").addEventListener("click", function(e) {
-    if (e.target === this) this.style.display = "none";
-});
-document.querySelector("#historyModal button").addEventListener("click", function() {
-    document.getElementById("historyModal").style.display = "none";
-});
-
-/* === MODAL ACERCA DE === */
-document.getElementById("aboutLink").addEventListener("click", function(e) {
+aboutLink.addEventListener('click', (e) => {
     e.preventDefault();
-    document.getElementById("aboutModal").style.display = "flex";
+    modalAbout.style.display = 'flex';
 });
-document.getElementById("aboutModal").addEventListener("click", function(e) {
-    if (e.target === this) this.style.display = "none";
-});
-document.querySelector("#aboutModal button").addEventListener("click", function() {
-    document.getElementById("aboutModal").style.display = "none";
+closeAboutModal.addEventListener('click', () => {
+    modalAbout.style.display = 'none';
 });
 
-/* === BOTÓN COMPARTIR === */
-document.getElementById("shareLink").addEventListener("click", function(e) {
+// === MODAL COMPARTIR ===
+const modalShare = document.getElementById('modalShare');
+const shareLink = document.getElementById('shareLink');
+const closeShareModal = document.getElementById('closeShareModal');
+
+shareLink.addEventListener('click', (e) => {
     e.preventDefault();
-    if (navigator.share) {
-        navigator.share({
-            title: "EKUSFM Radio",
-            text: "¡Escucha EKUSFM, la mejor radio online!",
-            url: window.location.href
-        });
-    } else {
-        prompt("Copia este enlace para compartir:", window.location.href);
-    }
+    modalShare.style.display = 'flex';
+});
+closeShareModal.addEventListener('click', () => {
+    modalShare.style.display = 'none';
+});
+
+// Copy link button
+const copyLinkBtn = document.getElementById('copyLinkBtn');
+const shareLinkInput = document.getElementById('shareLinkInput');
+copyLinkBtn.addEventListener('click', () => {
+    shareLinkInput.select();
+    document.execCommand('copy');
+    copyLinkBtn.textContent = '¡Copiado!';
+    setTimeout(() => {
+        copyLinkBtn.textContent = 'Copiar enlace';
+    }, 2000);
+});
+
+// Share on Facebook
+const shareFacebookBtn = document.getElementById('shareFacebookBtn');
+shareFacebookBtn.addEventListener('click', () => {
+    const url = encodeURIComponent(shareLinkInput.value);
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+    window.open(facebookUrl, '_blank', 'width=600,height=400');
+});
+
+// Share on WhatsApp
+const shareWhatsAppBtn = document.getElementById('shareWhatsAppBtn');
+shareWhatsAppBtn.addEventListener('click', () => {
+    const url = encodeURIComponent(shareLinkInput.value);
+    const message = encodeURIComponent('¡Escucha EstacionKUSFM! La mejor música y entretenimiento online.');
+    const whatsappUrl = `https://api.whatsapp.com/send?text=${message}%20${url}`;
+    window.open(whatsappUrl, '_blank');
 });
