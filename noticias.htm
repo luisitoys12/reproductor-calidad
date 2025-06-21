@@ -56,78 +56,158 @@
         background-color: #06b6d4;
     }
 
-    /* --- Estilos del Mini-Reproductor --- */
-    .mini-player {
-      position: fixed;
-      top: 15px;
-      left: 15px;
-      width: 280px;
-      background: url('https://images.pexels.com/photos/3082341/pexels-photo-3082341.jpeg') no-repeat center center;
-      background-size: cover;
-      filter: brightness(1.2); /* Ajusta el brillo si es necesario */
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.5);
-      z-index: 10000; /* Asegura que esté por encima de todo */
-      padding: 8px 12px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: #fff;
-      font-family: 'Poppins', Arial, sans-serif;
-      position: relative;
-      overflow: hidden;
-    }
-    .mini-player::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 0;
-      border-radius: 10px;
-    }
-    .mini-play-btn {
-      background: #22d3ee;
-      border: none;
-      border-radius: 50%;
-      width: 36px;
-      height: 36px;
-      color: #222;
-      font-size: 1.2rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1;
-      position: relative;
-    }
-    .mini-song-info {
-      flex-grow: 1;
-      overflow: hidden;
-      z-index: 1;
-      position: relative;
-    }
-    .mini-song-title {
-      font-weight: 600;
-      font-size: 0.9rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .mini-artist-name {
-      font-size: 0.8rem;
-      color: #38bdf8;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .mini-volume-control {
-      width: 70px;
-      cursor: pointer;
-      z-index: 1;
-      position: relative;
-    }
+    /* --- Nuevo Diseño del Mini-Reproductor --- */
+    #mini-reproductor {
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        width: 320px; /* Ancho un poco más grande */
+        background: #1e293b; /* Color de fondo sólido */
+        border-radius: 15px; /* Bordes más redondeados */
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
+        z-index: 10000;
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #fff;
+        font-family: 'Poppins', Arial, sans-serif;
+        border: 1px solid #38bdf8; /* Borde sutil */
+        transition: all 0.3s ease; /* Transición suave para cambios de estado */
+    }
 
-    /* --- Contenido Principal de la Página --- */
+    #mini-reproductor:hover {
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8);
+        transform: translateY(-2px);
+    }
+
+    #mini-reproductor.playing {
+        /* Estilo cuando está reproduciendo */
+        background: linear-gradient(135deg, #1e293b, #334155);
+    }
+
+    .player-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .mini-play-btn {
+        background: #22d3ee;
+        border: none;
+        border-radius: 50%;
+        width: 45px; /* Más grande */
+        height: 45px;
+        color: #1e293b; /* Texto oscuro para contraste */
+        font-size: 1.5rem; /* Icono más grande */
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .mini-play-btn:hover {
+        background-color: #06b6d4;
+        transform: scale(1.05);
+    }
+    .mini-play-btn:active {
+        transform: scale(0.95);
+    }
+
+    .mini-info-and-volume {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .mini-song-title {
+        font-weight: 600;
+        font-size: 1rem; /* Más grande */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-bottom: 2px;
+        color: #f8fafc;
+    }
+    .mini-artist-name {
+        font-size: 0.85rem; /* Ligeramente más grande */
+        color: #94a3b8; /* Tono más suave */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .mini-artist-name.program-info {
+        color: #38bdf8; /* Azul para resaltar el horario del programa */
+        font-weight: 500;
+    }
+
+    .mini-volume-control-container {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-top: 8px; /* Espacio entre info y volumen */
+    }
+    .mini-volume-control-container .material-icons {
+        font-size: 1.2rem;
+        color: #94a3b8;
+    }
+    .mini-volume-control {
+        -webkit-appearance: none;
+        width: 100%; /* Ocupa el ancho disponible */
+        height: 4px; /* Más delgado */
+        background: #475569; /* Color de la pista */
+        border-radius: 2px;
+        outline: none;
+        cursor: pointer;
+    }
+    .mini-volume-control::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 14px; /* Tamaño del thumb */
+        height: 14px;
+        border-radius: 50%;
+        background: #22d3ee; /* Color del thumb */
+        cursor: pointer;
+        box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    }
+    .mini-volume-control::-moz-range-thumb {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: #22d3ee;
+        cursor: pointer;
+        box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    }
+
+    .audio-loader {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background-color: #06b6d4; /* Color de la barra de carga */
+        transform-origin: left;
+        transform: scaleX(0);
+        transition: transform 0.1s linear; /* Transición para un movimiento suave */
+        border-bottom-left-radius: 15px; /* Bordes para coincidir con el reproductor */
+        border-bottom-right-radius: 15px;
+    }
+    .audio-loader.loading {
+        /* Animación para indicar carga si no hay progress */
+        animation: loading-pulse 1.5s infinite ease-in-out;
+    }
+
+    @keyframes loading-pulse {
+        0% { transform: scaleX(0); opacity: 0.5; }
+        50% { transform: scaleX(0.7); opacity: 1; }
+        100% { transform: scaleX(0); opacity: 0.5; }
+    }
+
+
+    /* --- Contenido Principal de la Página (los mismos estilos anteriores) --- */
     .content-wrapper {
         max-width: 1000px;
         margin: 20px auto;
@@ -323,16 +403,23 @@
 
 </head>
 <body>
-  <div id="mini-reproductor" class="mini-player">
-    <button id="playPauseMiniBtn" class="mini-play-btn" title="Play/Pause">
-      <i id="miniPlayIcon" class="fa-solid fa-play"></i>
-    </button>
-    <div class="mini-song-info">
-      <div id="miniSongTitle" class="mini-song-title">Cargando programa...</div>
-      <div id="miniArtistName" class="mini-artist-name"></div>
-    </div>
-    <input type="range" id="miniVolumeControl" class="mini-volume-control" min="0" max="1" step="0.01" value="1" title="Volume" />
+  <div id="mini-reproductor">
+    <div class="player-controls">
+        <button id="playPauseMiniBtn" class="mini-play-btn" title="Reproducir/Pausar">
+            <i id="miniPlayIcon" class="fa-solid fa-play"></i>
+        </button>
+    </div>
+    <div class="mini-info-and-volume">
+        <div id="miniSongTitle" class="mini-song-title">Cargando...</div>
+        <div id="miniArtistName" class="mini-artist-name"></div>
+        <div class="mini-volume-control-container">
+            <i class="material-icons">volume_down</i>
+            <input type="range" id="miniVolumeControl" class="mini-volume-control" min="0" max="1" step="0.01" value="1" title="Volumen" />
+            <i class="material-icons">volume_up</i>
+        </div>
+    </div>
     <audio id="audio-mini" preload="auto" crossorigin="anonymous"></audio>
+    <div id="audioLoader" class="audio-loader"></div>
   </div>
 
   <div class="header">
@@ -396,41 +483,107 @@
 
     const database = firebase.database();
 
-    // --- Lógica del Mini-Reproductor ---
+    // --- Configuración del Stream y AzuraCast ---
     const AUDIO_STREAM_URL = "https://radio.trabullnetwork.pro/listen/esmerosound/radio.mp3";
+    // *** REEMPLAZA ESTA URL CON LA URL DEL API DE TU AZURACAST ***
+    // Puedes encontrarla en tu panel de AzuraCast, generalmente en "APIs" o "Public Pages"
+    const AZURACAST_API_URL = "https://radio.trabullnetwork.pro/api/live/nowplaying/1"; 
+    // Si tu estación tiene un ID en AzuraCast, podría ser algo como ".../nowplaying/1" o ".../nowplaying/ekusfm"
+    
     const audioMini = document.getElementById('audio-mini');
-    audioMini.src = AUDIO_STREAM_URL;
-    audioMini.crossOrigin = "anonymous";
-    audioMini.volume = 1;
-
-    const playPauseMiniBtn = document.getElementById('playPauseMiniBtn');
+    const miniReproductorDiv = document.getElementById('mini-reproductor');
     const miniPlayIcon = document.getElementById('miniPlayIcon');
     const miniSongTitle = document.getElementById('miniSongTitle');
     const miniArtistName = document.getElementById('miniArtistName');
     const miniVolumeControl = document.getElementById('miniVolumeControl');
+    const audioLoader = document.getElementById('audioLoader');
 
-    playPauseMiniBtn.addEventListener('click', function() {
+    audioMini.src = AUDIO_STREAM_URL;
+    audioMini.crossOrigin = "anonymous";
+    audioMini.volume = 0.7; // Establece un volumen inicial predeterminado
+    miniVolumeControl.value = 0.7; // Sincroniza el slider con el volumen inicial
+
+    // --- Controles de Reproducción ---
+    document.getElementById('playPauseMiniBtn').addEventListener('click', function() {
         if (audioMini.paused) {
             audioMini.play();
         } else {
             audioMini.pause();
         }
     });
-    audioMini.addEventListener('play', function() {
-        miniPlayIcon.classList.remove('fa-play');
-        miniPlayIcon.classList.add('fa-pause');
-    });
-    audioMini.addEventListener('pause', function() {
-        miniPlayIcon.classList.remove('fa-pause');
-        miniPlayIcon.classList.add('fa-play');
-    });
-    miniVolumeControl.addEventListener('input', function() {
-        audioMini.volume = this.value;
+
+    audioMini.addEventListener('play', () => {
+        miniPlayIcon.classList.replace('fa-play', 'fa-pause');
+        miniReproductorDiv.classList.add('playing');
+        audioLoader.classList.remove('loading'); // Remover la animación de carga si ya hay progreso
     });
 
-    // --- Lógica para obtener el programa actual de Firebase (sin cambios relevantes) ---
+    audioMini.addEventListener('pause', () => {
+        miniPlayIcon.classList.replace('fa-pause', 'fa-play');
+        miniReproductorDiv.classList.remove('playing');
+        audioLoader.style.transform = 'scaleX(0)'; // Resetear la barra de progreso al pausar
+    });
+
+    miniVolumeControl.addEventListener('input', function() {
+        audioMini.volume = parseFloat(this.value);
+    });
+
+    // --- Manejo de la barra de progreso de carga ---
+    audioMini.addEventListener('waiting', () => {
+        audioLoader.classList.add('loading'); // Muestra animación de carga si el audio está en búfer
+    });
+
+    audioMini.addEventListener('playing', () => {
+        audioLoader.classList.remove('loading'); // Quita animación si el audio está reproduciendo
+    });
+
+    audioMini.addEventListener('progress', () => {
+        if (audioMini.duration > 0) {
+            const buffered = audioMini.buffered.end(audioMini.buffered.length - 1);
+            const percentage = (buffered / audioMini.duration) * 100;
+            audioLoader.style.transform = `scaleX(${percentage / 100})`;
+            audioLoader.classList.remove('loading'); // Si hay progreso, no mostrar animación genérica
+        }
+    });
+    // Fallback para streams en vivo sin duración conocida
+    audioMini.addEventListener('stalled', () => {
+        audioLoader.classList.add('loading'); // Si se estanca, mostrar animación
+    });
+
+
+    // --- Lógica de AzuraCast y Firebase para Metadatos ---
+    let currentAzuraCastData = { title: "EKUSFM", artist: "La mejor música y contenido" };
+
+    async function fetchAzuraCastMetadata() {
+        try {
+            const response = await fetch(AZURACAST_API_URL);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            // AzuraCast devuelve un array, toma el primer elemento
+            const nowPlaying = data[0] || data; 
+            
+            if (nowPlaying && nowPlaying.now_playing && nowPlaying.now_playing.song) {
+                currentAzuraCastData.title = nowPlaying.now_playing.song.title || "Sin título";
+                currentAzuraCastData.artist = nowPlaying.now_playing.song.artist || "Artista Desconocido";
+            } else if (nowPlaying && nowPlaying.current_song && nowPlaying.current_song.title) {
+                 // Otra estructura común de AzuraCast API
+                currentAzuraCastData.title = nowPlaying.current_song.title;
+                currentAzuraCastData.artist = nowPlaying.current_song.artist;
+            } else {
+                console.warn("No se encontraron datos de canción/artista en la respuesta de AzuraCast.");
+                currentAzuraCastData = { title: "EKUSFM", artist: "Cargando metadatos..." };
+            }
+        } catch (error) {
+            console.error("Error al obtener metadatos de AzuraCast:", error);
+            currentAzuraCastData = { title: "EKUSFM", artist: "Error al cargar metadatos" };
+        }
+    }
+
+    // Funciones auxiliares para determinar el programa actual (sin cambios)
     function getDayOfWeek(date) {
-        const days = ['Domingo', 'Lunes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']; // Ojo: "Martes" faltaba, corregido abajo
+        const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
         return days[date.getDay()];
     }
 
@@ -438,7 +591,7 @@
         const [hourStr, minuteStr] = timeStr.split(':');
         const hour = parseInt(hourStr);
         const minute = parseInt(minuteStr);
-        return hour * 60 + minute; // Tiempo en minutos desde la medianoche
+        return hour * 60 + minute;
     }
 
     function convertTo24Hour(timeStr) {
@@ -456,108 +609,111 @@
         return `${hours}:${minutes}`;
     }
 
-    function checkCurrentProgram() {
+    async function updateMiniPlayerDisplay() {
         const now = new Date();
-        const currentDay = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'][now.getDay()]; // Asegura todos los días
+        const currentDay = getDayOfWeek(now);
         const currentTimeInMinutes = now.getHours() * 60 + now.getMinutes();
+        let foundProgram = null;
 
-        database.ref('programas').once('value')
-            .then(snapshot => {
-                if (snapshot.exists()) {
-                    const programs = snapshot.val();
-                    let foundProgram = null;
+        try {
+            const snapshot = await database.ref('programas').once('value');
+            if (snapshot.exists()) {
+                const programs = snapshot.val();
+                for (let key in programs) {
+                    if (programs.hasOwnProperty(key)) {
+                        const program = programs[key];
+                        const schedule = program.schedule;
 
-                    for (let key in programs) {
-                        if (programs.hasOwnProperty(key)) {
-                            const program = programs[key];
-                            const schedule = program.schedule;
+                        const dayMatch = schedule.match(/^(.*?)\s*(\d{1,2}:\d{2}\s*(AM|PM)?\s*-\s*\d{1,2}:\d{2}\s*(AM|PM)?)$/i);
+                        if (!dayMatch || dayMatch.length < 3) continue;
 
-                            const dayMatch = schedule.match(/^(.*?)\s*(\d{1,2}:\d{2}\s*(AM|PM)?\s*-\s*\d{1,2}:\d{2}\s*(AM|PM)?)$/i);
-                            
-                            if (!dayMatch || dayMatch.length < 3) continue;
+                        let daysPart = dayMatch[1].trim();
+                        let timePartStr = dayMatch[2].trim();
 
-                            let daysPart = dayMatch[1].trim();
-                            let timePartStr = dayMatch[2].trim();
+                        let [startTimeStr, endTimeStr] = timePartStr.split(' - ');
+                        startTimeStr = convertTo24Hour(startTimeStr);
+                        endTimeStr = convertTo24Hour(endTimeStr);
 
-                            let [startTimeStr, endTimeStr] = timePartStr.split(' - ');
+                        const programStartTime = parseTime(startTimeStr);
+                        const programEndTime = parseTime(endTimeStr);
 
-                            startTimeStr = convertTo24Hour(startTimeStr);
-                            endTimeStr = convertTo24Hour(endTimeStr);
-
-                            const programStartTime = parseTime(startTimeStr);
-                            const programEndTime = parseTime(endTimeStr);
-
-                            const daysOfWeek = [];
-                            if (daysPart.includes('Lunes a Viernes')) {
-                                daysOfWeek.push('Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes');
-                            } else if (daysPart.includes('Sábados y Domingos')) {
-                                daysOfWeek.push('Sábado', 'Domingo');
-                            } else {
-                                daysPart.split(/,|\s+y\s+/).forEach(dayRange => {
-                                    const trimmedDayRange = dayRange.trim();
-                                    if (trimmedDayRange.includes('a')) {
-                                        const [startDay, endDay] = trimmedDayRange.split('a').map(d => d.trim());
-                                        const allDays = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
-                                        const startIndex = allDays.indexOf(startDay);
-                                        const endIndex = allDays.indexOf(endDay);
-                                        if (startIndex !== -1 && endIndex !== -1) {
-                                            for (let i = startIndex; i <= endIndex; i++) {
-                                                daysOfWeek.push(allDays[i]);
-                                            }
+                        const daysOfWeek = [];
+                        if (daysPart.includes('Lunes a Viernes')) {
+                            daysOfWeek.push('Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes');
+                        } else if (daysPart.includes('Sábados y Domingos')) {
+                            daysOfWeek.push('Sábado', 'Domingo');
+                        } else {
+                            daysPart.split(/,|\s+y\s+/).forEach(dayRange => {
+                                const trimmedDayRange = dayRange.trim();
+                                if (trimmedDayRange.includes('a')) {
+                                    const [startDay, endDay] = trimmedDayRange.split('a').map(d => d.trim());
+                                    const allDays = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+                                    const startIndex = allDays.indexOf(startDay);
+                                    const endIndex = allDays.indexOf(endDay);
+                                    if (startIndex !== -1 && endIndex !== -1) {
+                                        for (let i = startIndex; i <= endIndex; i++) {
+                                            daysOfWeek.push(allDays[i]);
                                         }
-                                    } else if (trimmedDayRange) {
-                                        daysOfWeek.push(trimmedDayRange);
                                     }
-                                });
-                            }
-                            
-                            const formattedDaysOfWeek = daysOfWeek.map(d => {
-                                let day = d.charAt(0).toUpperCase() + d.slice(1).toLowerCase();
-                                return day.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                                } else if (trimmedDayRange) {
+                                    daysOfWeek.push(trimmedDayRange);
+                                }
                             });
+                        }
+                        
+                        const formattedDaysOfWeek = daysOfWeek.map(d => d.charAt(0).toUpperCase() + d.slice(1).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
 
-                            let isOvernight = programEndTime < programStartTime;
-                            let isCurrentDay = formattedDaysOfWeek.includes(currentDay);
+                        let isOvernight = programEndTime < programStartTime;
+                        let isCurrentDay = formattedDaysOfWeek.includes(currentDay);
 
-                            if (isCurrentDay) {
-                                if (isOvernight) {
-                                    if (currentTimeInMinutes >= programStartTime || currentTimeInMinutes < programEndTime) {
-                                        foundProgram = program;
-                                        break;
-                                    }
-                                } else {
-                                    if (currentTimeInMinutes >= programStartTime && currentTimeInMinutes < programEndTime) {
-                                        foundProgram = program;
-                                        break;
-                                    }
+                        if (isCurrentDay) {
+                            if (isOvernight) {
+                                if (currentTimeInMinutes >= programStartTime || currentTimeInMinutes < programEndTime) {
+                                    foundProgram = program;
+                                    break;
+                                }
+                            } else {
+                                if (currentTimeInMinutes >= programStartTime && currentTimeInMinutes < programEndTime) {
+                                    foundProgram = program;
+                                    break;
                                 }
                             }
                         }
                     }
-
-                    if (foundProgram) {
-                        miniSongTitle.textContent = foundProgram.name;
-                        miniArtistName.textContent = foundProgram.schedule;
-                    } else {
-                        miniSongTitle.textContent = "¡Sintoniza EKUSFM!";
-                        miniArtistName.textContent = "La mejor música y contenido";
-                    }
-                } else {
-                    miniSongTitle.textContent = "¡Sintoniza EKUSFM!";
-                    miniArtistName.textContent = "Cargando programación...";
                 }
-            })
-            .catch(error => {
-                console.error("Error al cargar programas para mini-reproductor:", error);
-                miniSongTitle.textContent = "Error de carga";
-                miniArtistName.textContent = "Intenta recargar";
-            });
+            }
+        } catch (error) {
+            console.error("Error al cargar programas para la lógica de visualización:", error);
+        }
+
+        if (foundProgram) {
+            miniSongTitle.textContent = foundProgram.name;
+            miniArtistName.textContent = "Al Aire: " + foundProgram.schedule;
+            miniArtistName.classList.add('program-info'); // Agrega clase para estilo específico de programa
+        } else {
+            // Si no hay programa al aire, muestra los metadatos de AzuraCast
+            miniSongTitle.textContent = currentAzuraCastData.title;
+            miniArtistName.textContent = currentAzuraCastData.artist;
+            miniArtistName.classList.remove('program-info');
+        }
     }
 
-    checkCurrentProgram();
-    setInterval(checkCurrentProgram, 60 * 1000); // Actualiza cada 1 minuto
+    // --- Orquestación de Actualizaciones ---
+    async function initMiniPlayerUpdates() {
+        await fetchAzuraCastMetadata(); // Obtener metadatos de AzuraCast primero
+        updateMiniPlayerDisplay(); // Luego, decidir qué mostrar (programa o AzuraCast)
 
-    // --- Funciones para cargar datos de Firebase y mostrarlos ---
+        // Actualizar metadatos de AzuraCast cada 10 segundos
+        setInterval(fetchAzuraCastMetadata, 10 * 1000); 
+        // Actualizar la visualización del mini-reproductor cada minuto para la lógica de programas
+        setInterval(updateMiniPlayerDisplay, 60 * 1000); 
+    }
+
+    // Iniciar las actualizaciones al cargar la página
+    document.addEventListener('DOMContentLoaded', initMiniPlayerUpdates);
+
+
+    // --- Funciones para cargar datos de Firebase y mostrarlos (las mismas que antes) ---
 
     const newsListDiv = document.getElementById('news-list');
     const videosListDiv = document.getElementById('videos-list');
@@ -568,7 +724,7 @@
         newsListDiv.innerHTML = '<p class="no-data-message">Cargando noticias...</p>';
         database.ref('noticias').orderByChild('date').once('value')
             .then(snapshot => {
-                newsListDiv.innerHTML = ''; // Limpiar mensaje de carga
+                newsListDiv.innerHTML = ''; 
                 if (!snapshot.exists() || snapshot.val() === null) {
                     newsListDiv.innerHTML = '<p class="no-data-message">No hay noticias disponibles en este momento.</p>';
                     return;
@@ -580,7 +736,7 @@
                         sortedNews.push({ id: key, ...newsData[key] });
                     }
                 }
-                sortedNews.sort((a, b) => b.date - a.date); // Más reciente primero
+                sortedNews.sort((a, b) => b.date - a.date);
 
                 sortedNews.forEach(newsItem => {
                     const articleDiv = document.createElement('div');
@@ -603,7 +759,7 @@
         videosListDiv.innerHTML = '<p class="no-data-message">Cargando videos...</p>';
         database.ref('top10videos').orderByChild('rank').once('value')
             .then(snapshot => {
-                videosListDiv.innerHTML = ''; // Limpiar mensaje de carga
+                videosListDiv.innerHTML = ''; 
                 if (!snapshot.exists() || snapshot.val() === null) {
                     videosListDiv.innerHTML = '<p class="no-data-message">No hay videos en el Top 10 disponibles.</p>';
                     return;
@@ -615,7 +771,7 @@
                         sortedVideos.push({ id: key, ...videosData[key] });
                     }
                 }
-                sortedVideos.sort((a, b) => a.rank - b.rank); // Por ranking ascendente
+                sortedVideos.sort((a, b) => a.rank - b.rank);
 
                 sortedVideos.forEach(videoItem => {
                     const videoCard = document.createElement('div');
@@ -640,7 +796,7 @@
         programsListDiv.innerHTML = '<p class="no-data-message">Cargando programas...</p>';
         database.ref('programas').orderByChild('name').once('value')
             .then(snapshot => {
-                programsListDiv.innerHTML = ''; // Limpiar mensaje de carga
+                programsListDiv.innerHTML = ''; 
                 if (!snapshot.exists() || snapshot.val() === null) {
                     programsListDiv.innerHTML = '<p class="no-data-message">No hay programas disponibles en este momento.</p>';
                     return;
@@ -652,7 +808,7 @@
                         sortedPrograms.push({ id: key, ...programsData[key] });
                     }
                 }
-                sortedPrograms.sort((a, b) => a.name.localeCompare(b.name)); // Orden alfabético por nombre
+                sortedPrograms.sort((a, b) => a.name.localeCompare(b.name));
 
                 sortedPrograms.forEach(programItem => {
                     const programCard = document.createElement('div');
@@ -675,7 +831,7 @@
         featuresListUl.innerHTML = '<p class="no-data-message">Cargando funciones...</p>';
         database.ref('features').orderByChild('order').once('value')
             .then(snapshot => {
-                featuresListUl.innerHTML = ''; // Limpiar mensaje de carga
+                featuresListUl.innerHTML = ''; 
                 if (!snapshot.exists() || snapshot.val() === null) {
                     featuresListUl.innerHTML = '<p class="no-data-message">No hay funciones destacadas disponibles.</p>';
                     return;
@@ -687,12 +843,10 @@
                         sortedFeatures.push({ id: key, ...featuresData[key] });
                     }
                 }
-                sortedFeatures.sort((a, b) => a.order - b.order); // Por orden
+                sortedFeatures.sort((a, b) => a.order - b.order);
 
                 sortedFeatures.forEach(featureItem => {
                     const listItem = document.createElement('li');
-                    // Puedes decidir qué icono usar o si lo harás dinámico desde la DB
-                    // Por ahora, un icono genérico o un icono de material design
                     listItem.innerHTML = `
                         <span class="material-icons">star</span> 
                         <strong>${featureItem.name}</strong>
