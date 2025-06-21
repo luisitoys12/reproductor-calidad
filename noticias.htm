@@ -3,20 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Noticias - EKUSFM</title>
+    <title>Noticias y Contenido - EKUSFM</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="icon.png">
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
+        /* --- Estilos Generales para la Página de Contenido --- */
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #0f172a; /* Fondo oscuro */
             color: #f8fafc; /* Texto claro */
             margin: 0;
-            padding-top: 70px; /* Espacio para el header */
+            padding-top: 70px; /* Espacio para el mini-reproductor y el header */
             line-height: 1.6;
         }
         .header {
@@ -30,7 +33,7 @@
             top: 0;
             left: 0;
             right: 0;
-            z-index: 9000;
+            z-index: 9000; /* Menor que el reproductor para que esté debajo */
         }
         .header .logo {
             font-size: 1.5rem;
@@ -53,200 +56,502 @@
             background-color: #06b6d4;
         }
 
-        .news-container {
-            max-width: 960px;
+        /* --- Nuevo Diseño del Mini-Reproductor --- */
+        #mini-reproductor {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            width: 320px; /* Ancho un poco más grande */
+            background: #1e293b; /* Color de fondo sólido */
+            border-radius: 15px; /* Bordes más redondeados */
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
+            z-index: 10000;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #fff;
+            font-family: 'Poppins', Arial, sans-serif;
+            border: 1px solid #38bdf8; /* Borde sutil */
+            transition: all 0.3s ease; /* Transición suave para cambios de estado */
+        }
+
+        #mini-reproductor:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8);
+            transform: translateY(-2px);
+        }
+
+        #mini-reproductor.playing {
+            /* Estilo cuando está reproduciendo */
+            background: linear-gradient(135deg, #1e293b, #334155);
+        }
+
+        .player-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mini-play-btn {
+            background: #22d3ee;
+            border: none;
+            border-radius: 50%;
+            width: 45px; /* Más grande */
+            height: 45px;
+            color: #1e293b; /* Texto oscuro para contraste */
+            font-size: 1.5rem; /* Icono más grande */
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .mini-play-btn:hover {
+            background-color: #06b6d4;
+            transform: scale(1.05);
+        }
+        .mini-play-btn:active {
+            transform: scale(0.95);
+        }
+
+        .mini-info-and-volume {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .mini-song-title {
+            font-weight: 600;
+            font-size: 1rem; /* Más grande */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 2px;
+            color: #f8fafc;
+        }
+        .mini-artist-name {
+            font-size: 0.85rem; /* Ligeramente más grande */
+            color: #94a3b8; /* Tono más suave */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .mini-artist-name.program-info {
+            color: #38bdf8; /* Azul para resaltar el horario del programa */
+            font-weight: 500;
+        }
+
+        .mini-volume-control-container {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 8px; /* Espacio entre info y volumen */
+        }
+        .mini-volume-control-container .material-icons {
+            font-size: 1.2rem;
+            color: #94a3b8;
+        }
+        .mini-volume-control {
+            -webkit-appearance: none;
+            width: 100%; /* Ocupa el ancho disponible */
+            height: 4px; /* Más delgado */
+            background: #475569; /* Color de la pista */
+            border-radius: 2px;
+            outline: none;
+            cursor: pointer;
+        }
+        .mini-volume-control::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px; /* Tamaño del thumb */
+            height: 14px;
+            border-radius: 50%;
+            background: #22d3ee; /* Color del thumb */
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(0,0,0,0.3);
+        }
+        .mini-volume-control::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #22d3ee;
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(0,0,0,0.3);
+        }
+
+        .audio-loader {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #06b6d4; /* Color de la barra de carga */
+            transform-origin: left;
+            transform: scaleX(0);
+            transition: transform 0.1s linear; /* Transición para un movimiento suave */
+            border-bottom-left-radius: 15px; /* Bordes para coincidir con el reproductor */
+            border-bottom-right-radius: 15px;
+        }
+        .audio-loader.loading {
+            /* Animación para indicar carga si no hay progress */
+            animation: loading-pulse 1.5s infinite ease-in-out;
+        }
+
+        @keyframes loading-pulse {
+            0% { transform: scaleX(0); opacity: 0.5; }
+            50% { transform: scaleX(0.7); opacity: 1; }
+            100% { transform: scaleX(0); opacity: 0.5; }
+        }
+
+
+        /* --- Contenido Principal de la Página (los mismos estilos anteriores) --- */
+        .content-wrapper {
+            max-width: 1000px;
             margin: 20px auto;
             padding: 0 20px;
         }
-        .section-title {
-            text-align: center;
+        .page-title {
             color: #22d3ee;
+            text-align: center;
             margin-bottom: 30px;
             font-size: 2.5rem;
         }
-        #news-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-        }
-        .news-card {
+        .section-container {
             background-color: #1e293b;
             border-radius: 12px;
-            padding: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            color: #f8fafc;
-            display: flex;
-            flex-direction: column;
-            position: relative; /* Necesario para la animación del botón */
+            position: relative; /* Necesario para los loaders */
         }
-        .news-card h3 {
+        .section-container h2 {
             color: #38bdf8;
             margin-top: 0;
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 2rem;
+        }
+
+        /* --- Estilos para Noticias --- */
+        #news-list .news-article {
+            background-color: #2d3748;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+        }
+        #news-list .news-article h3 {
+            color: #22d3ee;
+            margin-top: 0;
+            font-size: 1.6rem;
             margin-bottom: 10px;
-            font-size: 1.5rem;
         }
-        .news-card .news-date {
-            font-size: 0.9em;
-            color: #cbd5e1;
+        #news-list .news-date {
+            font-size: 0.9rem;
+            color: #94a3b8;
             margin-bottom: 15px;
+            display: block;
         }
-        .news-card .news-image {
+        #news-list .news-image {
             width: 100%;
-            height: 180px;
-            object-fit: cover;
+            height: 200px; /* Altura fija para la imagen */
+            object-fit: cover; /* Asegura que la imagen cubra el espacio sin distorsionarse */
             border-radius: 8px;
             margin-bottom: 15px;
-            cursor: pointer; /* Para indicar que es clickeable */
-            transition: transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-        .news-card .news-image:hover {
-            transform: scale(1.02);
+        #news-list .news-content {
+            white-space: pre-wrap; /* Mantiene los saltos de línea y espacios del textarea */
+            font-size: 1rem;
+            color: #cbd5e1;
+            /* Control para el "Ver Más" */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 4; /* Mostrar solo 4 líneas inicialmente */
+            -webkit-box-orient: vertical;
+            margin-bottom: 15px;
         }
-        .news-card .news-summary,
-        .news-card .news-content-full {
-            font-size: 0.95rem;
-            line-height: 1.5;
-            flex-grow: 1;
-            margin-bottom: 15px; /* Espacio antes del botón */
-            white-space: pre-wrap; /* Para respetar saltos de línea del contenido */
+        #news-list .news-content.expanded {
+            -webkit-line-clamp: unset; /* Mostrar todo el contenido */
+            white-space: normal;
         }
-        .news-card .news-content-full {
-            display: none; /* Oculto por defecto */
-        }
-        .read-more-btn, .read-less-btn {
-            background-color: #22d3ee;
+        #news-list .read-more-btn {
+            background-color: #38bdf8;
             color: #1e293b;
-            padding: 10px 15px;
+            padding: 8px 15px;
             border: none;
-            border-radius: 8px;
+            border-radius: 5px;
             cursor: pointer;
             font-weight: 600;
-            margin-top: 5px; /* Ajuste para el espaciado */
-            align-self: flex-start;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            transition: background-color 0.3s ease;
+            align-self: flex-start; /* Alinea el botón a la izquierda */
+            margin-top: 10px;
         }
-        .read-more-btn:hover, .read-less-btn:hover {
-            background-color: #06b6d4;
-            transform: translateY(-2px);
-        }
-        .read-less-btn {
-            background-color: #607d8b; /* Color diferente para "Leer Menos" */
-            color: #fff;
-        }
-        .read-less-btn:hover {
-            background-color: #475569;
+        #news-list .read-more-btn:hover {
+            background-color: #0ea5e9;
         }
 
-        /* Estilos del Modal (Pop-up de Imagen) */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 10000; /* Sit on top */
-            padding-top: 60px; /* Location of the box */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
-            backdrop-filter: blur(5px); /* Efecto de desenfoque */
+        /* --- Estilos para Videos (Top 10) --- */
+        .videos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
         }
-
-        .modal-content {
-            margin: auto;
-            display: block;
-            width: 80%;
-            max-width: 700px;
-            max-height: 80vh; /* Limita la altura de la imagen */
-            object-fit: contain; /* Asegura que la imagen se ajuste */
+        .video-card {
+            background-color: #2d3748;
             border-radius: 10px;
-        }
-
-        #caption {
-            margin: auto;
-            display: block;
-            width: 80%;
-            max-width: 700px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
             text-align: center;
-            color: #ccc;
-            padding: 10px 0;
-            height: auto;
-            white-space: pre-wrap; /* Mantiene saltos de línea del contenido */
-            font-size: 1.1em;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Para empujar el footer hacia abajo */
         }
-
-        .close-button {
-            position: absolute;
-            top: 15px;
-            right: 35px;
-            color: #f1f1f1;
-            font-size: 40px;
-            font-weight: bold;
-            transition: 0.3s;
-            cursor: pointer;
+        .video-card iframe {
+            width: 100%;
+            height: 180px; /* Altura fija para los videos */
+            border: none;
         }
-
-        .close-button:hover,
-        .close-button:focus {
-            color: #bbb;
-            text-decoration: none;
+        .video-card-info {
+            padding: 15px;
         }
-
-        /* Animación del modal */
-        .modal-content, #caption {
-            -webkit-animation-name: zoom;
-            -webkit-animation-duration: 0.6s;
-            animation-name: zoom;
-            animation-duration: 0.6s;
+        .video-card h3 {
+            color: #22d3ee;
+            font-size: 1.3rem;
+            margin-top: 0;
+            margin-bottom: 5px;
         }
-
-        @-webkit-keyframes zoom {
-            from {-webkit-transform:scale(0)}
-            to {-webkit-transform:scale(1)}
-        }
-
-        @keyframes zoom {
-            from {transform:scale(0)}
-            to {transform:scale(1)}
-        }
-
-        .loading-message, .no-data-message {
-            text-align: center;
+        .video-card p {
+            font-size: 0.9rem;
             color: #94a3b8;
-            font-style: italic;
-            grid-column: 1 / -1; /* Para centrar en el grid */
+            margin-bottom: 0;
+        }
+
+        /* --- Estilos para Programas --- */
+        .programs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        .program-card {
+            background-color: #2d3748;
+            border-radius: 10px;
             padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .program-card h3 {
+            color: #22d3ee;
+            font-size: 1.5rem;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        .program-card .schedule {
+            font-size: 0.95rem;
+            color: #38bdf8;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .program-card .description {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+        }
+
+        /* --- Estilos para Funciones / Características --- */
+        .features-list {
+            list-style: none;
+            padding: 0;
+        }
+        .features-list li {
+            background-color: #2d3748;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .features-list li .material-icons {
+            color: #22d3ee;
+            font-size: 28px;
+        }
+        .features-list li strong {
+            color: #38bdf8;
+            font-size: 1.1rem;
+        }
+
+        /* --- Estilos para los Loaders (Spinners/Skeletons) --- */
+        .loader-spinner {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #38bdf8; /* Blue */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: block;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .skeleton-loader {
+            background-color: #334155;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            height: 20px;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+        .skeleton-loader.text-line {
+            width: 90%;
+            height: 16px;
+            margin-bottom: 8px;
+        }
+        .skeleton-loader.title {
+            width: 70%;
+            height: 24px;
+            margin-bottom: 10px;
+        }
+        .skeleton-loader.image {
+            width: 100%;
+            height: 200px;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
         }
     </style>
+    <script>
+        (function() {
+            var host = window.location.hostname;
+            var dominiosPermitidos = [
+                "estacionkusmedios.com",
+                "reproductor-calidad.vercel.app"
+            ];
+            var esSubdominioEKUS = host.endsWith(".estacionkusmedios.com");
+            var esDominioValido = dominiosPermitidos.includes(host) || esSubdominioEKUS;
+            if (!esDominioValido) {
+                document.documentElement.innerHTML = `
+                    <head>
+                        <meta charset="UTF-8">
+                        <title>Acceso no autorizado</title>
+                        <style>
+                            body { 
+                                font-family: 'Poppins', Arial, sans-serif; 
+                                background: #181e2a; color: #fff; 
+                                text-align: center; 
+                                margin: 0; 
+                                padding: 0;
+                                display: flex;
+                                flex-direction: column;
+                                justify-content: center;
+                                min-height: 100vh;
+                                }
+                            h1 { font-size: 2.4em; margin-top: 2em; color: #38bdf8;}
+                            p { color: #ddd; }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>Acceso no autorizado</h1>
+                        <p>Este sitio solo puede visualizarse en <b>estacionkusmedios.com</b> y sus subdominios, o en <b>reproductor-calidad.vercel.app</b>.</p>
+                    </body>
+                `;
+                throw new Error('Unauthorized access');
+            }
+        })();
+    </script>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
 </head>
 <body>
+    <div id="mini-reproductor">
+        <div class="player-controls">
+            <button id="playPauseMiniBtn" class="mini-play-btn" title="Reproducir/Pausar">
+                <i id="miniPlayIcon" class="fa-solid fa-play"></i>
+            </button>
+        </div>
+        <div class="mini-info-and-volume">
+            <div id="miniSongTitle" class="mini-song-title">Cargando...</div>
+            <div id="miniArtistName" class="mini-artist-name"></div>
+            <div class="mini-volume-control-container">
+                <i class="material-icons">volume_down</i>
+                <input type="range" id="miniVolumeControl" class="mini-volume-control" min="0" max="1" step="0.01" value="1" title="Volumen" />
+                <i class="material-icons">volume_up</i>
+            </div>
+        </div>
+        <audio id="audio-mini" preload="auto" crossorigin="anonymous"></audio>
+        <div id="audioLoader" class="audio-loader"></div>
+    </div>
+
     <div class="header">
         <div class="logo">
-            EKUSFM NOTICIAS
+            EKUSMEDIOS
         </div>
         <a href="index.htm" class="back-btn">
-            <i class="fas fa-arrow-left"></i> Volver al Inicio
+            <i class="fas fa-arrow-left"></i> Volver
         </a>
     </div>
 
-    <div class="news-container">
-        <h1 class="section-title">Últimas Noticias</h1>
-        <div id="news-grid">
-            <p class="loading-message">Cargando noticias...</p>
+    <div class="content-wrapper">
+        <h1 class="page-title">Contenido de EKUSFM</h1>
+
+        <div class="section-container">
+            <h2>Últimas Noticias</h2>
+            <div id="news-list">
+                <div class="loader-spinner"></div>
+                <div class="skeleton-loader title"></div>
+                <div class="skeleton-loader text-line"></div>
+                <div class="skeleton-loader text-line" style="width: 80%;"></div>
+            </div>
         </div>
-    </div>
 
-    <div id="imageModal" class="modal">
-        <span class="close-button">×</span>
-        <img class="modal-content" id="modalImage">
-        <div id="caption"></div>
-    </div>
+        <div class="section-container">
+            <h2>Top 10 Canciones</h2>
+            <div id="videos-list" class="videos-grid">
+                <div class="loader-spinner"></div>
+                <div class="skeleton-loader image"></div>
+                <div class="skeleton-loader title"></div>
+            </div>
+        </div>
 
+        <div class="section-container">
+            <h2>Nuestros Programas</h2>
+            <div id="programs-list" class="programs-grid">
+                <div class="loader-spinner"></div>
+                <div class="skeleton-loader title"></div>
+                <div class="skeleton-loader text-line"></div>
+            </div>
+        </div>
+
+        <div class="section-container">
+            <h2>Funciones Destacadas</h2>
+            <ul id="features-list" class="features-list">
+                <div class="loader-spinner"></div>
+                <div class="skeleton-loader text-line"></div>
+                <div class="skeleton-loader text-line" style="width: 70%;"></div>
+            </ul>
+        </div>
+
+    </div>    
     <script>
-        // *** TU CONFIGURACIÓN DE FIREBASE (¡CÓPIALA EXACTAMENTE DE TU CONSOLA!) ***
+        // --- CONFIGURACIÓN DE FIREBASE (¡CÓPIALA EXACTAMENTE DE TU CONSOLA DE FIREBASE!) ---
         const firebaseConfig = {
             apiKey: "AIzaSyBHlQ6WQauQLTbvp_iHbkWZ8Bhv3fntSpM",
             authDomain: "ekusfm-d1a9d.firebaseapp.com",
@@ -258,104 +563,450 @@
             measurementId: "G-X59DPNG6N4"
         };
 
+        // Inicializa Firebase solo si no está ya inicializado
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
+
         const database = firebase.database();
 
-        const newsGrid = document.getElementById('news-grid');
-        const imageModal = document.getElementById('imageModal');
-        const modalImage = document.getElementById('modalImage');
-        const captionText = document.getElementById('caption');
-        const closeButton = document.querySelector('.close-button');
+        // --- Configuración del Stream y AzuraCast ---
+        const AUDIO_STREAM_URL = "https://radio.trabullnetwork.pro/listen/esmerosound/radio.mp3";
+        const AZURACAST_API_URL = "https://radio.trabullnetwork.pro/api/live/nowplaying/esmerosound";
+        
+        const audioMini = document.getElementById('audio-mini');
+        const miniReproductorDiv = document.getElementById('mini-reproductor');
+        const miniPlayIcon = document.getElementById('miniPlayIcon');
+        const miniSongTitle = document.getElementById('miniSongTitle');
+        const miniArtistName = document.getElementById('miniArtistName');
+        const miniVolumeControl = document.getElementById('miniVolumeControl');
+        const audioLoader = document.getElementById('audioLoader');
 
-        closeButton.onclick = function() {
-            imageModal.style.display = "none";
-        }
+        audioMini.src = AUDIO_STREAM_URL;
+        audioMini.crossOrigin = "anonymous";
+        audioMini.volume = 0.7; // Establece un volumen inicial predeterminado
+        miniVolumeControl.value = 0.7; // Sincroniza el slider con el volumen inicial
 
-        window.onclick = function(event) {
-            if (event.target == imageModal) {
-                imageModal.style.display = "none";
+        // --- Controles de Reproducción ---
+        document.getElementById('playPauseMiniBtn').addEventListener('click', function() {
+            if (audioMini.paused) {
+                audioMini.play();
+            } else {
+                audioMini.pause();
+            }
+        });
+
+        audioMini.addEventListener('play', () => {
+            miniPlayIcon.classList.replace('fa-play', 'fa-pause');
+            miniReproductorDiv.classList.add('playing');
+            audioLoader.classList.remove('loading'); // Remover la animación de carga si ya hay progreso
+        });
+
+        audioMini.addEventListener('pause', () => {
+            miniPlayIcon.classList.replace('fa-pause', 'fa-play');
+            miniReproductorDiv.classList.remove('playing');
+            audioLoader.style.transform = 'scaleX(0)'; // Resetear la barra de progreso al pausar
+        });
+
+        miniVolumeControl.addEventListener('input', function() {
+            audioMini.volume = parseFloat(this.value);
+        });
+
+        // --- Manejo de la barra de progreso de carga ---
+        audioMini.addEventListener('waiting', () => {
+            audioLoader.classList.add('loading'); // Muestra animación de carga si el audio está en búfer
+        });
+
+        audioMini.addEventListener('playing', () => {
+            audioLoader.classList.remove('loading'); // Quita animación si el audio está reproduciendo
+        });
+
+        audioMini.addEventListener('progress', () => {
+            if (audioMini.duration > 0) {
+                const buffered = audioMini.buffered.end(audioMini.buffered.length - 1);
+                const percentage = (buffered / audioMini.duration) * 100;
+                audioLoader.style.transform = `scaleX(${percentage / 100})`;
+                audioLoader.classList.remove('loading'); // Si hay progreso, no mostrar animación genérica
+            }
+        });
+        // Fallback para streams en vivo sin duración conocida
+        audioMini.addEventListener('stalled', () => {
+            audioLoader.classList.add('loading'); // Si se estanca, mostrar animación
+        });
+
+
+        // --- Lógica de AzuraCast y Firebase para Metadatos ---
+        let currentAzuraCastData = { title: "EKUSFM", artist: "La mejor música y contenido" };
+
+        async function fetchAzuraCastMetadata() {
+            try {
+                const response = await fetch(AZURACAST_API_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                // AzuraCast devuelve un array, toma el primer elemento
+                const nowPlaying = data[0] || data; 
+                
+                if (nowPlaying && nowPlaying.now_playing && nowPlaying.now_playing.song) {
+                    currentAzuraCastData.title = nowPlaying.now_playing.song.title || "Sin título";
+                    currentAzuraCastData.artist = nowPlaying.now_playing.song.artist || "Artista Desconocido";
+                } else if (nowPlaying && nowPlaying.current_song && nowPlaying.current_song.title) {
+                    // Otra estructura común de AzuraCast API
+                    currentAzuraCastData.title = nowPlaying.current_song.title;
+                    currentAzuraCastData.artist = nowPlaying.current_song.artist;
+                } else {
+                    console.warn("No se encontraron datos de canción/artista en la respuesta de AzuraCast.");
+                    currentAzuraCastData = { title: "EKUSFM", artist: "Cargando metadatos..." };
+                }
+            } catch (error) {
+                console.error("Error al obtener metadatos de AzuraCast:", error);
+                // Este es el mensaje que ves en el reproductor si falla la API de AzuraCast
+                currentAzuraCastData = { title: "EKUSFM", artist: "Error al cargar metadatos" };
             }
         }
 
-        function loadNewsForDisplay() {
-            newsGrid.innerHTML = '<p class="loading-message">Cargando noticias...</p>';
-            database.ref('noticias').orderByChild('date').on('value', (snapshot) => {
-                newsGrid.innerHTML = '';
-                if (!snapshot.exists()) {
-                    newsGrid.innerHTML = '<p class="no-data-message">No hay noticias disponibles en este momento.</p>';
-                    return;
-                }
-                const newsData = [];
-                snapshot.forEach(childSnapshot => {
-                    newsData.push({ id: childSnapshot.key, ...childSnapshot.val() });
-                });
-                newsData.sort((a, b) => b.date - a.date); // Más recientes primero
-
-                newsData.forEach(newsItem => {
-                    const newsCard = document.createElement('div');
-                    newsCard.className = 'news-card';
-                    const formattedDate = new Date(newsItem.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
-
-                    let imageHtml = '';
-                    if (newsItem.imageUrl) {
-                        // Usamos encodeURIComponent y decodeURIComponent para manejar caracteres especiales en el contenido completo
-                        imageHtml = `<img src="${newsItem.imageUrl}" alt="${newsItem.title}" class="news-image" 
-                            data-full-content="${encodeURIComponent(newsItem.content)}" 
-                            data-title="${encodeURIComponent(newsItem.title)}">`;
-                    }
-
-                    // Limita el resumen a 150 caracteres y agrega puntos suspensivos
-                    const summary = newsItem.content.length > 150 ? newsItem.content.substring(0, 150) + '...' : newsItem.content;
-
-                    newsCard.innerHTML = `
-                        <h3>${newsItem.title}</h3>
-                        <p class="news-date">${formattedDate}</p>
-                        ${imageHtml}
-                        <p class="news-summary">${summary}</p>
-                        <p class="news-content-full" style="display:none;">${newsItem.content}</p>
-                        ${newsItem.content.length > 150 ? '<button class="read-more-btn">Ver Más</button>' : ''}
-                    `;
-                    newsGrid.appendChild(newsCard);
-
-                    const readMoreBtn = newsCard.querySelector('.read-more-btn');
-                    if (readMoreBtn) {
-                        readMoreBtn.addEventListener('click', function() {
-                            const summaryP = newsCard.querySelector('.news-summary');
-                            const fullContentP = newsCard.querySelector('.news-content-full');
-                            
-                            if (fullContentP.style.display === 'none') {
-                                summaryP.style.display = 'none';
-                                fullContentP.style.display = 'block';
-                                this.textContent = 'Ver Menos';
-                                this.classList.remove('read-more-btn');
-                                this.classList.add('read-less-btn');
-                            } else {
-                                summaryP.style.display = 'block';
-                                fullContentP.style.display = 'none';
-                                this.textContent = 'Ver Más';
-                                this.classList.remove('read-less-btn');
-                                this.classList.add('read-more-btn');
-                            }
-                        });
-                    }
-
-                    // Event listener para abrir el modal al hacer clic en la imagen
-                    const newsImage = newsCard.querySelector('.news-image');
-                    if (newsImage) {
-                        newsImage.addEventListener('click', function() {
-                            modalImage.src = this.src;
-                            // Decodifica el contenido y el título antes de mostrarlos
-                            captionText.innerHTML = `<strong>${decodeURIComponent(this.dataset.title)}</strong><br>${decodeURIComponent(this.dataset.fullContent)}`;
-                            imageModal.style.display = "block";
-                        });
-                    }
-                });
-            });
+        // Funciones auxiliares para determinar el programa actual (sin cambios)
+        function getDayOfWeek(date) {
+            const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+            return days[date.getDay()];
         }
 
-        document.addEventListener('DOMContentLoaded', loadNewsForDisplay);
-    </script>
+        function parseTime(timeStr) {
+            const [hourStr, minuteStr] = timeStr.split(':');
+            const hour = parseInt(hourStr);
+            const minute = parseInt(minuteStr);
+            return hour * 60 + minute;
+        }
+
+        function convertTo24Hour(timeStr) {
+            if (!/\s*(AM|PM)/i.test(timeStr)) {
+                return timeStr.replace(/\s*(AM|PM)/i, '');
+            }
+            let [time, modifier] = timeStr.split(' ');
+            let [hours, minutes] = time.split(':');
+            if (hours === '12') {
+                hours = '00';
+            }
+            if (modifier && modifier.toLowerCase() === 'pm') {
+                hours = parseInt(hours, 10) + 12;
+            }
+            return `${hours}:${minutes}`;
+        }
+
+        async function updateMiniPlayerDisplay() {
+            const now = new Date();
+            const currentDay = getDayOfWeek(now);
+            const currentTimeInMinutes = now.getHours() * 60 + now.getMinutes();
+            let foundProgram = null;
+
+            try {
+                // Aquí el mini-reproductor consulta Firebase para los programas
+                const snapshot = await database.ref('programas').once('value');
+                if (snapshot.exists()) {
+                    const programs = snapshot.val();
+                    for (let key in programs) {
+                        if (programs.hasOwnProperty(key)) {
+                            const program = programs[key];
+                            const schedule = program.schedule;
+
+                            const dayMatch = schedule.match(/^(.*?)\s*(\d{1,2}:\d{2}\s*(AM|PM)?\s*-\s*\d{1,2}:\d{2}\s*(AM|PM)?)$/i);
+                            if (!dayMatch || dayMatch.length < 3) continue;
+
+                            let daysPart = dayMatch[1].trim();
+                            let timePartStr = dayMatch[2].trim();
+
+                            let [startTimeStr, endTimeStr] = timePartStr.split(' - ');
+                            startTimeStr = convertTo24Hour(startTimeStr);
+                            endTimeStr = convertTo24Hour(endTimeStr);
+
+                            const programStartTime = parseTime(startTimeStr);
+                            const programEndTime = parseTime(endTimeStr);
+
+                            const daysOfWeek = [];
+                            if (daysPart.includes('Lunes a Viernes')) {
+                                daysOfWeek.push('Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes');
+                            } else if (daysPart.includes('Sábados y Domingos')) {
+                                daysOfWeek.push('Sábado', 'Domingo');
+                            } else {
+                                daysPart.split(/,|\s+y\s+/).forEach(dayRange => {
+                                    const trimmedDayRange = dayRange.trim();
+                                    if (trimmedDayRange.includes('a')) {
+                                        const [startDay, endDay] = trimmedDayRange.split('a').map(d => d.trim());
+                                        const allDays = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+                                        const startIndex = allDays.indexOf(startDay);
+                                        const endIndex = allDays.indexOf(endDay);
+                                        if (startIndex !== -1 && endIndex !== -1) {
+                                            for (let i = startIndex; i <= endIndex; i++) {
+                                                daysOfWeek.push(allDays[i]);
+                                            }
+                                        }
+                                    } else if (trimmedDayRange) {
+                                        daysOfWeek.push(trimmedDayRange);
+                                    }
+                                });
+                            }
+                            
+                            const formattedDaysOfWeek = daysOfWeek.map(d => d.charAt(0).toUpperCase() + d.slice(1).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
+
+                            let isOvernight = programEndTime < programStartTime;
+                            let isCurrentDay = formattedDaysOfWeek.includes(currentDay);
+
+                            if (isCurrentDay) {
+                                if (isOvernight) {
+                                    if (currentTimeInMinutes >= programStartTime || currentTimeInMinutes < programEndTime) {
+                                        foundProgram = program;
+                                        break;
+                                    }
+                                } else {
+                                    if (currentTimeInMinutes >= programStartTime && currentTimeInMinutes < programEndTime) {
+                                        foundProgram = program;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error("Error al cargar programas para la lógica de visualización del mini-reproductor (Firebase):", error);
+                // Este error sería si Firebase falla al cargar los programas
+            }
+
+            if (foundProgram) {
+                miniSongTitle.textContent = foundProgram.name;
+                miniArtistName.textContent = "Al Aire: " + foundProgram.schedule;
+                miniArtistName.classList.add('program-info'); // Agrega clase para estilo específico de programa
+            } else {
+                // Si no hay programa al aire, muestra los metadatos de AzuraCast
+                miniSongTitle.textContent = currentAzuraCastData.title;
+                miniArtistName.textContent = currentAzuraCastData.artist;
+                miniArtistName.classList.remove('program-info');
+            }
+        }
+
+        // --- Orquestación de Actualizaciones ---
+        async function initMiniPlayerUpdates() {
+            await fetchAzuraCastMetadata(); // Obtener metadatos de AzuraCast primero
+            updateMiniPlayerDisplay(); // Luego, decidir qué mostrar (programa o AzuraCast)
+
+            // Actualizar metadatos de AzuraCast cada 10 segundos
+            setInterval(fetchAzuraCastMetadata, 10 * 1000); 
+            // Actualizar la visualización del mini-reproductor cada minuto para la lógica de programas
+            setInterval(updateMiniPlayerDisplay, 60 * 1000); 
+        }
+
+        // Iniciar las actualizaciones al cargar la página
+        document.addEventListener('DOMContentLoaded', initMiniPlayerUpdates);
+
+
+        // --- Funciones para cargar datos de Firebase y mostrarlos ---
+
+        const newsListDiv = document.getElementById('news-list');
+        const videosListDiv = document.getElementById('videos-list');
+        const programsListDiv = document.getElementById('programs-list');
+        const featuresListUl = document.getElementById('features-list');
+
+        // Función para alternar el contenido de la noticia (Ver Más/Menos)
+        function toggleNewsContent(button) {
+            const contentDiv = button.previousElementSibling; // El div de contenido es el elemento hermano anterior
+            contentDiv.classList.toggle('expanded');
+            if (contentDiv.classList.contains('expanded')) {
+                button.textContent = 'Ver Menos';
+            } else {
+                button.textContent = 'Ver Más';
+            }
+        }
+
+        function loadNews() {
+            // Muestra loaders mientras carga
+            newsListDiv.innerHTML = `
+                <div class="loader-spinner"></div>
+                <div class="skeleton-loader title"></div>
+                <div class="skeleton-loader text-line"></div>
+                <div class="skeleton-loader text-line" style="width: 80%;"></div>
+            `;
+            database.ref('noticias').orderByChild('date').once('value')
+                .then(snapshot => {
+                    newsListDiv.innerHTML = ''; 
+                    if (!snapshot.exists() || snapshot.val() === null) {
+                        newsListDiv.innerHTML = '<p class="no-data-message">No hay noticias disponibles en este momento.</p>';
+                        return;
+                    }
+                    const newsData = snapshot.val();
+                    const sortedNews = [];
+                    for (let key in newsData) {
+                        if (newsData.hasOwnProperty(key)) {
+                            sortedNews.push({ id: key, ...newsData[key] });
+                        }
+                    }
+                    sortedNews.sort((a, b) => b.date - a.date);
+
+                    sortedNews.forEach(newsItem => {
+                        const articleDiv = document.createElement('div');
+                        articleDiv.className = 'news-article';
+                        let imageHtml = '';
+                        if (newsItem.imageUrl) { // Si existe una URL de imagen
+                            imageHtml = `<img src="${newsItem.imageUrl}" alt="${newsItem.title}" class="news-image" loading="lazy">`;
+                        }
+
+                        articleDiv.innerHTML = `
+                            ${imageHtml}
+                            <h3>${newsItem.title}</h3>
+                            <span class="news-date">${new Date(newsItem.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                            <p class="news-content">${newsItem.content}</p>
+                            <button class="read-more-btn">Ver Más</button>
+                        `;
+                        newsListDiv.appendChild(articleDiv);
+
+                        // Adjunta el evento al botón "Ver Más" recién creado
+                        const readMoreButton = articleDiv.querySelector('.read-more-btn');
+                        if (readMoreButton) {
+                            readMoreButton.addEventListener('click', () => toggleNewsContent(readMoreButton));
+                            // Oculta el botón si el contenido no excede las líneas predefinidas (requiere calcular el scrollHeight)
+                            // Para una implementación más precisa, deberías comparar scrollHeight y clientHeight
+                            // Por simplicidad, el botón siempre aparece y la función maneja el texto si es corto.
+                            const contentElement = articleDiv.querySelector('.news-content');
+                            if (contentElement.scrollHeight <= contentElement.clientHeight + 5) { // +5px de tolerancia
+                                readMoreButton.style.display = 'none';
+                            }
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error("Error al cargar noticias (Firebase):", error);
+                    newsListDiv.innerHTML = '<p class="no-data-message">Error al cargar las noticias.</p>';
+                });
+        }
+
+        function loadVideos() {
+            videosListDiv.innerHTML = `
+                <div class="loader-spinner"></div>
+                <div class="skeleton-loader image"></div>
+                <div class="skeleton-loader title"></div>
+            `;
+            database.ref('top10videos').orderByChild('rank').once('value')
+                .then(snapshot => {
+                    videosListDiv.innerHTML = ''; 
+                    if (!snapshot.exists() || snapshot.val() === null) {
+                        videosListDiv.innerHTML = '<p class="no-data-message">No hay videos en el Top 10 disponibles.</p>';
+                        return;
+                    }
+                    const videosData = snapshot.val();
+                    const sortedVideos = [];
+                    for (let key in videosData) {
+                        if (videosData.hasOwnProperty(key)) {
+                            sortedVideos.push({ id: key, ...videosData[key] });
+                        }
+                    }
+                    sortedVideos.sort((a, b) => a.rank - b.rank);
+
+                    sortedVideos.forEach(videoItem => {
+                        const videoCard = document.createElement('div');
+                        videoCard.className = 'video-card';
+                        // Corrección: el iframe de YouTube necesita la URL correcta para la incrustación.
+                        // Usamos "https://www.youtube.com/embed/"
+                        videoCard.innerHTML = `
+                            <iframe src="https://www.youtube.com/embed/${videoItem.videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+                            <div class="video-card-info">
+                                <h3>#${videoItem.rank} - ${videoItem.title}</h3>
+                                <p>ID: ${videoItem.videoId}</p>
+                            </div>
+                        `;
+                        videosListDiv.appendChild(videoCard);
+                    });
+                })
+                .catch(error => {
+                    console.error("Error al cargar videos (Firebase):", error);
+                    videosListDiv.innerHTML = '<p class="no-data-message">Error al cargar los videos del Top 10.</p>';
+                });
+        }
+
+        function loadPrograms() {
+            programsListDiv.innerHTML = `
+                <div class="loader-spinner"></div>
+                <div class="skeleton-loader title"></div>
+                <div class="skeleton-loader text-line"></div>
+            `;
+            database.ref('programas').orderByChild('name').once('value')
+                .then(snapshot => {
+                    programsListDiv.innerHTML = ''; 
+                    if (!snapshot.exists() || snapshot.val() === null) {
+                        programsListDiv.innerHTML = '<p class="no-data-message">No hay programas disponibles en este momento.</p>';
+                        return;
+                    }
+                    const programsData = snapshot.val();
+                    const sortedPrograms = [];
+                    for (let key in programsData) {
+                        if (programsData.hasOwnProperty(key)) {
+                            sortedPrograms.push({ id: key, ...programsData[key] });
+                        }
+                    }
+                    sortedPrograms.sort((a, b) => a.name.localeCompare(b.name));
+
+                    sortedPrograms.forEach(programItem => {
+                        const programCard = document.createElement('div');
+                        programCard.className = 'program-card';
+                        programCard.innerHTML = `
+                            <h3>${programItem.name}</h3>
+                            <p class="schedule"><span class="material-icons">schedule</span> ${programItem.schedule}</p>
+                            <p class="description">${programItem.description || 'Sin descripción.'}</p>
+                        `;
+                        programsListDiv.appendChild(programCard);
+                    });
+                })
+                .catch(error => {
+                    console.error("Error al cargar programas (Firebase):", error);
+                    programsListDiv.innerHTML = '<p class="no-data-message">Error al cargar los programas.</p>';
+                });
+        }
+
+        function loadFeatures() {
+            featuresListUl.innerHTML = `
+                <div class="loader-spinner"></div>
+                <div class="skeleton-loader text-line"></div>
+                <div class="skeleton-loader text-line" style="width: 70%;"></div>
+            `;
+            database.ref('features').orderByChild('order').once('value')
+                .then(snapshot => {
+                    featuresListUl.innerHTML = ''; 
+                    if (!snapshot.exists() || snapshot.val() === null) {
+                        featuresListUl.innerHTML = '<p class="no-data-message">No hay funciones destacadas disponibles.</p>';
+                        return;
+                    }
+                    const featuresData = snapshot.val();
+                    const sortedFeatures = [];
+                    for (let key in featuresData) {
+                        if (featuresData.hasOwnProperty(key)) {
+                            sortedFeatures.push({ id: key, ...featuresData[key] });
+                        }
+                    }
+                    sortedFeatures.sort((a, b) => a.order - b.order);
+
+                    sortedFeatures.forEach(featureItem => {
+                        const featureLi = document.createElement('li');
+                        featureLi.innerHTML = `
+                            <span class="material-icons">${featureItem.icon}</span>
+                            <strong>${featureItem.title}</strong>: ${featureItem.description}
+                        `;
+                        featuresListUl.appendChild(featureLi);
+                    });
+                })
+                .catch(error => {
+                    console.error("Error al cargar funciones (Firebase):", error);
+                    featuresListUl.innerHTML = '<p class="no-data-message">Error al cargar las funciones destacadas.</p>';
+                });
+        }
+
+        // --- Cargar todo al inicio ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // initMiniPlayerUpdates ya se llama al inicio, no es necesario duplicarlo aquí
+            loadNews();
+            loadVideos();
+            loadPrograms();
+            loadFeatures();
+        });
+
+    </script>    
 </body>
 </html>
