@@ -25,6 +25,56 @@ body {
   overflow-x: hidden;
 }
 
+/* Dark mode styles */
+body.light-mode {
+  --primary-color: #f0f0f0;
+  --secondary-color: #ffffff;
+  --accent-color: #8b5cf6;
+  --text-color: #222222;
+  --button-color: #4ade80;
+  --button-hover: #22c55e;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode .main-content {
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+}
+
+body.light-mode .menu {
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+}
+
+body.light-mode .menu-link {
+  color: var(--text-color);
+}
+
+body.light-mode .menu-link:hover {
+  color: var(--accent-color);
+}
+
+body.light-mode .control-btn,
+body.light-mode .play-btn {
+  background-color: #ddd;
+  color: var(--text-color);
+}
+
+body.light-mode .play-btn {
+  background-color: #22d3ee;
+  color: #222;
+}
+
+body.light-mode .radio-clock-container {
+  background-color: #ccc;
+  color: var(--text-color);
+}
+
+body.light-mode .peticiones-section {
+  background-color: #ddd;
+  color: var(--text-color);
+}
+
 body.disabled, body.desactivated {
   display: flex;
   justify-content: center;
