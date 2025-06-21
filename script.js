@@ -75,6 +75,8 @@ function makeSpotifyAppleBtns(title, artist) {
     `;
 }
 
+let lastMetadata = { title: "", artist: "" }; // Para historial
+
 async function updateMetadata() {
     try {
         const url = `${config.azuracastURL}/api/nowplaying/${config.azuracastStation}`;
@@ -102,6 +104,17 @@ async function updateMetadata() {
         artistName.textContent = artist || "";
         coverImg.src = artUrl;
         serviceBtns.innerHTML = makeSpotifyAppleBtns(title, artist);
+
+        // === AGREGAR AL HISTORIAL SOLO SI CAMBIA LA CANCIÓN ===
+        if (title && artist && (title !== lastMetadata.title || artist !== lastMetadata.artist)) {
+            addSongToHistory({
+                title,
+                artist,
+                spotify: `https://open.spotify.com/search/${encodeURIComponent(title + " " + artist)}`,
+                apple: `https://music.apple.com/search?term=${encodeURIComponent(title + " " + artist)}`
+            });
+            lastMetadata = { title, artist };
+        }
     } catch (e) {
         songTitle.textContent = "Sin datos";
         artistName.textContent = "";
@@ -230,4 +243,77 @@ bastaBullyingLink.addEventListener('click', (e) => {
 });
 closeBastaModal.addEventListener('click', () => {
     modalBasta.style.display = 'none';
+});
+
+
+/* === NUEVO: HISTORIAL DE CANCIONES DINÁMICO === */
+
+// Mostrar historial de canciones
+document.getElementById("historyLink").addEventListener("click", function(e) {
+    e.preventDefault();
+    showHistory();
+});
+
+function showHistory() {
+    const history = JSON.parse(localStorage.getItem("ekusfm_historial") || "[]");
+    const ul = document.getElementById("historial-list");
+    ul.innerHTML = history.length
+      ? history.map(song =>
+          `<li>
+            <b>${song.title}</b> - ${song.artist}<br>
+            <span style="color:#38bdf8;">${song.time}</span><br>
+            <a href="${song.spotify}" target="_blank">Escuchar en Spotify</a> |
+            <a href="${song.apple}" target="_blank">Apple Music</a>
+          </li>`
+        ).join("")
+      : "<li>No hay historial aún.</li>";
+    document.getElementById("historyModal").style.display = "flex";
+}
+
+function addSongToHistory({ title, artist, spotify, apple }) {
+    const history = JSON.parse(localStorage.getItem("ekusfm_historial") || "[]");
+    const now = new Date();
+    const hora = now.toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+    // Evita repetidos consecutivos
+    if (history[0] && history[0].title === title && history[0].artist === artist) return; 
+    history.unshift({ title, artist, time: hora, spotify, apple });
+    if (history.length > 15) history.pop();
+    localStorage.setItem("ekusfm_historial", JSON.stringify(history));
+}
+
+// Cerrar modal historial
+document.getElementById("historyModal").addEventListener("click", function(e) {
+    if (e.target === this) this.style.display = "none";
+});
+/* Cerrar con la X */
+document.querySelector("#historyModal button").addEventListener("click", function() {
+    document.getElementById("historyModal").style.display = "none";
+});
+
+
+/* === NUEVO: MODAL ACERCA DE === */
+document.getElementById("aboutLink").addEventListener("click", function(e) {
+    e.preventDefault();
+    document.getElementById("aboutModal").style.display = "flex";
+});
+document.getElementById("aboutModal").addEventListener("click", function(e) {
+    if (e.target === this) this.style.display = "none";
+});
+document.querySelector("#aboutModal button").addEventListener("click", function() {
+    document.getElementById("aboutModal").style.display = "none";
+});
+
+
+/* === NUEVO: BOTÓN COMPARTIR === */
+document.getElementById("shareLink").addEventListener("click", function(e) {
+    e.preventDefault();
+    if (navigator.share) {
+        navigator.share({
+            title: "EKUSFM Radio",
+            text: "¡Escucha EKUSFM, la mejor radio online!",
+            url: window.location.href
+        });
+    } else {
+        prompt("Copia este enlace para compartir:", window.location.href);
+    }
 });
