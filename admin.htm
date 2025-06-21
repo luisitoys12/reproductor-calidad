@@ -36,6 +36,7 @@
             color: #94a3b8;
         }
         input[type="text"],
+        input[type="password"],
         input[type="number"],
         input[type="date"],
         textarea {
@@ -103,94 +104,133 @@
         .data-list-item button:hover {
             background-color: #dc2626;
         }
+        #admin-content {
+            display: none; /* Oculto por defecto hasta que el usuario inicie sesión */
+        }
+        #logout-button {
+            background-color: #f97316; /* Color naranja para cerrar sesión */
+            float: right;
+            margin-top: 10px;
+        }
+        #login-form-container {
+            max-width: 400px;
+            margin: 50px auto;
+            background: #1e293b;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        #login-form-container h2 {
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
     <h1>Panel de Administración de Contenido EKUSFM</h1>
 
-    <div class="container">
-        <h2>Administrar Noticias</h2>
-        <form id="newsForm">
-            <label for="newsTitle">Título de la Noticia:</label>
-            <input type="text" id="newsTitle" required>
+    <div id="login-form-container" class="container">
+        <h2>Acceso de Administración</h2>
+        <form id="loginForm">
+            <label for="loginEmail">Email:</label>
+            <input type="text" id="loginEmail" value="admin@ekusfm.com" required>
 
-            <label for="newsContent">Contenido de la Noticia:</label>
-            <textarea id="newsContent" required></textarea>
+            <label for="loginPassword">Contraseña:</label>
+            <input type="password" id="loginPassword" value="ekusfmadmin1234" required>
 
-            <label for="newsDate">Fecha de la Noticia:</label>
-            <input type="date" id="newsDate" required>
-
-            <button type="submit">Agregar Noticia</button>
-            <div id="newsMessage" class="message"></div>
+            <button type="submit">Iniciar Sesión</button>
+            <div id="loginMessage" class="message"></div>
         </form>
-        <div class="data-list" id="newsList">
-            <h3>Noticias Existentes:</h3>
-            <p>Cargando noticias...</p>
-        </div>
     </div>
 
-    <div class="container">
-        <h2>Administrar Top 10 Canciones (Videos de YouTube)</h2>
-        <form id="videosForm">
-            <label for="videoTitle">Título de la Canción/Video:</label>
-            <input type="text" id="videoTitle" required>
+    <div id="admin-content">
+        <p>Bienvenido, <span id="userEmailDisplay"></span>! <button id="logout-button">Cerrar Sesión</button></p>
 
-            <label for="videoId">ID del Video de YouTube:</label>
-            <input type="text" id="videoId" placeholder="Ej: dQw4w9WgXcQ" required>
+        <div class="container">
+            <h2>Administrar Noticias</h2>
+            <form id="newsForm">
+                <label for="newsTitle">Título de la Noticia:</label>
+                <input type="text" id="newsTitle" required>
 
-            <label for="videoRank">Ranking (1-10):</label>
-            <input type="number" id="videoRank" min="1" max="10" required>
+                <label for="newsContent">Contenido de la Noticia:</label>
+                <textarea id="newsContent" required></textarea>
 
-            <button type="submit">Agregar Video</button>
-            <div id="videosMessage" class="message"></div>
-        </form>
-        <div class="data-list" id="videosList">
-            <h3>Videos Existentes:</h3>
-            <p>Cargando videos...</p>
+                <label for="newsDate">Fecha de la Noticia:</label>
+                <input type="date" id="newsDate" required>
+
+                <button type="submit">Agregar Noticia</button>
+                <div id="newsMessage" class="message"></div>
+            </form>
+            <div class="data-list" id="newsList">
+                <h3>Noticias Existentes:</h3>
+                <p>Cargando noticias...</p>
+            </div>
         </div>
-    </div>
 
-    <div class="container">
-        <h2>Administrar Programas</h2>
-        <form id="programsForm">
-            <label for="programName">Nombre del Programa:</label>
-            <input type="text" id="programName" required>
+        <div class="container">
+            <h2>Administrar Top 10 Canciones (Videos de YouTube)</h2>
+            <form id="videosForm">
+                <label for="videoTitle">Título de la Canción/Video:</label>
+                <input type="text" id="videoTitle" required>
 
-            <label for="programSchedule">Horario:</label>
-            <input type="text" id="programSchedule" placeholder="Ej: Lunes a Viernes 10:00 AM - 12:00 PM" required>
+                <label for="videoId">ID del Video de YouTube:</label>
+                <input type="text" id="videoId" placeholder="Ej: dQw4w9WgXcQ" required>
 
-            <label for="programDescription">Descripción:</label>
-            <textarea id="programDescription"></textarea>
+                <label for="videoRank">Ranking (1-10):</label>
+                <input type="number" id="videoRank" min="1" max="10" required>
 
-            <button type="submit">Agregar Programa</button>
-            <div id="programsMessage" class="message"></div>
-        </form>
-        <div class="data-list" id="programsList">
-            <h3>Programas Existentes:</h3>
-            <p>Cargando programas...</p>
+                <button type="submit">Agregar Video</button>
+                <div id="videosMessage" class="message"></div>
+            </form>
+            <div class="data-list" id="videosList">
+                <h3>Videos Existentes:</h3>
+                <p>Cargando videos...</p>
+            </div>
         </div>
-    </div>
 
-    <div class="container">
-        <h2>Administrar Otras Funciones</h2>
-        <form id="featuresForm">
-            <label for="featureName">Nombre de la Función:</label>
-            <input type="text" id="featureName" required>
+        <div class="container">
+            <h2>Administrar Programas</h2>
+            <form id="programsForm">
+                <label for="programName">Nombre del Programa:</label>
+                <input type="text" id="programName" required>
 
-            <label for="featureOrder">Orden de Visualización:</label>
-            <input type="number" id="featureOrder" min="1" required>
+                <label for="programSchedule">Horario:</label>
+                <input type="text" id="programSchedule" placeholder="Ej: Lunes a Viernes 10:00 AM - 12:00 PM" required>
 
-            <button type="submit">Agregar Función</button>
-            <div id="featuresMessage" class="message"></div>
-        </form>
-        <div class="data-list" id="featuresList">
-            <h3>Funciones Existentes:</h3>
-            <p>Cargando funciones...</p>
+                <label for="programDescription">Descripción:</label>
+                <textarea id="programDescription"></textarea>
+
+                <button type="submit">Agregar Programa</button>
+                <div id="programsMessage" class="message"></div>
+            </form>
+            <div class="data-list" id="programsList">
+                <h3>Programas Existentes:</h3>
+                <p>Cargando programas...</p>
+            </div>
+        </div>
+
+        <div class="container">
+            <h2>Administrar Otras Funciones</h2>
+            <form id="featuresForm">
+                <label for="featureName">Nombre de la Función:</label>
+                <input type="text" id="featureName" required>
+
+                <label for="featureOrder">Orden de Visualización:</label>
+                <input type="number" id="featureOrder" min="1" required>
+
+                <button type="submit">Agregar Función</button>
+                <div id="featuresMessage" class="message"></div>
+            </form>
+            <div class="data-list" id="featuresList">
+                <h3>Funciones Existentes:</h3>
+                <p>Cargando funciones...</p>
+            </div>
         </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
 
     <script>
         // *** TU CONFIGURACIÓN DE FIREBASE (¡CÓPIALA EXACTAMENTE DE TU CONSOLA!) ***
@@ -210,7 +250,16 @@
             firebase.initializeApp(firebaseConfig);
         }
 
+        const auth = firebase.auth(); // Inicializa Firebase Authentication
         const database = firebase.database();
+
+        // Elementos del DOM para la interfaz de usuario
+        const loginFormContainer = document.getElementById('login-form-container');
+        const loginForm = document.getElementById('loginForm');
+        const loginMessage = document.getElementById('loginMessage');
+        const adminContent = document.getElementById('admin-content');
+        const userEmailDisplay = document.getElementById('userEmailDisplay');
+        const logoutButton = document.getElementById('logout-button');
 
         // --- Funciones de Utilidad ---
         function showMessage(elementId, message, type) {
@@ -222,6 +271,60 @@
                 element.className = 'message';
             }, 3000); // Borra el mensaje después de 3 segundos
         }
+
+        // --- Manejo de la Autenticación ---
+
+        // Escucha cambios en el estado de autenticación (si el usuario está logueado o no)
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                // Usuario logueado
+                loginFormContainer.style.display = 'none'; // Oculta el formulario de login
+                adminContent.style.display = 'block';     // Muestra el contenido de administración
+                userEmailDisplay.textContent = user.email; // Muestra el email del usuario
+                // Carga todos los datos al iniciar sesión
+                loadNewsAdmin();
+                loadVideosAdmin();
+                loadProgramsAdmin();
+                loadFeaturesAdmin();
+            } else {
+                // Usuario no logueado
+                loginFormContainer.style.display = 'block'; // Muestra el formulario de login
+                adminContent.style.display = 'none';     // Oculta el contenido de administración
+                userEmailDisplay.textContent = '';
+            }
+        });
+
+        // Maneja el envío del formulario de login
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = loginForm.loginEmail.value;
+            const password = loginForm.loginPassword.value;
+
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // console.log('Usuario logueado:', userCredential.user.email);
+                    showMessage('loginMessage', 'Sesión iniciada con éxito!', 'success');
+                    loginForm.reset();
+                })
+                .catch(error => {
+                    showMessage('loginMessage', 'Error al iniciar sesión: ' + error.message, 'error');
+                    console.error('Error logging in:', error);
+                });
+        });
+
+        // Maneja el clic en el botón de cerrar sesión
+        logoutButton.addEventListener('click', () => {
+            auth.signOut()
+                .then(() => {
+                    showMessage('loginMessage', 'Sesión cerrada con éxito.', 'success');
+                    // onAuthStateChanged se encargará de ocultar el contenido de admin
+                })
+                .catch(error => {
+                    showMessage('loginMessage', 'Error al cerrar sesión: ' + error.message, 'error');
+                    console.error('Error logging out:', error);
+                });
+        });
+
 
         // --- Administración de Noticias ---
         const newsForm = document.getElementById('newsForm');
@@ -470,13 +573,8 @@
             }
         });
 
-        // --- Cargar todas las listas al iniciar la página ---
-        document.addEventListener('DOMContentLoaded', () => {
-            loadNewsAdmin();
-            loadVideosAdmin();
-            loadProgramsAdmin();
-            loadFeaturesAdmin();
-        });
+        // La carga inicial de datos ahora se maneja dentro de auth.onAuthStateChanged
+        // para asegurar que solo se carguen una vez que el usuario esté autenticado.
     </script>
 </body>
 </html>
