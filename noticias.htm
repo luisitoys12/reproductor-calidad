@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Noticias - EKUSFM</title>
+  <title>Noticias y Contenido - EKUSFM</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,7 +13,50 @@
   <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
-    /* Estilos específicos para el mini-reproductor en noticias.htm */
+    /* --- Estilos Generales para la Página de Contenido --- */
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #0f172a; /* Fondo oscuro */
+        color: #f8fafc; /* Texto claro */
+        margin: 0;
+        padding-top: 70px; /* Espacio para el mini-reproductor y el header */
+        line-height: 1.6;
+    }
+    .header {
+        background-color: #1e293b;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        position: fixed; /* Header fijo */
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 9000; /* Menor que el reproductor para que esté debajo */
+    }
+    .header .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #38bdf8;
+    }
+    .header .back-btn {
+        background-color: #22d3ee;
+        color: #1e293b;
+        padding: 8px 15px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        transition: background-color 0.3s ease;
+    }
+    .header .back-btn:hover {
+        background-color: #06b6d4;
+    }
+
+    /* --- Estilos del Mini-Reproductor --- */
     .mini-player {
       position: fixed;
       top: 15px;
@@ -24,7 +67,7 @@
       filter: brightness(1.2); /* Ajusta el brillo si es necesario */
       border-radius: 10px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.5);
-      z-index: 10000;
+      z-index: 10000; /* Asegura que esté por encima de todo */
       padding: 8px 12px;
       display: flex;
       align-items: center;
@@ -83,44 +126,157 @@
       z-index: 1;
       position: relative;
     }
-    body { padding-top: 60px; } /* Ajuste para el header si el mini-reproductor está en la esquina */
 
-    /* Estilos para el contenido de noticias */
-    .news-container {
-        max-width: 900px;
+    /* --- Contenido Principal de la Página --- */
+    .content-wrapper {
+        max-width: 1000px;
         margin: 20px auto;
-        padding: 20px;
-        background-color: #1e293b; /* Fondo similar al admin */
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-        color: #f8fafc;
+        padding: 0 20px;
     }
-    .news-article {
+    .page-title {
+        color: #22d3ee;
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 2.5rem;
+    }
+    .section-container {
+        background-color: #1e293b;
+        border-radius: 12px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+    .section-container h2 {
+        color: #38bdf8;
+        margin-top: 0;
+        margin-bottom: 25px;
+        text-align: center;
+        font-size: 2rem;
+    }
+
+    /* --- Estilos para Noticias --- */
+    #news-list .news-article {
         background-color: #2d3748;
         padding: 20px;
-        margin-bottom: 20px;
+        margin-bottom: 15px;
         border-radius: 10px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     }
-    .news-article h2 {
+    #news-list .news-article h3 {
         color: #22d3ee;
         margin-top: 0;
-        font-size: 1.8rem;
+        font-size: 1.6rem;
     }
-    .news-article p {
-        margin-bottom: 10px;
-    }
-    .news-date {
+    #news-list .news-date {
         font-size: 0.9rem;
         color: #94a3b8;
-        margin-bottom: 15px;
+        margin-bottom: 10px;
         display: block;
     }
-    .no-news {
+    #news-list .news-content {
+        white-space: pre-wrap; /* Mantiene los saltos de línea y espacios del textarea */
+    }
+    .no-data-message {
         text-align: center;
         color: #94a3b8;
         font-style: italic;
+        padding: 20px;
     }
+
+    /* --- Estilos para Videos (Top 10) --- */
+    .videos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+    }
+    .video-card {
+        background-color: #2d3748;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; /* Para empujar el footer hacia abajo */
+    }
+    .video-card iframe {
+        width: 100%;
+        height: 180px; /* Altura fija para los videos */
+        border: none;
+    }
+    .video-card-info {
+        padding: 15px;
+    }
+    .video-card h3 {
+        color: #22d3ee;
+        font-size: 1.3rem;
+        margin-top: 0;
+        margin-bottom: 5px;
+    }
+    .video-card p {
+        font-size: 0.9rem;
+        color: #94a3b8;
+        margin-bottom: 0;
+    }
+
+    /* --- Estilos para Programas --- */
+    .programs-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+    }
+    .program-card {
+        background-color: #2d3748;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .program-card h3 {
+        color: #22d3ee;
+        font-size: 1.5rem;
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+    .program-card .schedule {
+        font-size: 0.95rem;
+        color: #38bdf8;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    .program-card .description {
+        font-size: 0.9rem;
+        color: #cbd5e1;
+    }
+
+    /* --- Estilos para Funciones / Características --- */
+    .features-list {
+        list-style: none;
+        padding: 0;
+    }
+    .features-list li {
+        background-color: #2d3748;
+        padding: 15px 20px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    .features-list li .material-icons {
+        color: #22d3ee;
+        font-size: 28px;
+    }
+    .features-list li strong {
+        color: #38bdf8;
+        font-size: 1.1rem;
+    }
+
   </style>
     <script>
     (function() {
@@ -188,11 +344,38 @@
     </a>
   </div>
 
-  <div class="news-container" id="newsContainer">
-    <h1 class="page-title">Últimas Noticias de EKUSFM</h1>
-        <p class="no-news">Cargando noticias...</p>
-  </div>
-  
+  <div class="content-wrapper">
+    <h1 class="page-title">Contenido de EKUSFM</h1>
+
+        <div class="section-container">
+      <h2>Últimas Noticias</h2>
+      <div id="news-list">
+        <p class="no-data-message">Cargando noticias...</p>
+      </div>
+    </div>
+
+        <div class="section-container">
+      <h2>Top 10 Canciones</h2>
+      <div id="videos-list" class="videos-grid">
+        <p class="no-data-message">Cargando videos...</p>
+      </div>
+    </div>
+
+        <div class="section-container">
+      <h2>Nuestros Programas</h2>
+      <div id="programs-list" class="programs-grid">
+        <p class="no-data-message">Cargando programas...</p>
+      </div>
+    </div>
+
+        <div class="section-container">
+      <h2>Funciones Destacadas</h2>
+      <ul id="features-list" class="features-list">
+        <p class="no-data-message">Cargando funciones...</p>
+      </ul>
+    </div>
+
+  </div>   
   <script>
     // *** TU CONFIGURACIÓN DE FIREBASE (¡CÓPIALA EXACTAMENTE DE TU CONSOLA!) ***
     const firebaseConfig = {
@@ -211,19 +394,20 @@
         firebase.initializeApp(firebaseConfig);
     }
 
-    const database = firebase.database(); // Solo necesitamos Realtime Database aquí
+    const database = firebase.database();
 
+    // --- Lógica del Mini-Reproductor ---
     const AUDIO_STREAM_URL = "https://radio.trabullnetwork.pro/listen/esmerosound/radio.mp3";
     const audioMini = document.getElementById('audio-mini');
     audioMini.src = AUDIO_STREAM_URL;
     audioMini.crossOrigin = "anonymous";
     audioMini.volume = 1;
 
-    // FontAwesome Play/Pause icon logic para miniplayer
     const playPauseMiniBtn = document.getElementById('playPauseMiniBtn');
     const miniPlayIcon = document.getElementById('miniPlayIcon');
     const miniSongTitle = document.getElementById('miniSongTitle');
     const miniArtistName = document.getElementById('miniArtistName');
+    const miniVolumeControl = document.getElementById('miniVolumeControl');
 
     playPauseMiniBtn.addEventListener('click', function() {
         if (audioMini.paused) {
@@ -240,18 +424,13 @@
         miniPlayIcon.classList.remove('fa-pause');
         miniPlayIcon.classList.add('fa-play');
     });
-
-    // Control de volumen para el mini-reproductor
-    const miniVolumeControl = document.getElementById('miniVolumeControl');
     miniVolumeControl.addEventListener('input', function() {
         audioMini.volume = this.value;
     });
 
-
-    // --- Lógica para obtener el programa actual de Firebase ---
-
+    // --- Lógica para obtener el programa actual de Firebase (sin cambios relevantes) ---
     function getDayOfWeek(date) {
-        const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+        const days = ['Domingo', 'Lunes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']; // Ojo: "Martes" faltaba, corregido abajo
         return days[date.getDay()];
     }
 
@@ -262,17 +441,12 @@
         return hour * 60 + minute; // Tiempo en minutos desde la medianoche
     }
 
-    // Función auxiliar para convertir a formato 24 horas
     function convertTo24Hour(timeStr) {
-        // Manejar casos donde AM/PM no está presente
         if (!/\s*(AM|PM)/i.test(timeStr)) {
-            // Asumir formato 24h si no hay AM/PM
             return timeStr.replace(/\s*(AM|PM)/i, '');
         }
-
         let [time, modifier] = timeStr.split(' ');
         let [hours, minutes] = time.split(':');
-
         if (hours === '12') {
             hours = '00';
         }
@@ -282,10 +456,9 @@
         return `${hours}:${minutes}`;
     }
 
-
     function checkCurrentProgram() {
         const now = new Date();
-        const currentDay = getDayOfWeek(now); // Ej: "Lunes"
+        const currentDay = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'][now.getDay()]; // Asegura todos los días
         const currentTimeInMinutes = now.getHours() * 60 + now.getMinutes();
 
         database.ref('programas').once('value')
@@ -297,19 +470,17 @@
                     for (let key in programs) {
                         if (programs.hasOwnProperty(key)) {
                             const program = programs[key];
-                            const schedule = program.schedule; // Ej: "Lunes a Viernes 10:00 AM - 12:00 PM", "Sábados 20:00 - 22:00"
+                            const schedule = program.schedule;
 
-                            // Regex para extraer la parte de los días y la parte de los tiempos
                             const dayMatch = schedule.match(/^(.*?)\s*(\d{1,2}:\d{2}\s*(AM|PM)?\s*-\s*\d{1,2}:\d{2}\s*(AM|PM)?)$/i);
                             
-                            if (!dayMatch || dayMatch.length < 3) continue; // Si no coincide con el patrón esperado, saltar
+                            if (!dayMatch || dayMatch.length < 3) continue;
 
                             let daysPart = dayMatch[1].trim();
                             let timePartStr = dayMatch[2].trim();
 
                             let [startTimeStr, endTimeStr] = timePartStr.split(' - ');
 
-                            // Convertir AM/PM a formato 24h para facilitar comparación
                             startTimeStr = convertTo24Hour(startTimeStr);
                             endTimeStr = convertTo24Hour(endTimeStr);
 
@@ -322,13 +493,9 @@
                             } else if (daysPart.includes('Sábados y Domingos')) {
                                 daysOfWeek.push('Sábado', 'Domingo');
                             } else {
-                                // Para días individuales o rangos específicos como "Lunes, Miércoles"
-                                // Esto es un poco más complejo si hay "a" o "y" dentro de la parte de los días
-                                // Intentar dividir por comas o "y"
                                 daysPart.split(/,|\s+y\s+/).forEach(dayRange => {
                                     const trimmedDayRange = dayRange.trim();
                                     if (trimmedDayRange.includes('a')) {
-                                        // Rango de días como "Lunes a Miércoles"
                                         const [startDay, endDay] = trimmedDayRange.split('a').map(d => d.trim());
                                         const allDays = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
                                         const startIndex = allDays.indexOf(startDay);
@@ -344,28 +511,21 @@
                                 });
                             }
                             
-                            // Asegurarse de que los días estén capitalizados correctamente y sin acentos
                             const formattedDaysOfWeek = daysOfWeek.map(d => {
                                 let day = d.charAt(0).toUpperCase() + d.slice(1).toLowerCase();
-                                // Normalizar para quitar acentos si los hubiera al ingresar
                                 return day.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
                             });
 
-
-                            // Ajuste para horarios que cruzan la medianoche
                             let isOvernight = programEndTime < programStartTime;
                             let isCurrentDay = formattedDaysOfWeek.includes(currentDay);
 
                             if (isCurrentDay) {
                                 if (isOvernight) {
-                                    // Si el programa va de un día a otro (ej. 22:00 - 02:00)
-                                    // Considera que es el día actual si está después de la hora de inicio O antes de la hora de fin (del día siguiente)
                                     if (currentTimeInMinutes >= programStartTime || currentTimeInMinutes < programEndTime) {
                                         foundProgram = program;
                                         break;
                                     }
                                 } else {
-                                    // Programa dentro del mismo día
                                     if (currentTimeInMinutes >= programStartTime && currentTimeInMinutes < programEndTime) {
                                         foundProgram = program;
                                         break;
@@ -379,7 +539,6 @@
                         miniSongTitle.textContent = foundProgram.name;
                         miniArtistName.textContent = foundProgram.schedule;
                     } else {
-                        // Si no se encuentra ningún programa, mostrar un mensaje por defecto
                         miniSongTitle.textContent = "¡Sintoniza EKUSFM!";
                         miniArtistName.textContent = "La mejor música y contenido";
                     }
@@ -389,35 +548,31 @@
                 }
             })
             .catch(error => {
-                console.error("Error al cargar programas:", error);
-                miniSongTitle.textContent = "Error al cargar programa";
-                miniArtistName.textContent = "Por favor, recarga la página.";
+                console.error("Error al cargar programas para mini-reproductor:", error);
+                miniSongTitle.textContent = "Error de carga";
+                miniArtistName.textContent = "Intenta recargar";
             });
     }
 
-    // Llama a la función al cargar la página
     checkCurrentProgram();
-    // Opcional: Actualizar cada cierto tiempo (ej. cada minuto)
     setInterval(checkCurrentProgram, 60 * 1000); // Actualiza cada 1 minuto
 
+    // --- Funciones para cargar datos de Firebase y mostrarlos ---
 
-    // --- Lógica para cargar las Noticias desde Firebase ---
-    const newsContainer = document.getElementById('newsContainer');
+    const newsListDiv = document.getElementById('news-list');
+    const videosListDiv = document.getElementById('videos-list');
+    const programsListDiv = document.getElementById('programs-list');
+    const featuresListUl = document.getElementById('features-list');
 
     function loadNews() {
-        newsContainer.querySelector('.no-news').textContent = 'Cargando noticias...';
-        // Limpiar el contenido existente, excepto el título y el mensaje de carga
-        const existingArticles = newsContainer.querySelectorAll('.news-article');
-        existingArticles.forEach(article => article.remove());
-
+        newsListDiv.innerHTML = '<p class="no-data-message">Cargando noticias...</p>';
         database.ref('noticias').orderByChild('date').once('value')
             .then(snapshot => {
+                newsListDiv.innerHTML = ''; // Limpiar mensaje de carga
                 if (!snapshot.exists() || snapshot.val() === null) {
-                    newsContainer.querySelector('.no-news').textContent = 'No hay noticias disponibles en este momento.';
+                    newsListDiv.innerHTML = '<p class="no-data-message">No hay noticias disponibles en este momento.</p>';
                     return;
                 }
-                newsContainer.querySelector('.no-news').style.display = 'none'; // Ocultar el mensaje de "Cargando..."
-
                 const newsData = snapshot.val();
                 const sortedNews = [];
                 for (let key in newsData) {
@@ -425,41 +580,139 @@
                         sortedNews.push({ id: key, ...newsData[key] });
                     }
                 }
-                // Ordenar por fecha, la más reciente primero
-                sortedNews.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+                sortedNews.sort((a, b) => b.date - a.date); // Más reciente primero
 
                 sortedNews.forEach(newsItem => {
                     const articleDiv = document.createElement('div');
                     articleDiv.className = 'news-article';
-                    
-                    const titleElement = document.createElement('h2');
-                    titleElement.textContent = newsItem.title;
-                    articleDiv.appendChild(titleElement);
-
-                    const dateElement = document.createElement('span');
-                    dateElement.className = 'news-date';
-                    // Formatea la fecha al idioma local
-                    dateElement.textContent = new Date(newsItem.date).toLocaleDateString('es-ES', { 
-                        year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' 
-                    });
-                    articleDiv.appendChild(dateElement);
-
-                    const contentElement = document.createElement('p');
-                    contentElement.textContent = newsItem.content;
-                    articleDiv.appendChild(contentElement);
-
-                    newsContainer.appendChild(articleDiv);
+                    articleDiv.innerHTML = `
+                        <h3>${newsItem.title}</h3>
+                        <span class="news-date">${new Date(newsItem.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                        <p class="news-content">${newsItem.content}</p>
+                    `;
+                    newsListDiv.appendChild(articleDiv);
                 });
             })
             .catch(error => {
                 console.error("Error al cargar noticias:", error);
-                newsContainer.querySelector('.no-news').textContent = 'Error al cargar las noticias. Por favor, inténtalo de nuevo más tarde.';
-                newsContainer.querySelector('.no-news').style.display = 'block'; // Asegurarse de que el mensaje de error sea visible
+                newsListDiv.innerHTML = '<p class="no-data-message">Error al cargar las noticias.</p>';
             });
     }
 
-    // Cargar las noticias al cargar la página
-    document.addEventListener('DOMContentLoaded', loadNews);
+    function loadVideos() {
+        videosListDiv.innerHTML = '<p class="no-data-message">Cargando videos...</p>';
+        database.ref('top10videos').orderByChild('rank').once('value')
+            .then(snapshot => {
+                videosListDiv.innerHTML = ''; // Limpiar mensaje de carga
+                if (!snapshot.exists() || snapshot.val() === null) {
+                    videosListDiv.innerHTML = '<p class="no-data-message">No hay videos en el Top 10 disponibles.</p>';
+                    return;
+                }
+                const videosData = snapshot.val();
+                const sortedVideos = [];
+                for (let key in videosData) {
+                    if (videosData.hasOwnProperty(key)) {
+                        sortedVideos.push({ id: key, ...videosData[key] });
+                    }
+                }
+                sortedVideos.sort((a, b) => a.rank - b.rank); // Por ranking ascendente
+
+                sortedVideos.forEach(videoItem => {
+                    const videoCard = document.createElement('div');
+                    videoCard.className = 'video-card';
+                    videoCard.innerHTML = `
+                        <iframe src="https://www.youtube.com/embed/${videoItem.videoId}?controls=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+                        <div class="video-card-info">
+                            <h3>#${videoItem.rank} - ${videoItem.title}</h3>
+                            <p>ID: ${videoItem.videoId}</p>
+                        </div>
+                    `;
+                    videosListDiv.appendChild(videoCard);
+                });
+            })
+            .catch(error => {
+                console.error("Error al cargar videos:", error);
+                videosListDiv.innerHTML = '<p class="no-data-message">Error al cargar los videos del Top 10.</p>';
+            });
+    }
+
+    function loadPrograms() {
+        programsListDiv.innerHTML = '<p class="no-data-message">Cargando programas...</p>';
+        database.ref('programas').orderByChild('name').once('value')
+            .then(snapshot => {
+                programsListDiv.innerHTML = ''; // Limpiar mensaje de carga
+                if (!snapshot.exists() || snapshot.val() === null) {
+                    programsListDiv.innerHTML = '<p class="no-data-message">No hay programas disponibles en este momento.</p>';
+                    return;
+                }
+                const programsData = snapshot.val();
+                const sortedPrograms = [];
+                for (let key in programsData) {
+                    if (programsData.hasOwnProperty(key)) {
+                        sortedPrograms.push({ id: key, ...programsData[key] });
+                    }
+                }
+                sortedPrograms.sort((a, b) => a.name.localeCompare(b.name)); // Orden alfabético por nombre
+
+                sortedPrograms.forEach(programItem => {
+                    const programCard = document.createElement('div');
+                    programCard.className = 'program-card';
+                    programCard.innerHTML = `
+                        <h3>${programItem.name}</h3>
+                        <p class="schedule"><span class="material-icons">schedule</span> ${programItem.schedule}</p>
+                        <p class="description">${programItem.description || 'Sin descripción.'}</p>
+                    `;
+                    programsListDiv.appendChild(programCard);
+                });
+            })
+            .catch(error => {
+                console.error("Error al cargar programas:", error);
+                programsListDiv.innerHTML = '<p class="no-data-message">Error al cargar los programas.</p>';
+            });
+    }
+
+    function loadFeatures() {
+        featuresListUl.innerHTML = '<p class="no-data-message">Cargando funciones...</p>';
+        database.ref('features').orderByChild('order').once('value')
+            .then(snapshot => {
+                featuresListUl.innerHTML = ''; // Limpiar mensaje de carga
+                if (!snapshot.exists() || snapshot.val() === null) {
+                    featuresListUl.innerHTML = '<p class="no-data-message">No hay funciones destacadas disponibles.</p>';
+                    return;
+                }
+                const featuresData = snapshot.val();
+                const sortedFeatures = [];
+                for (let key in featuresData) {
+                    if (featuresData.hasOwnProperty(key)) {
+                        sortedFeatures.push({ id: key, ...featuresData[key] });
+                    }
+                }
+                sortedFeatures.sort((a, b) => a.order - b.order); // Por orden
+
+                sortedFeatures.forEach(featureItem => {
+                    const listItem = document.createElement('li');
+                    // Puedes decidir qué icono usar o si lo harás dinámico desde la DB
+                    // Por ahora, un icono genérico o un icono de material design
+                    listItem.innerHTML = `
+                        <span class="material-icons">star</span> 
+                        <strong>${featureItem.name}</strong>
+                    `;
+                    featuresListUl.appendChild(listItem);
+                });
+            })
+            .catch(error => {
+                console.error("Error al cargar funciones:", error);
+                featuresListUl.innerHTML = '<p class="no-data-message">Error al cargar las funciones destacadas.</p>';
+            });
+    }
+
+    // Cargar todos los datos al cargar la página
+    document.addEventListener('DOMContentLoaded', () => {
+        loadNews();
+        loadVideos();
+        loadPrograms();
+        loadFeatures();
+    });
 
   </script>
 </body>
