@@ -300,7 +300,10 @@
 
                     let imageHtml = '';
                     if (newsItem.imageUrl) {
-                        imageHtml = `<img src="${newsItem.imageUrl}" alt="${newsItem.title}" class="news-image" data-full-content="${newsItem.content.replace(/"/g, '&quot;').replace(/\n/g, '&#10;')}" data-title="${newsItem.title.replace(/"/g, '&quot;')}">`;
+                        // Usamos encodeURIComponent y decodeURIComponent para manejar caracteres especiales en el contenido completo
+                        imageHtml = `<img src="${newsItem.imageUrl}" alt="${newsItem.title}" class="news-image" 
+                            data-full-content="${encodeURIComponent(newsItem.content)}" 
+                            data-title="${encodeURIComponent(newsItem.title)}">`;
                     }
 
                     // Limita el resumen a 150 caracteres y agrega puntos suspensivos
@@ -343,7 +346,8 @@
                     if (newsImage) {
                         newsImage.addEventListener('click', function() {
                             modalImage.src = this.src;
-                            captionText.innerHTML = `<strong>${this.dataset.title}</strong><br>${this.dataset.fullContent.replace(/&#10;/g, '\n')}`;
+                            // Decodifica el contenido y el título antes de mostrarlos
+                            captionText.innerHTML = `<strong>${decodeURIComponent(this.dataset.title)}</strong><br>${decodeURIComponent(this.dataset.fullContent)}`;
                             imageModal.style.display = "block";
                         });
                     }
