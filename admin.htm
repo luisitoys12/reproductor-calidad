@@ -1,888 +1,802 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel de Administración - EKUSFM</title>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" type="image/png" href="icon.png">
-  <style>
-    body {
-        font-family: 'Poppins', sans-serif;
-        background-color: #0f172a; /* Fondo oscuro */
-        color: #f8fafc; /* Texto claro */
-        margin: 0;
-        padding: 20px;
-        line-height: 1.6;
-    }
-    .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-        background-color: #1e293b;
-        border-radius: 12px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.5);
-    }
-    h1 {
-        color: #22d3ee;
-        text-align: center;
-        margin-bottom: 30px;
-        font-size: 2.5rem;
-    }
-    .section-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-        padding-bottom: 10px;
-        border-bottom: 1px solid #334155;
-    }
-    .section-header h2 {
-        color: #38bdf8;
-        margin: 0;
-        font-size: 1.8rem;
-    }
-    .form-group {
-        margin-bottom: 15px;
-    }
-    .form-group label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: 500;
-        color: #cbd5e1;
-    }
-    .form-group input[type="text"],
-    .form-group input[type="number"],
-    .form-group textarea {
-        width: calc(100% - 20px);
-        padding: 10px;
-        border: 1px solid #475569;
-        border-radius: 8px;
-        background-color: #2d3748;
-        color: #f8fafc;
-        font-size: 1rem;
-        transition: border-color 0.3s ease;
-    }
-    .form-group input[type="text"]::placeholder,
-    .form-group input[type="number"]::placeholder,
-    .form-group textarea::placeholder {
-        color: #94a3b8;
-        opacity: 0.7;
-    }
-    .form-group input[type="text"]:focus,
-    .form-group input[type="number"]:focus,
-    .form-group textarea:focus {
-        border-color: #38bdf8;
-        outline: none;
-    }
-    .form-actions {
-        display: flex;
-        gap: 10px;
-        margin-top: 20px;
-    }
-    .btn {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: 600;
-        transition: background-color 0.3s ease;
-    }
-    .btn-primary {
-        background-color: #22d3ee;
-        color: #1e293b;
-    }
-    .btn-primary:hover {
-        background-color: #06b6d4;
-    }
-    .btn-secondary {
-        background-color: #475569;
-        color: #f8fafc;
-    }
-    .btn-secondary:hover {
-        background-color: #64748b;
-    }
-    .btn-danger {
-        background-color: #ef4444;
-        color: #f8fafc;
-    }
-    .btn-danger:hover {
-        background-color: #dc2626;
-    }
-    .data-list {
-        margin-top: 25px;
-        border-top: 1px solid #334155;
-        padding-top: 20px;
-    }
-    .data-item {
-        background-color: #2d3748;
-        padding: 15px;
-        margin-bottom: 10px;
-        border-radius: 8px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-    .data-item:hover {
-        background-color: #3b4555;
-    }
-    .data-item-content {
-        flex-grow: 1;
-    }
-    .data-item-content h3 {
-        margin: 0;
-        color: #22d3ee;
-        font-size: 1.2rem;
-    }
-    .data-item-content p {
-        margin: 5px 0 0;
-        color: #94a3b8;
-        font-size: 0.9rem;
-    }
-    .item-actions {
-        display: flex;
-        gap: 8px;
-    }
-    .item-actions .btn {
-        padding: 8px 12px;
-        font-size: 0.9rem;
-    }
-    .tabs {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 30px;
-        border-bottom: 2px solid #334155;
-    }
-    .tab-button {
-        background-color: transparent;
-        border: none;
-        padding: 15px 25px;
-        color: #94a3b8;
-        font-size: 1.1rem;
-        font-weight: 500;
-        cursor: pointer;
-        transition: color 0.3s ease, border-bottom 0.3s ease;
-        border-bottom: 3px solid transparent;
-        margin: 0 10px;
-    }
-    .tab-button.active {
-        color: #38bdf8;
-        border-bottom: 3px solid #38bdf8;
-    }
-    .tab-content {
-        display: none;
-    }
-    .tab-content.active {
-        display: block;
-    }
-    .no-data-message {
-        text-align: center;
-        color: #94a3b8;
-        font-style: italic;
-        padding: 20px;
-    }
-    .back-to-home {
-        display: block;
-        text-align: center;
-        margin-top: 30px;
-        font-size: 1.1rem;
-    }
-    .back-to-home a {
-        color: #22d3ee;
-        text-decoration: none;
-        font-weight: 600;
-        transition: color 0.3s ease;
-    }
-    .back-to-home a:hover {
-        color: #06b6d4;
-    }
-    .explanation-text {
-        background-color: #2d3748;
-        border-left: 4px solid #38bdf8;
-        padding: 15px 20px;
-        margin-bottom: 25px;
-        border-radius: 0 8px 8px 0;
-        font-size: 0.95rem;
-        color: #cbd5e1;
-    }
-    .explanation-text strong {
-        color: #22d3ee;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - EKUSFM</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #0f172a; /* Fondo oscuro */
+            color: #f8fafc; /* Texto claro */
+            margin: 0;
+            padding-top: 70px; /* Espacio para el header */
+            line-height: 1.6;
+        }
+        .header {
+            background-color: #1e293b;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            position: fixed; /* Header fijo */
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9000;
+        }
+        .header .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #38bdf8;
+        }
+        .header .back-btn {
+            background-color: #22d3ee;
+            color: #1e293b;
+            padding: 8px 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .header .back-btn:hover {
+            background-color: #06b6d4;
+        }
 
-  </style>
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            color: #22d3ee;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+        }
+
+        .section-admin {
+            background-color: #1e293b;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .section-admin h2 {
+            color: #38bdf8;
+            margin-top: 0;
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-weight: 500;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="url"],
+        .form-group input[type="number"],
+        .form-group textarea {
+            width: calc(100% - 20px);
+            padding: 12px;
+            border: 1px solid #475569;
+            border-radius: 8px;
+            background-color: #2d3748;
+            color: #f8fafc;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        .form-group input[type="text"]:focus,
+        .form-group input[type="url"]:focus,
+        .form-group input[type="number"]:focus,
+        .form-group textarea:focus {
+            border-color: #38bdf8;
+            outline: none;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn-primary {
+            background-color: #22d3ee;
+            color: #1e293b;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: block; /* Para que ocupe todo el ancho */
+            width: 100%;
+            text-align: center;
+        }
+        .btn-primary:hover {
+            background-color: #06b6d4;
+            transform: translateY(-2px);
+        }
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .data-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 30px;
+        }
+
+        .data-list li {
+            background-color: #2d3748;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            flex-wrap: wrap; /* Para que los elementos se ajusten en pantallas pequeñas */
+        }
+
+        .data-list li span {
+            flex: 1; /* Permite que el texto ocupe espacio */
+            min-width: 150px; /* Asegura un ancho mínimo para cada elemento de texto */
+            margin-right: 10px; /* Espacio entre el texto y los botones */
+            word-wrap: break-word; /* Rompe palabras largas */
+        }
+        .data-list li span.rank-display {
+            font-weight: bold;
+            color: #38bdf8;
+            min-width: 50px; /* Para el rank */
+        }
+        .data-list li .item-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px; /* Espacio si los botones bajan de línea */
+        }
+
+        .data-list .edit-btn,
+        .data-list .delete-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        .data-list .edit-btn {
+            background-color: #38bdf8;
+            color: #1e293b;
+        }
+        .data-list .edit-btn:hover {
+            background-color: #22d3ee;
+        }
+
+        .data-list .delete-btn {
+            background-color: #ef4444;
+            color: #fff;
+        }
+        .data-list .delete-btn:hover {
+            background-color: #dc2626;
+        }
+
+        .message {
+            text-align: center;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .message.success {
+            background-color: #10b981;
+            color: #1e293b;
+        }
+        .message.error {
+            background-color: #ef4444;
+            color: #fff;
+        }
+        .no-data-message {
+            text-align: center;
+            color: #94a3b8;
+            font-style: italic;
+            padding: 20px;
+        }
+
+        /* Estilos para las instrucciones */
+        .instructions {
+            background-color: #2d3748;
+            border-left: 5px solid #38bdf8;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: #cbd5e1;
+        }
+        .instructions h3 {
+            color: #22d3ee;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        .instructions ul {
+            list-style: none;
+            padding: 0;
+        }
+        .instructions ul li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        .instructions ul li strong {
+            color: #f8fafc;
+        }
+        .instructions ul li code {
+            background-color: #1a202c;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            color: #a78bfa;
+        }
+    </style>
+
+    <script>
+        (function() {
+            var host = window.location.hostname;
+            var dominiosPermitidos = [
+                "estacionkusmedios.com",
+                "reproductor-calidad.vercel.app",
+                "localhost" // Para desarrollo local
+            ];
+            var esSubdominioEKUS = host.endsWith(".estacionkusmedios.com");
+            var esDominioValido = dominiosPermitidos.includes(host) || esSubdominioEKUS;
+            if (!esDominioValido) {
+                document.documentElement.innerHTML = `
+                    <head>
+                        <meta charset="UTF-8">
+                        <title>Acceso no autorizado</title>
+                        <style>
+                            body {
+                                font-family: 'Poppins', Arial, sans-serif;
+                                background: #181e2a; color: #fff;
+                                text-align: center;
+                                margin: 0; padding: 0;
+                                display: flex; flex-direction: column; justify-content: center; min-height: 100vh;
+                            }
+                            h1 { font-size: 2.4em; margin-top: 2em; color: #38bdf8;}
+                            p { color: #ddd; }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>Acceso no autorizado</h1>
+                        <p>Este panel solo puede visualizarse en <b>estacionkusmedios.com</b> y sus subdominios, o en <b>reproductor-calidad.vercel.app</b>.</p>
+                    </body>
+                `;
+                throw new Error('Unauthorized access');
+            }
+        })();
+    </script>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 </head>
 <body>
-  <div class="container">
-    <h1>Panel de Administración EKUSFM</h1>
-
-    <div class="tabs">
-        <button class="tab-button active" data-tab="news">Noticias</button>
-        <button class="tab-button" data-tab="videos">Top 10 Videos</button>
-        <button class="tab-button" data-tab="programs">Programas</button>
-        <button class="tab-button" data-tab="features">Funciones</button>
+    <div class="header">
+        <div class="logo">
+            ADMIN EKUSFM
+        </div>
+        <a href="index.htm" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Volver al Inicio
+        </a>
     </div>
 
-    <div id="news" class="tab-content active">
-        <div class="section-header">
-            <h2>Gestión de Noticias</h2>
-            <button class="btn btn-secondary" onclick="clearNewsForm()">Nuevo</button>
+    <div class="container">
+        <h1>Panel de Administración de Contenido</h1>
+
+        <div class="section-admin">
+            <h2>Administrar Noticias</h2>
+            <div class="instructions">
+                <h3>Instrucciones de Uso - Noticias</h3>
+                <ul>
+                    <li><strong>Título:</strong> Ingresa el título principal de tu noticia.</li>
+                    <li><strong>Contenido:</strong> Escribe el cuerpo completo de la noticia. Usa párrafos (`\n\n`) para separar ideas, tu código lo respetará.</li>
+                    <li><strong>URL de Imagen (Opcional):</strong> Pega la URL directa de la imagen que quieres asociar con esta noticia. Si no pones ninguna, la noticia se mostrará sin imagen.</li>
+                    <li>Al <strong>guardar</strong>, la noticia se añadirá o actualizará.</li>
+                    <li>Usa los botones <strong>"Editar"</strong> y <strong>"Eliminar"</strong> para gestionar las noticias existentes.</li>
+                    <li>Las noticias se muestran en la página principal ordenadas por fecha (las más recientes primero).</li>
+                </ul>
+            </div>
+            <form id="newsForm">
+                <input type="hidden" id="newsId" value="">
+                <div class="form-group">
+                    <label for="newsTitle">Título de la Noticia:</label>
+                    <input type="text" id="newsTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="newsContent">Contenido de la Noticia:</label>
+                    <textarea id="newsContent" rows="5" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="newsImageUrl">URL de Imagen (Opcional):</label>
+                    <input type="url" id="newsImageUrl" placeholder="https://ejemplo.com/imagen.jpg">
+                </div>
+                <button type="submit" class="btn-primary">Guardar Noticia</button>
+            </form>
+            <ul id="newsList" class="data-list">
+                <p class="no-data-message">Cargando noticias...</p>
+            </ul>
         </div>
-        <form id="newsForm">
-            <input type="hidden" id="newsId">
-            <div class="form-group">
-                <label for="newsTitle">Título de la Noticia:</label>
-                <input type="text" id="newsTitle" placeholder="Ingresa el título de la noticia" required>
+
+        <div class="section-admin">
+            <h2>Administrar Top 10 Canciones (Videos)</h2>
+            <div class="instructions">
+                <h3>Instrucciones de Uso - Top 10 Videos</h3>
+                <ul>
+                    <li><strong>Título:</strong> Nombre de la canción y/o artista.</li>
+                    <li><strong>ID de Video (YouTube):</strong> Pega SOLO el identificador único del video de YouTube (la parte después de <code>v=</code> y antes de cualquier <code>&</code> o <code>?</code>). Por ejemplo, si la URL es <code>https://www.youtube.com/watch?v=**ABC123XYZ**&ab_channel=Canal</code>, el ID es <code>ABC123XYZ</code>.</li>
+                    <li><strong>Rank:</strong> Asigna un número (del 1 al 10) para el orden en el Top. Si asignas un rank ya existente, la canción con ese rank se actualizará.</li>
+                    <li>Al <strong>guardar</strong>, el video se añadirá o actualizará.</li>
+                    <li>Usa los botones <strong>"Editar"</strong> y <strong>"Eliminar"</strong> para gestionar las canciones existentes.</li>
+                    <li>En la página principal solo se muestran las primeras 3, pero un botón "Ver Más" revela el resto.</li>
+                </ul>
             </div>
-            <div class="form-group">
-                <label for="newsContent">Contenido de la Noticia:</label>
-                <textarea id="newsContent" rows="8" placeholder="Escribe el contenido completo de la noticia" required></textarea>
-            </div>
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary" id="saveNewsBtn">Guardar Noticia</button>
-                <button type="button" class="btn btn-secondary" id="updateNewsBtn" style="display:none;">Actualizar Noticia</button>
-                <button type="button" class="btn btn-danger" id="deleteNewsBtn" style="display:none;">Eliminar Noticia</button>
-            </div>
-        </form>
-        <div class="data-list" id="newsList">
-            <p class="no-data-message">Cargando noticias...</p>
+            <form id="videosForm">
+                <input type="hidden" id="videoId" value="">
+                <div class="form-group">
+                    <label for="videoTitle">Título de la Canción:</label>
+                    <input type="text" id="videoTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="youtubeId">ID de Video (YouTube):</label>
+                    <input type="text" id="youtubeId" placeholder="Ej. ABC123XYZ" required>
+                </div>
+                <div class="form-group">
+                    <label for="videoRank">Rank (1-10):</label>
+                    <input type="number" id="videoRank" min="1" max="10" required>
+                </div>
+                <button type="submit" class="btn-primary">Guardar Video</button>
+            </form>
+            <ul id="videosList" class="data-list">
+                <p class="no-data-message">Cargando videos...</p>
+            </ul>
         </div>
+
+        <div class="section-admin">
+            <h2>Administrar Programas</h2>
+            <div class="instructions">
+                <h3>Instrucciones de Uso - Programas</h3>
+                <ul>
+                    <li><strong>Nombre:</strong> Título del programa (ej. "Mañanas con EKUS").</li>
+                    <li><strong>Horario:</strong> Define el día y la hora. Ejemplos:
+                        <ul>
+                            <li><code>Lunes a Viernes 7:00 AM - 10:00 AM</code></li>
+                            <li><code>Jueves 9:00 PM - 11:00 PM</code></li>
+                            <li><code>Sábados y Domingos 6:00 PM - 8:00 PM</code></li>
+                            <li><code>Lunes a Miércoles 5:00 PM - 7:00 PM</code></li>
+                        </ul>
+                        Este formato es crucial para que el mini-reproductor detecte qué programa está al aire.
+                    </li>
+                    <li><strong>Descripción:</strong> Un breve resumen de lo que trata el programa.</li>
+                    <li>Al <strong>guardar</strong>, el programa se añadirá o actualizará.</li>
+                    <li>Usa los botones <strong>"Editar"</strong> y <strong>"Eliminar"</strong> para gestionar los programas existentes.</li>
+                </ul>
+            </div>
+            <form id="programsForm">
+                <input type="hidden" id="programId" value="">
+                <div class="form-group">
+                    <label for="programName">Nombre del Programa:</label>
+                    <input type="text" id="programName" required>
+                </div>
+                <div class="form-group">
+                    <label for="programSchedule">Horario:</label>
+                    <input type="text" id="programSchedule" placeholder="Ej. Lunes a Viernes 8:00 AM - 10:00 AM" required>
+                </div>
+                <div class="form-group">
+                    <label for="programDescription">Descripción:</label>
+                    <textarea id="programDescription" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Guardar Programa</button>
+            </form>
+            <ul id="programsList" class="data-list">
+                <p class="no-data-message">Cargando programas...</p>
+            </ul>
+        </div>
+
+        <div class="section-admin">
+            <h2>Administrar Funciones Destacadas</h2>
+            <div class="instructions">
+                <h3>Instrucciones de Uso - Funciones Destacadas</h3>
+                <ul>
+                    <li><strong>Nombre:</strong> Nombre de la función o característica destacada.</li>
+                    <li><strong>Orden:</strong> Asigna un número para determinar en qué orden se mostrará en la lista de funciones destacadas.</li>
+                    <li>Al <strong>guardar</strong>, la función se añadirá o actualizará.</li>
+                    <li>Usa los botones <strong>"Editar"</strong> y <strong>"Eliminar"</strong> para gestionar las funciones existentes.</li>
+                </ul>
+            </div>
+            <form id="featuresForm">
+                <input type="hidden" id="featureId" value="">
+                <div class="form-group">
+                    <label for="featureName">Nombre de la Función:</label>
+                    <input type="text" id="featureName" required>
+                </div>
+                <div class="form-group">
+                    <label for="featureOrder">Orden:</label>
+                    <input type="number" id="featureOrder" min="1" required>
+                </div>
+                <button type="submit" class="btn-primary">Guardar Función</button>
+            </form>
+            <ul id="featuresList" class="data-list">
+                <p class="no-data-message">Cargando funciones...</p>
+            </ul>
+        </div>
+
     </div>
 
-    <div id="videos" class="tab-content">
-        <div class="section-header">
-            <h2>Gestión de Top 10 Videos</h2>
-            <button class="btn btn-secondary" onclick="clearVideoForm()">Nuevo</button>
-        </div>
-        <form id="videoForm">
-            <input type="hidden" id="videoIdKey">
-            <div class="form-group">
-                <label for="videoTitle">Título del Video:</label>
-                <input type="text" id="videoTitle" placeholder="Ingresa el título del video" required>
-            </div>
-            <div class="form-group">
-                <label for="youtubeId">ID de YouTube (Ej: dQw4w9WgXcQ):</label>
-                <input type="text" id="youtubeId" placeholder="Ingresa el ID de YouTube del video" required>
-            </div>
-            <div class="form-group">
-                <label for="videoRank">Ranking (1-10):</label>
-                <input type="number" id="videoRank" min="1" max="10" placeholder="Posición en el top 10" required>
-            </div>
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary" id="saveVideoBtn">Guardar Video</button>
-                <button type="button" class="btn btn-secondary" id="updateVideoBtn" style="display:none;">Actualizar Video</button>
-                <button type="button" class="btn btn-danger" id="deleteVideoBtn" style="display:none;">Eliminar Video</button>
-            </div>
-        </form>
-        <div class="data-list" id="videoList">
-            <p class="no-data-message">Cargando videos...</p>
-        </div>
-    </div>
+    <script>
+        // *** TU CONFIGURACIÓN DE FIREBASE (¡CÓPIALA EXACTAMENTE DE TU CONSOLA!) ***
+        const firebaseConfig = {
+            apiKey: "AIzaSyBHlQ6WQauQLTbvp_iHbkWZ8Bhv3fntSpM",
+            authDomain: "ekusfm-d1a9d.firebaseapp.com",
+            databaseURL: "https://ekusfm-d1a9d-default-rtdb.firebaseio.com",
+            projectId: "ekusfm-d1a9d",
+            storageBucket: "ekusfm-d1a9d.firebasestorage.app",
+            messagingSenderId: "849619346647",
+            appId: "1:849619346647:web:06559451c66950d9b03c92",
+            measurementId: "G-X59DPNG6N4"
+        };
 
-    <div id="programs" class="tab-content">
-        <div class="section-header">
-            <h2>Gestión de Programas</h2>
-            <button class="btn btn-secondary" onclick="clearProgramForm()">Nuevo</button>
-        </div>
-        <form id="programForm">
-            <input type="hidden" id="programId">
-            <div class="form-group">
-                <label for="programName">Nombre del Programa:</label>
-                <input type="text" id="programName" placeholder="Ej: Noticias del Día" required>
-            </div>
-            <div class="form-group">
-                <label for="programSchedule">Horario (Ej: Lunes a Viernes 08:00 AM - 09:00 AM):</label>
-                <input type="text" id="programSchedule" placeholder="Ej: Lunes a Viernes 08:00 AM - 09:00 AM" required>
-            </div>
-            <div class="form-group">
-                <label for="programDescription">Descripción:</label>
-                <textarea id="programDescription" rows="5" placeholder="Breve descripción del programa"></textarea>
-            </div>
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary" id="saveProgramBtn">Guardar Programa</button>
-                <button type="button" class="btn btn-secondary" id="updateProgramBtn" style="display:none;">Actualizar Programa</button>
-                <button type="button" class="btn btn-danger" id="deleteProgramBtn" style="display:none;">Eliminar Programa</button>
-            </div>
-        </form>
-        <div class="data-list" id="programList">
-            <p class="no-data-message">Cargando programas...</p>
-        </div>
-    </div>
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const database = firebase.database();
 
-    <div id="features" class="tab-content">
-        <div class="section-header">
-            <h2>Gestión de Funciones Destacadas</h2>
-            <button class="btn btn-secondary" onclick="clearFeatureForm()">Nuevo</button>
-        </div>
-        <div class="explanation-text">
-            <p>Aquí puedes administrar las <strong>funciones o características destacadas</strong> de tu emisora. Estos elementos se mostrarán en la página principal (<code>noticias.htm</code>) para resaltar aspectos importantes de EKUSFM.</p>
-            <p>Utiliza el campo <strong>"Nombre de la Característica"</strong> para el texto visible (ej. "Calidad de Audio HD", "Interactividad con la Audiencia").</p>
-            <p>El campo <strong>"Orden de Visualización"</strong> determina la posición en la que aparecerá la característica en la lista (un número más bajo significa que aparecerá más arriba). Puedes asignar el mismo número a varias para que su orden sea el que quieras, pero te recomiendo que sean diferentes, para que no se mezclen o cambien de lugar inesperadamente.</p>
-        </div>
-        <form id="featureForm">
-            <input type="hidden" id="featureId">
-            <div class="form-group">
-                <label for="featureName">Nombre de la Característica:</label>
-                <input type="text" id="featureName" placeholder="Ej: Calidad de Audio HD" required>
-            </div>
-            <div class="form-group">
-                <label for="featureOrder">Orden de Visualización:</label>
-                <input type="number" id="featureOrder" min="1" placeholder="Número para ordenar la lista" required>
-            </div>
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary" id="saveFeatureBtn">Guardar Característica</button>
-                <button type="button" class="btn btn-secondary" id="updateFeatureBtn" style="display:none;">Actualizar Característica</button>
-                <button type="button" class="btn btn-danger" id="deleteFeatureBtn" style="display:none;">Eliminar Característica</button>
-            </div>
-        </form>
-        <div class="data-list" id="featureList">
-            <p class="no-data-message">Cargando funciones...</p>
-        </div>
-    </div>
-
-    <div class="back-to-home">
-        <a href="index.htm">Volver a la página principal</a>
-    </div>
-
-  </div>   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-  <script>
-    // *** TU CONFIGURACIÓN DE FIREBASE (¡CÓPIALA EXACTAMENTE DE TU CONSOLA!) ***
-    const firebaseConfig = {
-        apiKey: "AIzaSyBHlQ6WQauQLTbvp_iHbkWZ8Bhv3fntSpM",
-        authDomain: "ekusfm-d1a9d.firebaseapp.com",
-        databaseURL: "https://ekusfm-d1a9d-default-rtdb.firebaseio.com",
-        projectId: "ekusfm-d1a9d",
-        storageBucket: "ekusfm-d1a9d.firebasestorage.app",
-        messagingSenderId: "849619346647",
-        appId: "1:849619346647:web:06559451c66950d9b03c92",
-        measurementId: "G-X59DPNG6N4"
-    };
-
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
-
-    const database = firebase.database();
-
-    // --- Control de Pestañas ---
-    const tabButtons = document.querySelectorAll('.tab-button');
-    const tabContents = document.querySelectorAll('.tab-content');
-
-    tabButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const tabId = button.dataset.tab;
-
-            tabButtons.forEach(btn => btn.classList.remove('active'));
-            tabContents.forEach(content => content.classList.remove('active'));
-
-            button.classList.add('active');
-            document.getElementById(tabId).classList.add('active');
-
-            // Recargar datos cuando se cambia de pestaña para asegurar frescura
-            if (tabId === 'news') clearNewsForm(); loadNews();
-            else if (tabId === 'videos') clearVideoForm(); loadVideos();
-            else if (tabId === 'programs') clearProgramForm(); loadPrograms();
-            else if (tabId === 'features') clearFeatureForm(); loadFeatures();
-        });
-    });
-
-    // --- Funciones para Noticias ---
-    const newsForm = document.getElementById('newsForm');
-    const newsIdInput = document.getElementById('newsId');
-    const newsTitleInput = document.getElementById('newsTitle');
-    const newsContentInput = document.getElementById('newsContent');
-    const saveNewsBtn = document.getElementById('saveNewsBtn');
-    const updateNewsBtn = document.getElementById('updateNewsBtn');
-    const deleteNewsBtn = document.getElementById('deleteNewsBtn');
-    const newsListDiv = document.getElementById('newsList');
-
-    function clearNewsForm() {
-        newsIdInput.value = '';
-        newsTitleInput.value = '';
-        newsContentInput.value = '';
-        saveNewsBtn.style.display = 'inline-block';
-        updateNewsBtn.style.display = 'none';
-        deleteNewsBtn.style.display = 'none';
-        newsTitleInput.focus();
-    }
-
-    newsForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const title = newsTitleInput.value.trim();
-        const content = newsContentInput.value.trim();
-        const newsId = newsIdInput.value;
-
-        if (!title || !content) {
-            alert('Por favor, completa todos los campos de la noticia.');
-            return;
+        // --- FUNCIONES GENERALES PARA CRUD ---
+        function showMessage(msg, type = 'success') {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = msg;
+            document.body.appendChild(messageDiv);
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 3000);
         }
 
-        if (newsId) {
-            // Actualizar noticia existente
-            database.ref('noticias/' + newsId).update({
-                title: title,
-                content: content
-            }).then(() => {
-                alert('Noticia actualizada con éxito!');
-                clearNewsForm();
-                // loadNews(); // Ya se recarga con 'on' listener
-            }).catch(error => {
-                console.error("Error al actualizar noticia:", error);
-                alert('Error al actualizar noticia.');
+        // --- Noticias ---
+        const newsForm = document.getElementById('newsForm');
+        const newsList = document.getElementById('newsList');
+
+        function loadNewsAdmin() {
+            newsList.innerHTML = '<p class="no-data-message">Cargando noticias...</p>';
+            database.ref('noticias').orderByChild('date').on('value', (snapshot) => {
+                newsList.innerHTML = '';
+                if (!snapshot.exists()) {
+                    newsList.innerHTML = '<p class="no-data-message">No hay noticias para administrar.</p>';
+                    return;
+                }
+                const newsData = [];
+                snapshot.forEach(childSnapshot => {
+                    newsData.push({ id: childSnapshot.key, ...childSnapshot.val() });
+                });
+                newsData.sort((a, b) => b.date - a.date); // Ordenar por fecha descendente
+
+                newsData.forEach(newsItem => {
+                    const li = document.createElement('li');
+                    const formattedDate = new Date(newsItem.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' });
+                    li.innerHTML = `
+                        <span><strong>${newsItem.title}</strong> (${formattedDate})</span>
+                        <div class="item-buttons">
+                            <button class="edit-btn" data-id="${newsItem.id}" data-title="${newsItem.title}" data-content="${newsItem.content}" data-imageurl="${newsItem.imageUrl || ''}">Editar</button>
+                            <button class="delete-btn" data-id="${newsItem.id}">Eliminar</button>
+                        </div>
+                    `;
+                    newsList.appendChild(li);
+                });
+
+                // Añadir event listeners después de renderizar
+                document.querySelectorAll('#newsList .edit-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        document.getElementById('newsId').value = e.target.dataset.id;
+                        document.getElementById('newsTitle').value = e.target.dataset.title;
+                        document.getElementById('newsContent').value = e.target.dataset.content;
+                        document.getElementById('newsImageUrl').value = e.target.dataset.imageurl;
+                    });
+                });
+                document.querySelectorAll('#newsList .delete-btn').forEach(button => {
+                    button.addEventListener('click', (e) => deleteItem('noticias', e.target.dataset.id));
+                });
             });
-        } else {
-            // Guardar nueva noticia
-            database.ref('noticias').push({
+        }
+
+        newsForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = document.getElementById('newsId').value;
+            const title = document.getElementById('newsTitle').value;
+            const content = document.getElementById('newsContent').value;
+            const imageUrl = document.getElementById('newsImageUrl').value;
+            const newsItem = {
                 title: title,
                 content: content,
-                date: firebase.database.ServerValue.TIMESTAMP 
-            }).then(() => {
-                alert('Noticia guardada con éxito!');
-                clearNewsForm();
-                // loadNews(); // Ya se recarga con 'on' listener
-            }).catch(error => {
-                console.error("Error al guardar noticia:", error);
-                alert('Error al guardar noticia.');
-            });
-        }
-    });
+                date: firebase.database.ServerValue.TIMESTAMP, // Fecha actual del servidor
+                imageUrl: imageUrl || null // Guarda null si está vacío
+            };
 
-    updateNewsBtn.addEventListener('click', function() {
-        newsForm.dispatchEvent(new Event('submit')); // Reusa el submit para actualizar
-    });
-
-    deleteNewsBtn.addEventListener('click', function() {
-        const newsId = newsIdInput.value;
-        if (newsId && confirm('¿Estás seguro de que quieres eliminar esta noticia?')) {
-            database.ref('noticias/' + newsId).remove()
-                .then(() => {
-                    alert('Noticia eliminada con éxito!');
-                    clearNewsForm();
-                    // loadNews(); // Ya se recarga con 'on' listener
-                }).catch(error => {
-                    console.error("Error al eliminar noticia:", error);
-                    alert('Error al eliminar noticia.');
-                });
-        }
-    });
-
-    function loadNews() {
-        newsListDiv.innerHTML = '<p class="no-data-message">Cargando noticias...</p>';
-        database.ref('noticias').orderByChild('date').on('value', snapshot => {
-            newsListDiv.innerHTML = '';
-            if (!snapshot.exists() || snapshot.val() === null) {
-                newsListDiv.innerHTML = '<p class="no-data-message">No hay noticias disponibles.</p>';
-                return;
+            if (id) {
+                // Editar existente
+                database.ref('noticias/' + id).update(newsItem)
+                    .then(() => {
+                        showMessage('Noticia actualizada con éxito.');
+                        newsForm.reset();
+                        document.getElementById('newsId').value = '';
+                    })
+                    .catch(error => showMessage('Error al actualizar noticia: ' + error.message, 'error'));
+            } else {
+                // Añadir nuevo
+                database.ref('noticias').push(newsItem)
+                    .then(() => {
+                        showMessage('Noticia añadida con éxito.');
+                        newsForm.reset();
+                    })
+                    .catch(error => showMessage('Error al añadir noticia: ' + error.message, 'error'));
             }
-            const newsData = snapshot.val();
-            const sortedNews = [];
-            for (let key in newsData) {
-                if (newsData.hasOwnProperty(key)) {
-                    sortedNews.push({ id: key, ...newsData[key] });
-                }
-            }
-            sortedNews.sort((a, b) => b.date - a.date); // Más reciente primero
-
-            sortedNews.forEach(newsItem => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'data-item';
-                itemDiv.innerHTML = `
-                    <div class="data-item-content">
-                        <h3>${newsItem.title}</h3>
-                        <p>${new Date(newsItem.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
-                    </div>
-                `;
-                itemDiv.addEventListener('click', () => {
-                    newsIdInput.value = newsItem.id;
-                    newsTitleInput.value = newsItem.title;
-                    newsContentInput.value = newsItem.content;
-                    saveNewsBtn.style.display = 'none';
-                    updateNewsBtn.style.display = 'inline-block';
-                    deleteNewsBtn.style.display = 'inline-block';
-                });
-                newsListDiv.appendChild(itemDiv);
-            });
         });
-    }
 
-    // --- Funciones para Top 10 Videos ---
-    const videoForm = document.getElementById('videoForm');
-    const videoIdKeyInput = document.getElementById('videoIdKey'); // ID único de Firebase
-    const videoTitleInput = document.getElementById('videoTitle');
-    const youtubeIdInput = document.getElementById('youtubeId'); // ID de YouTube
-    const videoRankInput = document.getElementById('videoRank');
-    const saveVideoBtn = document.getElementById('saveVideoBtn');
-    const updateVideoBtn = document.getElementById('updateVideoBtn');
-    const deleteVideoBtn = document.getElementById('deleteVideoBtn');
-    const videoListDiv = document.getElementById('videoList');
+        // --- Top 10 Videos ---
+        const videosForm = document.getElementById('videosForm');
+        const videosList = document.getElementById('videosList');
 
-    function clearVideoForm() {
-        videoIdKeyInput.value = '';
-        videoTitleInput.value = '';
-        youtubeIdInput.value = '';
-        videoRankInput.value = '';
-        saveVideoBtn.style.display = 'inline-block';
-        updateVideoBtn.style.display = 'none';
-        deleteVideoBtn.style.display = 'none';
-        videoTitleInput.focus();
-    }
+        function loadVideosAdmin() {
+            videosList.innerHTML = '<p class="no-data-message">Cargando videos...</p>';
+            database.ref('top10videos').orderByChild('rank').on('value', (snapshot) => {
+                videosList.innerHTML = '';
+                if (!snapshot.exists()) {
+                    videosList.innerHTML = '<p class="no-data-message">No hay videos en el Top 10 para administrar.</p>';
+                    return;
+                }
+                const videosData = [];
+                snapshot.forEach(childSnapshot => {
+                    videosData.push({ id: childSnapshot.key, ...childSnapshot.val() });
+                });
 
-    videoForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const title = videoTitleInput.value.trim();
-        const videoId = youtubeIdInput.value.trim(); // Asegúrate de que esto es el ID de YouTube
-        const rank = parseInt(videoRankInput.value);
-        const videoIdKey = videoIdKeyInput.value;
+                videosData.forEach(videoItem => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span class="rank-display">#${videoItem.rank}</span>
+                        <span><strong>${videoItem.title}</strong> (ID: ${videoItem.videoId})</span>
+                        <div class="item-buttons">
+                            <button class="edit-btn" data-id="${videoItem.id}" data-title="${videoItem.title}" data-videoid="${videoItem.videoId}" data-rank="${videoItem.rank}">Editar</button>
+                            <button class="delete-btn" data-id="${videoItem.id}">Eliminar</button>
+                        </div>
+                    `;
+                    videosList.appendChild(li);
+                });
 
-        if (!title || !videoId || isNaN(rank)) {
-            alert('Por favor, completa todos los campos del video y asegúrate que el ranking sea un número.');
-            return;
+                document.querySelectorAll('#videosList .edit-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        document.getElementById('videoId').value = e.target.dataset.id;
+                        document.getElementById('videoTitle').value = e.target.dataset.title;
+                        document.getElementById('youtubeId').value = e.target.dataset.videoid;
+                        document.getElementById('videoRank').value = e.target.dataset.rank;
+                    });
+                });
+                document.querySelectorAll('#videosList .delete-btn').forEach(button => {
+                    button.addEventListener('click', (e) => deleteItem('top10videos', e.target.dataset.id));
+                });
+            });
         }
 
-        if (videoIdKey) {
-            // Actualizar video existente
-            database.ref('top10videos/' + videoIdKey).update({
+        videosForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = document.getElementById('videoId').value;
+            const title = document.getElementById('videoTitle').value;
+            const videoId = document.getElementById('youtubeId').value;
+            const rank = parseInt(document.getElementById('videoRank').value);
+
+            const videoItem = {
                 title: title,
                 videoId: videoId,
                 rank: rank
-            }).then(() => {
-                alert('Video actualizado con éxito!');
-                clearVideoForm();
-                // loadVideos(); // Ya se recarga con 'on' listener
-            }).catch(error => {
-                console.error("Error al actualizar video:", error);
-                alert('Error al actualizar video.');
-            });
-        } else {
-            // Guardar nuevo video
-            database.ref('top10videos').push({
-                title: title,
-                videoId: videoId,
-                rank: rank
-            }).then(() => {
-                alert('Video guardado con éxito!');
-                clearVideoForm();
-                // loadVideos(); // Ya se recarga con 'on' listener
-            }).catch(error => {
-                console.error("Error al guardar video:", error);
-                alert('Error al guardar video.');
-            });
-        }
-    });
+            };
 
-    updateVideoBtn.addEventListener('click', function() {
-        videoForm.dispatchEvent(new Event('submit'));
-    });
-
-    deleteVideoBtn.addEventListener('click', function() {
-        const videoIdKey = videoIdKeyInput.value;
-        if (videoIdKey && confirm('¿Estás seguro de que quieres eliminar este video?')) {
-            database.ref('top10videos/' + videoIdKey).remove()
-                .then(() => {
-                    alert('Video eliminado con éxito!');
-                    clearVideoForm();
-                    // loadVideos(); // Ya se recarga con 'on' listener
-                }).catch(error => {
-                    console.error("Error al eliminar video:", error);
-                    alert('Error al eliminar video.');
-                });
-        }
-    });
-
-    function loadVideos() {
-        videoListDiv.innerHTML = '<p class="no-data-message">Cargando videos...</p>';
-        database.ref('top10videos').orderByChild('rank').on('value', snapshot => {
-            videoListDiv.innerHTML = '';
-            if (!snapshot.exists() || snapshot.val() === null) {
-                videoListDiv.innerHTML = '<p class="no-data-message">No hay videos en el Top 10 disponibles.</p>';
-                return;
+            if (id) {
+                database.ref('top10videos/' + id).update(videoItem)
+                    .then(() => {
+                        showMessage('Video actualizado con éxito.');
+                        videosForm.reset();
+                        document.getElementById('videoId').value = '';
+                    })
+                    .catch(error => showMessage('Error al actualizar video: ' + error.message, 'error'));
+            } else {
+                database.ref('top10videos').push(videoItem)
+                    .then(() => {
+                        showMessage('Video añadido con éxito.');
+                        videosForm.reset();
+                    })
+                    .catch(error => showMessage('Error al añadir video: ' + error.message, 'error'));
             }
-            const videosData = snapshot.val();
-            const sortedVideos = [];
-            for (let key in videosData) {
-                if (videosData.hasOwnProperty(key)) {
-                    sortedVideos.push({ id: key, ...videosData[key] });
-                }
-            }
-            sortedVideos.sort((a, b) => a.rank - b.rank); // Ordenar por ranking
-
-            sortedVideos.forEach(videoItem => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'data-item';
-                itemDiv.innerHTML = `
-                    <div class="data-item-content">
-                        <h3>#${videoItem.rank} - ${videoItem.title}</h3>
-                        <p>ID YouTube: ${videoItem.videoId}</p>
-                    </div>
-                `;
-                itemDiv.addEventListener('click', () => {
-                    videoIdKeyInput.value = videoItem.id;
-                    videoTitleInput.value = videoItem.title;
-                    youtubeIdInput.value = videoItem.videoId;
-                    videoRankInput.value = videoItem.rank;
-                    saveVideoBtn.style.display = 'none';
-                    updateVideoBtn.style.display = 'inline-block';
-                    deleteVideoBtn.style.display = 'inline-block';
-                });
-                videoListDiv.appendChild(itemDiv);
-            });
         });
-    }
 
-    // --- Funciones para Programas ---
-    const programForm = document.getElementById('programForm');
-    const programIdInput = document.getElementById('programId');
-    const programNameInput = document.getElementById('programName');
-    const programScheduleInput = document.getElementById('programSchedule');
-    const programDescriptionInput = document.getElementById('programDescription');
-    const saveProgramBtn = document.getElementById('saveProgramBtn');
-    const updateProgramBtn = document.getElementById('updateProgramBtn');
-    const deleteProgramBtn = document.getElementById('deleteProgramBtn');
-    const programListDiv = document.getElementById('programList');
+        // --- Programas ---
+        const programsForm = document.getElementById('programsForm');
+        const programsList = document.getElementById('programsList');
 
-    function clearProgramForm() {
-        programIdInput.value = '';
-        programNameInput.value = '';
-        programScheduleInput.value = '';
-        programDescriptionInput.value = '';
-        saveProgramBtn.style.display = 'inline-block';
-        updateProgramBtn.style.display = 'none';
-        deleteProgramBtn.style.display = 'none';
-        programNameInput.focus();
-    }
+        function loadProgramsAdmin() {
+            programsList.innerHTML = '<p class="no-data-message">Cargando programas...</p>';
+            database.ref('programas').orderByChild('name').on('value', (snapshot) => {
+                programsList.innerHTML = '';
+                if (!snapshot.exists()) {
+                    programsList.innerHTML = '<p class="no-data-message">No hay programas para administrar.</p>';
+                    return;
+                }
+                const programsData = [];
+                snapshot.forEach(childSnapshot => {
+                    programsData.push({ id: childSnapshot.key, ...childSnapshot.val() });
+                });
 
-    programForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const name = programNameInput.value.trim();
-        const schedule = programScheduleInput.value.trim();
-        const description = programDescriptionInput.value.trim();
-        const programId = programIdInput.value;
+                programsData.forEach(programItem => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span><strong>${programItem.name}</strong> (${programItem.schedule})</span>
+                        <div class="item-buttons">
+                            <button class="edit-btn" data-id="${programItem.id}" data-name="${programItem.name}" data-schedule="${programItem.schedule}" data-description="${programItem.description || ''}">Editar</button>
+                            <button class="delete-btn" data-id="${programItem.id}">Eliminar</button>
+                        </div>
+                    `;
+                    programsList.appendChild(li);
+                });
 
-        if (!name || !schedule) {
-            alert('Por favor, completa el nombre y el horario del programa.');
-            return;
+                document.querySelectorAll('#programsList .edit-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        document.getElementById('programId').value = e.target.dataset.id;
+                        document.getElementById('programName').value = e.target.dataset.name;
+                        document.getElementById('programSchedule').value = e.target.dataset.schedule;
+                        document.getElementById('programDescription').value = e.target.dataset.description;
+                    });
+                });
+                document.querySelectorAll('#programsList .delete-btn').forEach(button => {
+                    button.addEventListener('click', (e) => deleteItem('programas', e.target.dataset.id));
+                });
+            });
         }
 
-        if (programId) {
-            // Actualizar programa existente
-            database.ref('programas/' + programId).update({
+        programsForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = document.getElementById('programId').value;
+            const name = document.getElementById('programName').value;
+            const schedule = document.getElementById('programSchedule').value;
+            const description = document.getElementById('programDescription').value;
+
+            const programItem = {
                 name: name,
                 schedule: schedule,
                 description: description
-            }).then(() => {
-                alert('Programa actualizado con éxito!');
-                clearProgramForm();
-                // loadPrograms(); // Ya se recarga con 'on' listener
-            }).catch(error => {
-                console.error("Error al actualizar programa:", error);
-                alert('Error al actualizar programa.');
-            });
-        } else {
-            // Guardar nuevo programa
-            database.ref('programas').push({
-                name: name,
-                schedule: schedule,
-                description: description
-            }).then(() => {
-                alert('Programa guardado con éxito!');
-                clearProgramForm();
-                // loadPrograms(); // Ya se recarga con 'on' listener
-            }).catch(error => {
-                console.error("Error al guardar programa:", error);
-                alert('Error al guardar programa.');
-            });
-        }
-    });
+            };
 
-    updateProgramBtn.addEventListener('click', function() {
-        programForm.dispatchEvent(new Event('submit'));
-    });
-
-    deleteProgramBtn.addEventListener('click', function() {
-        const programId = programIdInput.value;
-        if (programId && confirm('¿Estás seguro de que quieres eliminar este programa?')) {
-            database.ref('programas/' + programId).remove()
-                .then(() => {
-                    alert('Programa eliminado con éxito!');
-                    clearProgramForm();
-                    // loadPrograms(); // Ya se recarga con 'on' listener
-                }).catch(error => {
-                    console.error("Error al eliminar programa:", error);
-                    alert('Error al eliminar programa.');
-                });
-        }
-    });
-
-    function loadPrograms() {
-        programListDiv.innerHTML = '<p class="no-data-message">Cargando programas...</p>';
-        database.ref('programas').orderByChild('name').on('value', snapshot => {
-            programListDiv.innerHTML = '';
-            if (!snapshot.exists() || snapshot.val() === null) {
-                programListDiv.innerHTML = '<p class="no-data-message">No hay programas disponibles.</p>';
-                return;
+            if (id) {
+                database.ref('programas/' + id).update(programItem)
+                    .then(() => {
+                        showMessage('Programa actualizado con éxito.');
+                        programsForm.reset();
+                        document.getElementById('programId').value = '';
+                    })
+                    .catch(error => showMessage('Error al actualizar programa: ' + error.message, 'error'));
+            } else {
+                database.ref('programas').push(programItem)
+                    .then(() => {
+                        showMessage('Programa añadido con éxito.');
+                        programsForm.reset();
+                    })
+                    .catch(error => showMessage('Error al añadir programa: ' + error.message, 'error'));
             }
-            const programsData = snapshot.val();
-            const sortedPrograms = [];
-            for (let key in programsData) {
-                if (programsData.hasOwnProperty(key)) {
-                    sortedPrograms.push({ id: key, ...programsData[key] });
-                }
-            }
-            sortedPrograms.sort((a, b) => a.name.localeCompare(b.name));
-
-            sortedPrograms.forEach(programItem => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'data-item';
-                itemDiv.innerHTML = `
-                    <div class="data-item-content">
-                        <h3>${programItem.name}</h3>
-                        <p>${programItem.schedule}</p>
-                    </div>
-                `;
-                itemDiv.addEventListener('click', () => {
-                    programIdInput.value = programItem.id;
-                    programNameInput.value = programItem.name;
-                    programScheduleInput.value = programItem.schedule;
-                    programDescriptionInput.value = programItem.description || '';
-                    saveProgramBtn.style.display = 'none';
-                    updateProgramBtn.style.display = 'inline-block';
-                    deleteProgramBtn.style.display = 'inline-block';
-                });
-                programListDiv.appendChild(itemDiv);
-            });
         });
-    }
 
-    // --- Funciones para Features (Características) ---
-    const featureForm = document.getElementById('featureForm');
-    const featureIdInput = document.getElementById('featureId');
-    const featureNameInput = document.getElementById('featureName');
-    const featureOrderInput = document.getElementById('featureOrder');
-    const saveFeatureBtn = document.getElementById('saveFeatureBtn');
-    const updateFeatureBtn = document.getElementById('updateFeatureBtn');
-    const deleteFeatureBtn = document.getElementById('deleteFeatureBtn');
-    const featureListUl = document.getElementById('featureList');
+        // --- Funciones Destacadas ---
+        const featuresForm = document.getElementById('featuresForm');
+        const featuresList = document.getElementById('featuresList');
 
-    function clearFeatureForm() {
-        featureIdInput.value = '';
-        featureNameInput.value = '';
-        featureOrderInput.value = '';
-        saveFeatureBtn.style.display = 'inline-block';
-        updateFeatureBtn.style.display = 'none';
-        deleteFeatureBtn.style.display = 'none';
-        featureNameInput.focus();
-    }
+        function loadFeaturesAdmin() {
+            featuresList.innerHTML = '<p class="no-data-message">Cargando funciones...</p>';
+            database.ref('features').orderByChild('order').on('value', (snapshot) => {
+                featuresList.innerHTML = '';
+                if (!snapshot.exists()) {
+                    featuresList.innerHTML = '<p class="no-data-message">No hay funciones destacadas para administrar.</p>';
+                    return;
+                }
+                const featuresData = [];
+                snapshot.forEach(childSnapshot => {
+                    featuresData.push({ id: childSnapshot.key, ...childSnapshot.val() });
+                });
 
-    featureForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const name = featureNameInput.value.trim();
-        const order = parseInt(featureOrderInput.value);
-        const featureId = featureIdInput.value;
+                featuresData.forEach(featureItem => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span><strong>${featureItem.name}</strong> (Orden: ${featureItem.order})</span>
+                        <div class="item-buttons">
+                            <button class="edit-btn" data-id="${featureItem.id}" data-name="${featureItem.name}" data-order="${featureItem.order}">Editar</button>
+                            <button class="delete-btn" data-id="${featureItem.id}">Eliminar</button>
+                        </div>
+                    `;
+                    featuresList.appendChild(li);
+                });
 
-        if (!name || isNaN(order)) {
-            alert('Por favor, completa el nombre y el orden de la característica.');
-            return;
+                document.querySelectorAll('#featuresList .edit-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        document.getElementById('featureId').value = e.target.dataset.id;
+                        document.getElementById('featureName').value = e.target.dataset.name;
+                        document.getElementById('featureOrder').value = e.target.dataset.order;
+                    });
+                });
+                document.querySelectorAll('#featuresList .delete-btn').forEach(button => {
+                    button.addEventListener('click', (e) => deleteItem('features', e.target.dataset.id));
+                });
+            });
         }
 
-        if (featureId) {
-            // Actualizar característica existente
-            database.ref('features/' + featureId).update({
+        featuresForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = document.getElementById('featureId').value;
+            const name = document.getElementById('featureName').value;
+            const order = parseInt(document.getElementById('featureOrder').value);
+
+            const featureItem = {
                 name: name,
                 order: order
-            }).then(() => {
-                alert('Característica actualizada con éxito!');
-                clearFeatureForm();
-                // loadFeatures(); // Ya se recarga con 'on' listener
-            }).catch(error => {
-                console.error("Error al actualizar característica:", error);
-                alert('Error al actualizar característica.');
-            });
-        } else {
-            // Guardar nueva característica
-            database.ref('features').push({
-                name: name,
-                order: order
-            }).then(() => {
-                alert('Característica guardada con éxito!');
-                clearFeatureForm();
-                // loadFeatures(); // Ya se recarga con 'on' listener
-            }).catch(error => {
-                console.error("Error al guardar característica:", error);
-                alert('Error al guardar característica.');
-            });
-        }
-    });
+            };
 
-    updateFeatureBtn.addEventListener('click', function() {
-        featureForm.dispatchEvent(new Event('submit'));
-    });
-
-    deleteFeatureBtn.addEventListener('click', function() {
-        const featureId = featureIdInput.value;
-        if (featureId && confirm('¿Estás seguro de que quieres eliminar esta característica?')) {
-            database.ref('features/' + featureId).remove()
-                .then(() => {
-                    alert('Característica eliminada con éxito!');
-                    clearFeatureForm();
-                    // loadFeatures(); // Ya se recarga con 'on' listener
-                }).catch(error => {
-                    console.error("Error al eliminar característica:", error);
-                    alert('Error al eliminar característica.');
-                });
-        }
-    });
-
-    function loadFeatures() {
-        featureListUl.innerHTML = '<p class="no-data-message">Cargando funciones...</p>';
-        database.ref('features').orderByChild('order').on('value', snapshot => {
-            featureListUl.innerHTML = '';
-            if (!snapshot.exists() || snapshot.val() === null) {
-                featureListUl.innerHTML = '<p class="no-data-message">No hay funciones destacadas disponibles.</p>';
-                return;
+            if (id) {
+                database.ref('features/' + id).update(featureItem)
+                    .then(() => {
+                        showMessage('Función actualizada con éxito.');
+                        featuresForm.reset();
+                        document.getElementById('featureId').value = '';
+                    })
+                    .catch(error => showMessage('Error al actualizar función: ' + error.message, 'error'));
+            } else {
+                database.ref('features').push(featureItem)
+                    .then(() => {
+                        showMessage('Función añadida con éxito.');
+                        featuresForm.reset();
+                    })
+                    .catch(error => showMessage('Error al añadir función: ' + error.message, 'error'));
             }
-            const featuresData = snapshot.val();
-            const sortedFeatures = [];
-            for (let key in featuresData) {
-                if (featuresData.hasOwnProperty(key)) {
-                    sortedFeatures.push({ id: key, ...featuresData[key] });
-                }
-            }
-            sortedFeatures.sort((a, b) => a.order - b.order); // Ordenar por orden
-
-            sortedFeatures.forEach(featureItem => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'data-item';
-                itemDiv.innerHTML = `
-                    <div class="data-item-content">
-                        <h3>${featureItem.name}</h3>
-                        <p>Orden: ${featureItem.order}</p>
-                    </div>
-                `;
-                itemDiv.addEventListener('click', () => {
-                    featureIdInput.value = featureItem.id;
-                    featureNameInput.value = featureItem.name;
-                    featureOrderInput.value = featureItem.order;
-                    saveFeatureBtn.style.display = 'none';
-                    updateFeatureBtn.style.display = 'inline-block';
-                    deleteFeatureBtn.style.display = 'inline-block';
-                });
-                featureListUl.appendChild(itemDiv);
-            });
         });
-    }
 
-    // Cargar los datos de la pestaña activa por defecto al cargar la página
-    document.addEventListener('DOMContentLoaded', () => {
-        loadNews(); // Carga las noticias por defecto al iniciar
-    });
+        // --- Función para Eliminar Genérica ---
+        function deleteItem(path, id) {
+            if (confirm('¿Estás seguro de que quieres eliminar este elemento?')) {
+                database.ref(`${path}/${id}`).remove()
+                    .then(() => showMessage('Elemento eliminado con éxito.'))
+                    .catch(error => showMessage(`Error al eliminar elemento de ${path}: ${error.message}`, 'error'));
+            }
+        }
 
-  </script>
+        // Cargar datos al iniciar
+        document.addEventListener('DOMContentLoaded', () => {
+            loadNewsAdmin();
+            loadVideosAdmin();
+            loadProgramsAdmin();
+            loadFeaturesAdmin();
+        });
+    </script>
 </body>
 </html>
