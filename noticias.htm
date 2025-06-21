@@ -234,18 +234,27 @@
         font-size: 2rem;
     }
 
-    /* --- Estilos para Noticias --- */
+    /* --- Estilos para Noticias con Imágenes --- */
     #news-list .news-article {
         background-color: #2d3748;
         padding: 20px;
         margin-bottom: 15px;
         border-radius: 10px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        cursor: pointer; /* Indica que es clicable */
         transition: background-color 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
     #news-list .news-article:hover {
         background-color: #3b4555;
+    }
+    #news-list .news-article img {
+        width: 100%;
+        max-height: 200px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 15px;
     }
     #news-list .news-article h3 {
         color: #22d3ee;
@@ -259,10 +268,27 @@
         display: block;
     }
     #news-list .news-content {
-        white-space: pre-wrap; /* Mantiene los saltos de línea y espacios del textarea */
-        max-height: 80px; /* Limita la altura del preview */
-        overflow: hidden; /* Oculta el contenido extra */
-        text-overflow: ellipsis; /* Añade puntos suspensivos */
+        white-space: pre-wrap;
+        max-height: 80px; 
+        overflow: hidden; 
+        text-overflow: ellipsis; 
+        margin-bottom: 15px; 
+    }
+    .news-article .read-more-btn {
+        align-self: flex-end; 
+        background-color: #38bdf8;
+        color: #1e293b;
+        padding: 8px 15px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+        text-decoration: none; 
+        display: inline-block; 
+    }
+    .news-article .read-more-btn:hover {
+        background-color: #06b6d4;
     }
     .no-data-message {
         text-align: center;
@@ -272,40 +298,71 @@
     }
 
     /* --- ESTILOS PARA EL NUEVO DISEÑO DE TOP 10 VIDEOS/CANCIONES --- */
+    .videos-grid-container {
+        /* Contenedor para el grid y el botón */
+        display: flex;
+        flex-direction: column;
+        gap: 20px; /* Espacio entre el grid y el botón */
+    }
     .videos-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Columnas responsivas */
-        gap: 30px; /* Mayor espacio entre tarjetas */
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
         padding: 10px;
+        /* Estilos para el scroll */
+        max-height: 500px; /* Altura máxima antes de que aparezca el scroll */
+        overflow-y: auto; /* Habilita el scroll vertical */
+        padding-right: 15px; /* Espacio para la barra de scroll */
     }
+
+    /* Estilo de la barra de desplazamiento (para navegadores Webkit como Chrome, Safari) */
+    .videos-grid::-webkit-scrollbar {
+        width: 8px; /* Ancho de la barra */
+    }
+
+    .videos-grid::-webkit-scrollbar-track {
+        background: #1e293b; /* Fondo de la pista */
+        border-radius: 10px;
+    }
+
+    .videos-grid::-webkit-scrollbar-thumb {
+        background-color: #38bdf8; /* Color del "pulgar" de la barra */
+        border-radius: 10px;
+        border: 2px solid #1e293b; /* Borde alrededor del pulgar */
+    }
+
+    .videos-grid::-webkit-scrollbar-thumb:hover {
+        background-color: #22d3ee; /* Color al pasar el ratón */
+    }
+    
     .video-card {
         background-color: #2d3748;
-        border-radius: 15px; /* Bordes más redondeados */
+        border-radius: 15px;
         overflow: hidden;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.4); /* Sombra más pronunciada */
+        box-shadow: 0 6px 20px rgba(0,0,0,0.4);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        border: 1px solid #334155; /* Borde sutil */
+        border: 1px solid #334155;
     }
     .video-card:hover {
-        transform: translateY(-8px); /* Elevación al pasar el mouse */
+        transform: translateY(-8px);
         box-shadow: 0 10px 30px rgba(0,0,0,0.6);
     }
     .video-card iframe {
         width: 100%;
-        height: 200px; /* Altura fija para los videos */
+        height: 200px;
         border: none;
-        border-bottom: 1px solid #334155; /* Separador sutil */
+        border-bottom: 1px solid #334155;
     }
     .video-card-info {
-        padding: 20px; /* Más padding */
+        padding: 20px;
         text-align: center;
     }
     .video-card h3 {
         color: #22d3ee;
-        font-size: 1.5rem; /* Título más grande */
+        font-size: 1.5rem;
         margin-top: 0;
         margin-bottom: 10px;
         line-height: 1.3;
@@ -313,15 +370,39 @@
     .video-card .video-rank {
         font-size: 1.1rem;
         font-weight: 700;
-        color: #38bdf8; /* Color azul brillante para el ranking */
+        color: #38bdf8;
         margin-bottom: 8px;
-        display: block; /* Para que ocupe su propia línea */
+        display: block;
     }
     .video-card p {
         font-size: 0.95rem;
         color: #94a3b8;
         margin-bottom: 0;
     }
+
+    .show-more-btn-container {
+        text-align: center;
+        margin-top: 20px; /* Espacio entre el grid y el botón */
+    }
+    .show-more-btn {
+        background-color: #38bdf8;
+        color: #1e293b;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 1.1rem;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .show-more-btn:hover {
+        background-color: #06b6d4;
+        transform: translateY(-2px);
+    }
+    .show-more-btn:active {
+        transform: translateY(0);
+    }
+
 
     /* --- Estilos para Programas --- */
     .programs-grid {
@@ -383,15 +464,15 @@
 
     /* --- Estilos para el Modal Pop-up de Noticias --- */
     .modal {
-        display: none; /* Oculto por defecto */
-        position: fixed; /* Permanece fijo en la pantalla */
-        z-index: 10001; /* Z-index superior al reproductor */
+        display: none; 
+        position: fixed; 
+        z-index: 10001; 
         left: 0;
         top: 0;
-        width: 100%; /* Cubre todo el ancho */
-        height: 100%; /* Cubre toda la altura */
-        overflow: auto; /* Permite scroll si el contenido es largo */
-        background-color: rgba(0,0,0,0.7); /* Fondo semi-transparente oscuro */
+        width: 100%; 
+        height: 100%; 
+        overflow: auto; 
+        background-color: rgba(0,0,0,0.7); 
         display: flex;
         align-items: center;
         justify-content: center;
@@ -405,23 +486,23 @@
     }
 
     .modal-content {
-        background-color: #1e293b; /* Fondo del modal */
+        background-color: #1e293b; 
         margin: auto;
         padding: 30px;
         border-radius: 15px;
         box-shadow: 0 8px 30px rgba(0,0,0,0.8);
-        max-width: 700px; /* Ancho máximo */
-        width: 90%; /* Ancho responsivo */
+        max-width: 700px; 
+        width: 90%; 
         position: relative;
-        transform: translateY(-50px); /* Efecto de entrada */
+        transform: translateY(-50px); 
         transition: transform 0.3s ease-in-out;
         color: #f8fafc;
-        max-height: 80vh; /* Altura máxima para el contenido */
-        overflow-y: auto; /* Scroll para el contenido si es muy largo */
+        max-height: 80vh; 
+        overflow-y: auto; 
     }
 
     .modal.show .modal-content {
-        transform: translateY(0); /* Posición final */
+        transform: translateY(0); 
     }
 
     .modal-content h2 {
@@ -438,10 +519,18 @@
         display: block;
     }
 
+    .modal-content .modal-image {
+        width: 100%;
+        max-height: 350px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
     .modal-content p {
         font-size: 1rem;
         line-height: 1.7;
-        white-space: pre-wrap; /* Para respetar saltos de línea */
+        white-space: pre-wrap; 
     }
 
     .close-button {
@@ -549,6 +638,7 @@
     <div id="newsModal" class="modal">
         <div class="modal-content">
             <span class="close-button">×</span>
+            <img id="modalNewsImage" class="modal-image" src="" alt="Imagen de la Noticia" style="display: none;">
             <h2 id="modalNewsTitle"></h2>
             <span id="modalNewsDate" class="modal-date"></span>
             <p id="modalNewsContent"></p>
@@ -557,9 +647,14 @@
 
         <div class="section-container">
       <h2>Top 10 Canciones</h2>
-      <div id="videos-list" class="videos-grid">
-        <p class="no-data-message">Cargando videos...</p>
-      </div>
+      <div class="videos-grid-container">
+        <div id="videos-list" class="videos-grid">
+          <p class="no-data-message">Cargando videos...</p>
+        </div>
+        <div id="show-more-videos-container" class="show-more-btn-container" style="display: none;">
+            <button id="showMoreVideosBtn" class="show-more-btn">Ver más canciones</button>
+        </div>
+      </div>
     </div>
 
         <div class="section-container">
@@ -626,13 +721,13 @@
     audioMini.addEventListener('play', () => {
         miniPlayIcon.classList.replace('fa-play', 'fa-pause');
         miniReproductorDiv.classList.add('playing');
-        audioLoader.classList.remove('loading'); // Remover la animación de carga si ya hay progreso
+        audioLoader.classList.remove('loading'); 
     });
 
     audioMini.addEventListener('pause', () => {
         miniPlayIcon.classList.replace('fa-pause', 'fa-play');
         miniReproductorDiv.classList.remove('playing');
-        audioLoader.style.transform = 'scaleX(0)'; // Resetear la barra de progreso al pausar
+        audioLoader.style.transform = 'scaleX(0)'; 
     });
 
     miniVolumeControl.addEventListener('input', function() {
@@ -641,11 +736,11 @@
 
     // --- Manejo de la barra de progreso de carga ---
     audioMini.addEventListener('waiting', () => {
-        audioLoader.classList.add('loading'); // Muestra animación de carga si el audio está en búfer
+        audioLoader.classList.add('loading'); 
     });
 
     audioMini.addEventListener('playing', () => {
-        audioLoader.classList.remove('loading'); // Quita animación si el audio está reproduciendo
+        audioLoader.classList.remove('loading'); 
     });
 
     audioMini.addEventListener('progress', () => {
@@ -653,12 +748,12 @@
             const buffered = audioMini.buffered.end(audioMini.buffered.length - 1);
             const percentage = (buffered / audioMini.duration) * 100;
             audioLoader.style.transform = `scaleX(${percentage / 100})`;
-            audioLoader.classList.remove('loading'); // Si hay progreso, no mostrar animación genérica
+            audioLoader.classList.remove('loading'); 
         }
     });
     // Fallback para streams en vivo sin duración conocida
     audioMini.addEventListener('stalled', () => {
-        audioLoader.classList.add('loading'); // Si se estanca, mostrar animación
+        audioLoader.classList.add('loading'); 
     });
 
 
@@ -669,6 +764,7 @@
         try {
             const response = await fetch(AZURACAST_API_URL);
             if (!response.ok) {
+                // Si la respuesta no es OK (ej. 404, 500), lanzar un error
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
@@ -690,7 +786,11 @@
             }
         } catch (error) {
             console.error("Error al obtener metadatos de AzuraCast:", error);
-            currentAzuraCastData = { title: "EKUSFM", artist: "Error al cargar metadatos" };
+            // Establece un mensaje de error claro en el reproductor
+            currentAzuraCastData = { title: "EKUSFM", artist: "Error al cargar metadatos" }; 
+        } finally {
+            // Aseguramos que la pantalla se actualice con la información disponible o el error
+            updateMiniPlayerDisplay(); 
         }
     }
 
@@ -737,7 +837,6 @@
                         const program = programs[key];
                         const schedule = program.schedule;
 
-                        // Mejorar la robustez del parsing del horario
                         const dayMatch = schedule.match(/^(.*?)\s*(\d{1,2}:\d{2}\s*(AM|PM)?\s*-\s*\d{1,2}:\d{2}\s*(AM|PM)?)$/i);
                         if (!dayMatch || dayMatch.length < 3) continue;
 
@@ -782,13 +881,11 @@
 
                         if (isCurrentDay) {
                             if (isOvernight) {
-                                // Programa que cruza la medianoche (ej: 22:00 - 02:00)
                                 if (currentTimeInMinutes >= programStartTime || currentTimeInMinutes < programEndTime) {
                                     foundProgram = program;
                                     break;
                                 }
                             } else {
-                                // Programa dentro del mismo día
                                 if (currentTimeInMinutes >= programStartTime && currentTimeInMinutes < programEndTime) {
                                     foundProgram = program;
                                     break;
@@ -805,9 +902,8 @@
         if (foundProgram) {
             miniSongTitle.textContent = foundProgram.name;
             miniArtistName.textContent = "Al Aire: " + foundProgram.schedule;
-            miniArtistName.classList.add('program-info'); // Agrega clase para estilo específico de programa
+            miniArtistName.classList.add('program-info'); 
         } else {
-            // Si no hay programa al aire, muestra los metadatos de AzuraCast
             miniSongTitle.textContent = currentAzuraCastData.title;
             miniArtistName.textContent = currentAzuraCastData.artist;
             miniArtistName.classList.remove('program-info');
@@ -817,25 +913,34 @@
     // --- Orquestación de Actualizaciones de Mini-Reproductor ---
     async function initMiniPlayerUpdates() {
         await fetchAzuraCastMetadata(); 
+        // Llama a updateMiniPlayerDisplay aquí también, para asegurar que se muestren los metadatos iniciales
         updateMiniPlayerDisplay(); 
 
-        // Actualizar metadatos de AzuraCast cada 10 segundos
         setInterval(fetchAzuraCastMetadata, 10 * 1000); 
-        // Actualizar la visualización (programa vs. AzuraCast) cada minuto
         setInterval(updateMiniPlayerDisplay, 60 * 1000); 
     }
 
     // --- Lógica del Modal de Noticias ---
     const newsModal = document.getElementById('newsModal');
+    const modalNewsImage = document.getElementById('modalNewsImage'); // Nuevo elemento para la imagen
     const modalNewsTitle = document.getElementById('modalNewsTitle');
     const modalNewsDate = document.getElementById('modalNewsDate');
     const modalNewsContent = document.getElementById('modalNewsContent');
     const closeButton = document.querySelector('.close-button');
 
-    function openNewsModal(title, date, content) {
+    function openNewsModal(title, date, content, imageUrl) {
         modalNewsTitle.textContent = title;
         modalNewsDate.textContent = date;
-        modalNewsContent.textContent = content; // Usar textContent para seguridad y pre-wrap en CSS
+        modalNewsContent.textContent = content; 
+        
+        if (imageUrl) {
+            modalNewsImage.src = imageUrl;
+            modalNewsImage.style.display = 'block'; // Mostrar la imagen si hay URL
+        } else {
+            modalNewsImage.style.display = 'none'; // Ocultar si no hay URL
+            modalNewsImage.src = ''; // Limpiar src
+        }
+
         newsModal.classList.add('show');
     }
 
@@ -855,6 +960,10 @@
     const videosListDiv = document.getElementById('videos-list');
     const programsListDiv = document.getElementById('programs-list');
     const featuresListUl = document.getElementById('features-list');
+    const showMoreVideosBtn = document.getElementById('showMoreVideosBtn');
+    const showMoreVideosContainer = document.getElementById('show-more-videos-container');
+
+    let allVideos = []; // Almacenará todas las canciones del top 10
 
     function loadNews() {
         newsListDiv.innerHTML = '<p class="no-data-message">Cargando noticias...</p>';
@@ -877,22 +986,29 @@
                 sortedNews.forEach(newsItem => {
                     const articleDiv = document.createElement('div');
                     articleDiv.className = 'news-article';
-                    // Almacena los datos completos en atributos de datos para el pop-up
-                    articleDiv.dataset.title = newsItem.title;
-                    articleDiv.dataset.date = new Date(newsItem.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-                    articleDiv.dataset.content = newsItem.content;
+                    
+                    const formattedDate = new Date(newsItem.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+                    
+                    const imageUrlHtml = newsItem.imageUrl ? `<img src="${newsItem.imageUrl}" alt="${newsItem.title}" onerror="this.style.display='none';">` : '';
 
                     articleDiv.innerHTML = `
+                        ${imageUrlHtml}
                         <h3>${newsItem.title}</h3>
-                        <span class="news-date">${new Date(newsItem.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                        <span class="news-date">${formattedDate}</span>
                         <p class="news-content">${newsItem.content}</p>
+                        <button class="read-more-btn" 
+                                data-title="${newsItem.title}" 
+                                data-date="${formattedDate}" 
+                                data-content="${newsItem.content}"
+                                data-imageurl="${newsItem.imageUrl || ''}">Ver más</button>
                     `;
-                    // Añadir el evento click para abrir el modal
-                    articleDiv.addEventListener('click', function() {
+                    
+                    articleDiv.querySelector('.read-more-btn').addEventListener('click', function() {
                         openNewsModal(
                             this.dataset.title,
                             this.dataset.date,
-                            this.dataset.content
+                            this.dataset.content,
+                            this.dataset.imageurl
                         );
                     });
                     newsListDiv.appendChild(articleDiv);
@@ -904,48 +1020,74 @@
             });
     }
 
+    function renderVideos(videosToRender) {
+        videosListDiv.innerHTML = ''; // Limpiar antes de renderizar
+        if (videosToRender.length === 0) {
+            videosListDiv.innerHTML = '<p class="no-data-message">No hay videos en el Top 10 disponibles.</p>';
+            return;
+        }
+
+        videosToRender.forEach(videoItem => {
+            const videoCard = document.createElement('div');
+            videoCard.className = 'video-card';
+            // Usa el atributo `loading="lazy"` para mejorar el rendimiento
+            videoCard.innerHTML = `
+                <iframe src="https://www.youtube.com/embed/${videoItem.videoId}?controls=0" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen 
+                        loading="lazy"></iframe>
+                <div class="video-card-info">
+                    <span class="video-rank">#${videoItem.rank}</span>
+                    <h3>${videoItem.title}</h3>
+                    <p>ID: ${videoItem.videoId}</p>
+                </div>
+            `;
+            videosListDiv.appendChild(videoCard);
+        });
+    }
+
     function loadVideos() {
         videosListDiv.innerHTML = '<p class="no-data-message">Cargando videos...</p>';
         database.ref('top10videos').orderByChild('rank').once('value')
             .then(snapshot => {
-                videosListDiv.innerHTML = ''; 
+                videosListDiv.innerHTML = ''; // Limpiar mensaje de carga
                 if (!snapshot.exists() || snapshot.val() === null) {
                     videosListDiv.innerHTML = '<p class="no-data-message">No hay videos en el Top 10 disponibles.</p>';
                     return;
                 }
                 const videosData = snapshot.val();
-                const sortedVideos = [];
+                allVideos = []; // Resetear el array de todos los videos
                 for (let key in videosData) {
                     if (videosData.hasOwnProperty(key)) {
-                        sortedVideos.push({ id: key, ...videosData[key] });
+                        allVideos.push({ id: key, ...videosData[key] });
                     }
                 }
-                sortedVideos.sort((a, b) => a.rank - b.rank);
+                allVideos.sort((a, b) => a.rank - b.rank); // Asegurarse de que estén ordenados
 
-                sortedVideos.forEach(videoItem => {
-                    const videoCard = document.createElement('div');
-                    videoCard.className = 'video-card';
-                    // Nota: Asegúrate de que videoItem.videoId es solo el ID del video (ej. "dQw4w9WgXcQ")
-                    videoCard.innerHTML = `
-                        <iframe src="https://www.youtube.com/embed/${videoItem.videoId}?controls=0" 
-                                frameborder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                allowfullscreen 
-                                loading="lazy"></iframe>
-                        <div class="video-card-info">
-                            <span class="video-rank">#${videoItem.rank}</span>
-                            <h3>${videoItem.title}</h3>
-                            <p>ID: ${videoItem.videoId}</p>
-                        </div>
-                    `;
-                    videosListDiv.appendChild(videoCard);
-                });
+                // Mostrar solo las primeras 3 canciones inicialmente
+                renderVideos(allVideos.slice(0, 3)); 
+
+                // Mostrar el botón "Ver Más" si hay más de 3 videos
+                if (allVideos.length > 3) {
+                    showMoreVideosContainer.style.display = 'block';
+                } else {
+                    showMoreVideosContainer.style.display = 'none';
+                }
             })
             .catch(error => {
                 console.error("Error al cargar videos:", error);
                 videosListDiv.innerHTML = '<p class="no-data-message">Error al cargar los videos del Top 10.</p>';
+                showMoreVideosContainer.style.display = 'none'; // Ocultar el botón si hay error
             });
     }
+
+    // Event listener para el botón "Ver más" del Top 10
+    showMoreVideosBtn.addEventListener('click', () => {
+        renderVideos(allVideos); // Renderizar todos los videos
+        showMoreVideosContainer.style.display = 'none'; // Ocultar el botón después de mostrar todos
+    });
+
 
     function loadPrograms() {
         programsListDiv.innerHTML = '<p class="no-data-message">Cargando programas...</p>';
@@ -1017,7 +1159,7 @@
 
     // Cargar todos los datos al cargar la página
     document.addEventListener('DOMContentLoaded', () => {
-        initMiniPlayerUpdates(); // Iniciar reproductor y metadatos
+        initMiniPlayerUpdates(); 
         loadNews();
         loadVideos();
         loadPrograms();
