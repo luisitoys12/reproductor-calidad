@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" href="icon.png">
   <link rel="stylesheet" href="style.css">
@@ -241,6 +241,11 @@
         margin-bottom: 15px;
         border-radius: 10px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        cursor: pointer; /* Indica que es clicable */
+        transition: background-color 0.3s ease;
+    }
+    #news-list .news-article:hover {
+        background-color: #3b4555;
     }
     #news-list .news-article h3 {
         color: #22d3ee;
@@ -255,6 +260,9 @@
     }
     #news-list .news-content {
         white-space: pre-wrap; /* Mantiene los saltos de línea y espacios del textarea */
+        max-height: 80px; /* Limita la altura del preview */
+        overflow: hidden; /* Oculta el contenido extra */
+        text-overflow: ellipsis; /* Añade puntos suspensivos */
     }
     .no-data-message {
         text-align: center;
@@ -263,38 +271,54 @@
         padding: 20px;
     }
 
-    /* --- Estilos para Videos (Top 10) --- */
+    /* --- ESTILOS PARA EL NUEVO DISEÑO DE TOP 10 VIDEOS/CANCIONES --- */
     .videos-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 25px;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Columnas responsivas */
+        gap: 30px; /* Mayor espacio entre tarjetas */
+        padding: 10px;
     }
     .video-card {
         background-color: #2d3748;
-        border-radius: 10px;
+        border-radius: 15px; /* Bordes más redondeados */
         overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        text-align: center;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.4); /* Sombra más pronunciada */
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
         display: flex;
         flex-direction: column;
-        justify-content: space-between; /* Para empujar el footer hacia abajo */
+        justify-content: space-between;
+        border: 1px solid #334155; /* Borde sutil */
+    }
+    .video-card:hover {
+        transform: translateY(-8px); /* Elevación al pasar el mouse */
+        box-shadow: 0 10px 30px rgba(0,0,0,0.6);
     }
     .video-card iframe {
         width: 100%;
-        height: 180px; /* Altura fija para los videos */
+        height: 200px; /* Altura fija para los videos */
         border: none;
+        border-bottom: 1px solid #334155; /* Separador sutil */
     }
     .video-card-info {
-        padding: 15px;
+        padding: 20px; /* Más padding */
+        text-align: center;
     }
     .video-card h3 {
         color: #22d3ee;
-        font-size: 1.3rem;
+        font-size: 1.5rem; /* Título más grande */
         margin-top: 0;
-        margin-bottom: 5px;
+        margin-bottom: 10px;
+        line-height: 1.3;
+    }
+    .video-card .video-rank {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #38bdf8; /* Color azul brillante para el ranking */
+        margin-bottom: 8px;
+        display: block; /* Para que ocupe su propia línea */
     }
     .video-card p {
-        font-size: 0.9rem;
+        font-size: 0.95rem;
         color: #94a3b8;
         margin-bottom: 0;
     }
@@ -357,7 +381,88 @@
         font-size: 1.1rem;
     }
 
+    /* --- Estilos para el Modal Pop-up de Noticias --- */
+    .modal {
+        display: none; /* Oculto por defecto */
+        position: fixed; /* Permanece fijo en la pantalla */
+        z-index: 10001; /* Z-index superior al reproductor */
+        left: 0;
+        top: 0;
+        width: 100%; /* Cubre todo el ancho */
+        height: 100%; /* Cubre toda la altura */
+        overflow: auto; /* Permite scroll si el contenido es largo */
+        background-color: rgba(0,0,0,0.7); /* Fondo semi-transparente oscuro */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    .modal.show {
+        display: flex;
+        opacity: 1;
+    }
+
+    .modal-content {
+        background-color: #1e293b; /* Fondo del modal */
+        margin: auto;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.8);
+        max-width: 700px; /* Ancho máximo */
+        width: 90%; /* Ancho responsivo */
+        position: relative;
+        transform: translateY(-50px); /* Efecto de entrada */
+        transition: transform 0.3s ease-in-out;
+        color: #f8fafc;
+        max-height: 80vh; /* Altura máxima para el contenido */
+        overflow-y: auto; /* Scroll para el contenido si es muy largo */
+    }
+
+    .modal.show .modal-content {
+        transform: translateY(0); /* Posición final */
+    }
+
+    .modal-content h2 {
+        color: #22d3ee;
+        margin-top: 0;
+        font-size: 2rem;
+        margin-bottom: 10px;
+    }
+
+    .modal-content .modal-date {
+        font-size: 0.95rem;
+        color: #94a3b8;
+        margin-bottom: 20px;
+        display: block;
+    }
+
+    .modal-content p {
+        font-size: 1rem;
+        line-height: 1.7;
+        white-space: pre-wrap; /* Para respetar saltos de línea */
+    }
+
+    .close-button {
+        color: #fff;
+        position: absolute;
+        top: 15px;
+        right: 25px;
+        font-size: 30px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+
+    .close-button:hover,
+    .close-button:focus {
+        color: #22d3ee;
+        text-decoration: none;
+        cursor: pointer;
+    }
   </style>
+
     <script>
     (function() {
       var host = window.location.hostname;
@@ -441,6 +546,15 @@
       </div>
     </div>
 
+    <div id="newsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">×</span>
+            <h2 id="modalNewsTitle"></h2>
+            <span id="modalNewsDate" class="modal-date"></span>
+            <p id="modalNewsContent"></p>
+        </div>
+    </div>
+
         <div class="section-container">
       <h2>Top 10 Canciones</h2>
       <div id="videos-list" class="videos-grid">
@@ -485,7 +599,6 @@
 
     // --- Configuración del Stream y AzuraCast ---
     const AUDIO_STREAM_URL = "https://radio.trabullnetwork.pro/listen/esmerosound/radio.mp3";
-    // *** ESTA ES LA LÍNEA QUE SE HA ACTUALIZADO CON LA URL ESPECÍFICA ***
     const AZURACAST_API_URL = "https://radio.trabullnetwork.pro/api/live/nowplaying/esmerosound"; 
     
     const audioMini = document.getElementById('audio-mini');
@@ -559,18 +672,20 @@
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            // AzuraCast devuelve un array, toma el primer elemento
-            const nowPlaying = data[0] || data; 
             
-            if (nowPlaying && nowPlaying.now_playing && nowPlaying.now_playing.song) {
-                currentAzuraCastData.title = nowPlaying.now_playing.song.title || "Sin título";
-                currentAzuraCastData.artist = nowPlaying.now_playing.song.artist || "Artista Desconocido";
-            } else if (nowPlaying && nowPlaying.current_song && nowPlaying.current_song.title) {
-                 // Otra estructura común de AzuraCast API
-                currentAzuraCastData.title = nowPlaying.current_song.title;
-                currentAzuraCastData.artist = nowPlaying.current_song.artist;
-            } else {
-                console.warn("No se encontraron datos de canción/artista en la respuesta de AzuraCast.");
+            // Verifica la estructura de la respuesta de AzuraCast
+            if (Array.isArray(data) && data.length > 0 && data[0].now_playing && data[0].now_playing.song) {
+                const nowPlaying = data[0].now_playing.song;
+                currentAzuraCastData.title = nowPlaying.title || "Sin título";
+                currentAzuraCastData.artist = nowPlaying.artist || "Artista Desconocido";
+            } else if (data.now_playing && data.now_playing.song) {
+                // Para el caso en que no es un array, pero tiene la misma estructura interna
+                const nowPlaying = data.now_playing.song;
+                currentAzuraCastData.title = nowPlaying.title || "Sin título";
+                currentAzuraCastData.artist = nowPlaying.artist || "Artista Desconocido";
+            }
+            else {
+                console.warn("No se encontraron datos de canción/artista en la respuesta de AzuraCast con la estructura esperada.");
                 currentAzuraCastData = { title: "EKUSFM", artist: "Cargando metadatos..." };
             }
         } catch (error) {
@@ -579,7 +694,7 @@
         }
     }
 
-    // Funciones auxiliares para determinar el programa actual (sin cambios)
+    // Funciones auxiliares para determinar el programa actual
     function getDayOfWeek(date) {
         const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
         return days[date.getDay()];
@@ -622,6 +737,7 @@
                         const program = programs[key];
                         const schedule = program.schedule;
 
+                        // Mejorar la robustez del parsing del horario
                         const dayMatch = schedule.match(/^(.*?)\s*(\d{1,2}:\d{2}\s*(AM|PM)?\s*-\s*\d{1,2}:\d{2}\s*(AM|PM)?)$/i);
                         if (!dayMatch || dayMatch.length < 3) continue;
 
@@ -644,10 +760,10 @@
                             daysPart.split(/,|\s+y\s+/).forEach(dayRange => {
                                 const trimmedDayRange = dayRange.trim();
                                 if (trimmedDayRange.includes('a')) {
-                                    const [startDay, endDay] = trimmedDayRange.split('a').map(d => d.trim());
                                     const allDays = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
-                                    const startIndex = allDays.indexOf(startDay);
-                                    const endIndex = allDays.indexOf(endDay);
+                                    const [startDayName, endDayName] = trimmedDayRange.split('a').map(d => d.trim());
+                                    const startIndex = allDays.indexOf(startDayName);
+                                    const endIndex = allDays.indexOf(endDayName);
                                     if (startIndex !== -1 && endIndex !== -1) {
                                         for (let i = startIndex; i <= endIndex; i++) {
                                             daysOfWeek.push(allDays[i]);
@@ -666,11 +782,13 @@
 
                         if (isCurrentDay) {
                             if (isOvernight) {
+                                // Programa que cruza la medianoche (ej: 22:00 - 02:00)
                                 if (currentTimeInMinutes >= programStartTime || currentTimeInMinutes < programEndTime) {
                                     foundProgram = program;
                                     break;
                                 }
                             } else {
+                                // Programa dentro del mismo día
                                 if (currentTimeInMinutes >= programStartTime && currentTimeInMinutes < programEndTime) {
                                     foundProgram = program;
                                     break;
@@ -696,22 +814,42 @@
         }
     }
 
-    // --- Orquestación de Actualizaciones ---
+    // --- Orquestación de Actualizaciones de Mini-Reproductor ---
     async function initMiniPlayerUpdates() {
-        await fetchAzuraCastMetadata(); // Obtener metadatos de AzuraCast primero
-        updateMiniPlayerDisplay(); // Luego, decidir qué mostrar (programa o AzuraCast)
+        await fetchAzuraCastMetadata(); 
+        updateMiniPlayerDisplay(); 
 
         // Actualizar metadatos de AzuraCast cada 10 segundos
         setInterval(fetchAzuraCastMetadata, 10 * 1000); 
-        // Actualizar la visualización del mini-reproductor cada minuto para la lógica de programas
+        // Actualizar la visualización (programa vs. AzuraCast) cada minuto
         setInterval(updateMiniPlayerDisplay, 60 * 1000); 
     }
 
-    // Iniciar las actualizaciones al cargar la página
-    document.addEventListener('DOMContentLoaded', initMiniPlayerUpdates);
+    // --- Lógica del Modal de Noticias ---
+    const newsModal = document.getElementById('newsModal');
+    const modalNewsTitle = document.getElementById('modalNewsTitle');
+    const modalNewsDate = document.getElementById('modalNewsDate');
+    const modalNewsContent = document.getElementById('modalNewsContent');
+    const closeButton = document.querySelector('.close-button');
 
+    function openNewsModal(title, date, content) {
+        modalNewsTitle.textContent = title;
+        modalNewsDate.textContent = date;
+        modalNewsContent.textContent = content; // Usar textContent para seguridad y pre-wrap en CSS
+        newsModal.classList.add('show');
+    }
 
-    // --- Funciones para cargar datos de Firebase y mostrarlos (las mismas que antes) ---
+    closeButton.addEventListener('click', () => {
+        newsModal.classList.remove('show');
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target == newsModal) {
+            newsModal.classList.remove('show');
+        }
+    });
+
+    // --- Funciones para cargar datos de Firebase y mostrarlos ---
 
     const newsListDiv = document.getElementById('news-list');
     const videosListDiv = document.getElementById('videos-list');
@@ -739,11 +877,24 @@
                 sortedNews.forEach(newsItem => {
                     const articleDiv = document.createElement('div');
                     articleDiv.className = 'news-article';
+                    // Almacena los datos completos en atributos de datos para el pop-up
+                    articleDiv.dataset.title = newsItem.title;
+                    articleDiv.dataset.date = new Date(newsItem.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+                    articleDiv.dataset.content = newsItem.content;
+
                     articleDiv.innerHTML = `
                         <h3>${newsItem.title}</h3>
                         <span class="news-date">${new Date(newsItem.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
                         <p class="news-content">${newsItem.content}</p>
                     `;
+                    // Añadir el evento click para abrir el modal
+                    articleDiv.addEventListener('click', function() {
+                        openNewsModal(
+                            this.dataset.title,
+                            this.dataset.date,
+                            this.dataset.content
+                        );
+                    });
                     newsListDiv.appendChild(articleDiv);
                 });
             })
@@ -774,10 +925,16 @@
                 sortedVideos.forEach(videoItem => {
                     const videoCard = document.createElement('div');
                     videoCard.className = 'video-card';
+                    // Nota: Asegúrate de que videoItem.videoId es solo el ID del video (ej. "dQw4w9WgXcQ")
                     videoCard.innerHTML = `
-                        <iframe src="https://www.youtube.com/embed/${videoItem.videoId}?controls=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+                        <iframe src="https://www.youtube.com/embed/${videoItem.videoId}?controls=0" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen 
+                                loading="lazy"></iframe>
                         <div class="video-card-info">
-                            <h3>#${videoItem.rank} - ${videoItem.title}</h3>
+                            <span class="video-rank">#${videoItem.rank}</span>
+                            <h3>${videoItem.title}</h3>
                             <p>ID: ${videoItem.videoId}</p>
                         </div>
                     `;
@@ -860,6 +1017,7 @@
 
     // Cargar todos los datos al cargar la página
     document.addEventListener('DOMContentLoaded', () => {
+        initMiniPlayerUpdates(); // Iniciar reproductor y metadatos
         loadNews();
         loadVideos();
         loadPrograms();
