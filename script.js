@@ -3,7 +3,7 @@ const config = {
     nombreRadio: "EKUSFM",
     streamURL: "https://stream.zeno.fm/i6yeiqilxkvuv",
     idzeno: "i6yeiqilxkvuv",
-    albumCover: "https://aventura.estacionkusmedios.com/img/default.jpg",
+    albumCover: "https://radioaventura-web.vercel.app/img/default.jpg",
     redesSociales: [
         { url: "https://web.facebook.com/ekusfm", icon: "fab fa-facebook" },
         { url: "https://www.instagram.com/estacionkusfm/", icon: "fab fa-instagram" },
@@ -16,21 +16,23 @@ const config = {
 (function() {
     const hostname = location.hostname;
     const permitido = (
-        hostname === "reproductor-calidad.vercel.app" ||
-hostname === "luisitoys12.github.io/reproductor-calidad" ||
-        hostname === "estacionkusmedios.com" ||
-        hostname.endsWith(".estacionkusmedios.com")
+        hostname === "luisitoys12.github.io" ||
+        hostname === "repro-ekusmedios.vercel.app" ||
+        hostname === "reproductor-calidad.vercel.app"
     );
     if (!permitido) {
         document.body.innerHTML = `
         <div style="text-align:center;padding:40px;color:#fff;background:#1e293b;height:100vh">
             <h1 style="color:#ff4444;font-size:2.5rem;">Página NO Autorizada</h1>
-            <p style="font-size:1.2rem;">Esta web solo puede ser utilizada por <b>EKUSFM</b> en <b>estacionkusmedios.com</b> o <b>reproductor-calidad.vercel.app</b>.<br>
-            Si eres el responsable, contacta a <a href="https://estacionkusmedios.org" style="color:#0ff;" target="_blank">estacionkusmedios.org</a>
+            <p style="font-size:1.2rem;">
+                El reproductor no está autorizado para usarse en este dominio.<br>
+                Si ves este mensaje es porque el dominio en el que intentas acceder no cuenta con autorización para utilizar este reproductor por motivos de control y seguridad.<br><br>
+                Si eres el propietario del sitio y necesitas solicitar autorización para un nuevo dominio, por favor envía un correo a <a href="mailto:estacionkusmedios@hotmail.com" style="color:#0ff;">estacionkusmedios@hotmail.com</a>.<br>
+                Gracias por tu comprensión.
             </p>
         </div>`;
         document.title = "No autorizado";
-        throw new Error("Sitio no autorizado por estacionkusmedios.org");
+        throw new Error("Sitio no autorizado.");
     }
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('keydown', function(e) {
