@@ -1,9 +1,8 @@
 // === CONFIGURACIÓN ===
 const config = {
     nombreRadio: "EKUSFM",
-    azuracastURL: "https://radio.estacionkusmedios.com",
-    azuracastStation: "esmerosound",
-    streamURL: "https://radio.estacionkusmedios.com/listen/esmerosound/radio.mp3",
+    streamURL: "https://stream.zeno.fm/i6yeiqilxkvuv",
+    idzeno: "i6yeiqilxkvuv",
     albumCover: "https://aventura.estacionkusmedios.com/img/default.jpg",
     redesSociales: [
         { url: "https://web.facebook.com/ekusfm", icon: "fab fa-facebook" },
@@ -45,8 +44,8 @@ const audio = document.getElementById('audio');
 const playPauseBtn = document.getElementById('playPauseBtn');
 const volumeControl = document.getElementById('volumeControl');
 audio.src = config.streamURL;
-audio.volume = volumeControl.value;
 audio.crossOrigin = "anonymous";
+audio.volume = volumeControl.value;
 
 playPauseBtn.addEventListener('click', () => {
     if (audio.paused) audio.play();
@@ -56,11 +55,48 @@ audio.addEventListener('play', () => playPauseBtn.innerHTML = '<i class="fas fa-
 audio.addEventListener('pause', () => playPauseBtn.innerHTML = '<i class="fas fa-play"></i>');
 volumeControl.addEventListener('input', (e) => audio.volume = e.target.value);
 
-// === METADATOS ===
+// === METADATOS ZENO.FM ===
 const songTitle = document.getElementById('song-title');
 const artistName = document.getElementById('artist-name');
 const coverImg = document.getElementById('cover-img');
 const serviceBtns = document.getElementById('service-btns');
+let lastSong = "";
+
+async function updateMetadata() {
+    try {
+        const res = await fetch(`https://zenoplay.zenomedia.com/api/zenofm/nowplaying/${config.idzeno}?ra=${Math.random()}`);
+        const data = await res.json();
+        const currentSong = data.title || "Sin datos";
+        if (currentSong === lastSong) return;
+        lastSong = currentSong;
+
+        let [artist, title] = currentSong.split(" - ");
+        title = title || currentSong;
+        artist = artist || "EKUSFM";
+        songTitle.textContent = title;
+        artistName.textContent = artist;
+
+        // Buscar carátula en iTunes
+        let coverUrl = config.albumCover;
+        try {
+            const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(artist)}&media=music&limit=1`);
+            const cdata = await r.json();
+            if (cdata.results && cdata.results[0]?.artworkUrl100) {
+                coverUrl = cdata.results[0].artworkUrl100.replace("100x100bb", "600x600bb");
+            }
+        } catch {}
+        coverImg.src = coverUrl;
+
+        serviceBtns.innerHTML = makeSpotifyAppleBtns(title, artist);
+    } catch (e) {
+        songTitle.textContent = "Sin datos";
+        artistName.textContent = "";
+        coverImg.src = config.albumCover;
+        serviceBtns.innerHTML = "";
+    }
+}
+setInterval(updateMetadata, 10000);
+updateMetadata();
 
 function makeSpotifyAppleBtns(title, artist) {
     if (!title || !artist) return "";
@@ -74,54 +110,6 @@ function makeSpotifyAppleBtns(title, artist) {
       </button>
     `;
 }
-
-async function updateMetadata() {
-    try {
-        const url = `${config.azuracastURL}/api/nowplaying/${config.azuracastStation}`;
-        const res = await fetch(url);
-        if (!res.ok) throw new Error("HTTP status: " + res.status);
-        const data = await res.json();
-
-        let title = data.now_playing?.song?.title || data.now_playing?.song?.text || "Sin datos";
-        let artist = data.now_playing?.song?.artist || "";
-        let artUrl = data.now_playing?.song?.art || "";
-        let listeners = data.listeners?.current || 0;
-
-        // Fallbacks
-        if ((!title || title === "Sin datos") && data.song?.title) title = data.song.title;
-        if (!artist && data.song?.artist) artist = data.song.artist;
-        if (!artUrl && data.song?.art) artUrl = data.song.art;
-        if ((!title || !artist) && title && title.includes(" - ")) {
-            const [maybeArtist, maybeTitle] = title.split(" - ");
-            if (!artist) artist = maybeArtist.trim();
-            title = maybeTitle.trim();
-        }
-        if (artUrl && artUrl.startsWith("/")) artUrl = config.azuracastURL + artUrl;
-        if (!artUrl) artUrl = config.albumCover;
-
-        songTitle.textContent = title || "Sin datos";
-        artistName.textContent = artist || "";
-        coverImg.src = artUrl;
-        serviceBtns.innerHTML = makeSpotifyAppleBtns(title, artist);
-
-        // Update listeners count display
-        const listenersCount = document.getElementById('listenersCount');
-        if (listenersCount) {
-            listenersCount.textContent = `Oyentes actuales: ${listeners}`;
-        }
-    } catch (e) {
-        songTitle.textContent = "Sin datos";
-        artistName.textContent = "";
-        coverImg.src = config.albumCover;
-        serviceBtns.innerHTML = "";
-        const listenersCount = document.getElementById('listenersCount');
-        if (listenersCount) {
-            listenersCount.textContent = "";
-        }
-    }
-}
-setInterval(updateMetadata, 10000);
-updateMetadata();
 
 // === RELOJ CDMX ===
 function updateRadioClock() {
@@ -173,7 +161,6 @@ config.redesSociales.forEach(({ url, icon }) => {
     a.target = '_blank';
     a.rel = 'noopener noreferrer';
     a.className = 'menu-link';
-    // Extract social network name from URL for display text
     let displayName = '';
     if (url.includes('facebook.com')) displayName = 'Síguenos en Facebook';
     else if (url.includes('instagram.com')) displayName = 'Síguenos en Instagram';
@@ -259,32 +246,31 @@ const historyList = document.getElementById('historyList');
 
 historyLink.addEventListener('click', (e) => {
     e.preventDefault();
-    // For demo, show placeholder items with professional design
     historyList.innerHTML = '';
     const songs = [
         {
             title: 'Canción 1',
             artist: 'Artista A',
             time: '10:15 AM',
-            cover: 'https://aventura.estacionkusmedios.com/img/default.jpg'
+            cover: config.albumCover
         },
         {
             title: 'Canción 2',
             artist: 'Artista B',
             time: '10:20 AM',
-            cover: 'https://aventura.estacionkusmedios.com/img/default.jpg'
+            cover: config.albumCover
         },
         {
             title: 'Canción 3',
             artist: 'Artista C',
             time: '10:25 AM',
-            cover: 'https://aventura.estacionkusmedios.com/img/default.jpg'
+            cover: config.albumCover
         },
         {
             title: 'Canción 4',
             artist: 'Artista D',
             time: '10:30 AM',
-            cover: 'https://aventura.estacionkusmedios.com/img/default.jpg'
+            cover: config.albumCover
         }
     ];
     songs.forEach(song => {
