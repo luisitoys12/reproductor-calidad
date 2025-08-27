@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
-    body { padding-bottom: 120px; padding-top: 60px; }
+    body { padding-bottom: 120px; padding-top: 60px; background: #202b3a; }
     .header {
       background-color: #1e293b;
       padding: 15px 20px;
@@ -47,7 +47,24 @@
     .header .back-btn:hover {
       background-color: #06b6d4;
     }
-    /* Tabs */
+    .novedades-container {
+      max-width:950px;
+      margin:0 auto;
+      padding:22px 8px 0 8px;
+      background: #fff1;
+      border-radius: 12px;
+      margin-top:40px;
+      margin-bottom:40px;
+    }
+    .page-title {
+      color:#38bdf8;
+      text-align:center;
+      margin-bottom:30px;
+      font-size:2.3em;
+      font-weight:700;
+      letter-spacing:1px;
+      margin-top:10px;
+    }
     .tab-menu {
       display: flex;
       border-radius: 8px;
@@ -69,6 +86,10 @@
       transition: background 0.2s, color 0.2s;
       outline: none;
       border-right: 1px solid #222c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
     .tab-link:last-child {
       border-right: none;
@@ -101,6 +122,12 @@
       object-fit: cover;
       box-shadow: 0 4px 18px #0003;
     }
+    .content-section h2 {
+      color:#22d3ee;
+      text-align:center;
+      margin-bottom:22px;
+      font-size:1.7em;
+    }
     .cards-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
@@ -125,12 +152,14 @@
       color: #0ff;
       font-size: 0.99em;
       margin-bottom: 7px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
     .card-content .description {
       color: #cbd5e1;
       font-size: 1em;
     }
-    /* Eventos y Concursos */
     .events-list, .contests-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -152,6 +181,7 @@
       font-weight: 500;
       margin-bottom: 4px;
       margin-top: 0;
+      display: block;
     }
     .event-date, .contest-date {
       color: #94a3b8;
@@ -172,6 +202,57 @@
       font-size: 1.1em;
       border-top: 1px solid #333;
     }
+    /* MINI REPRODUCTOR FOOTER */
+    #mini-reproductor-footer {
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      width: 100%;
+      background: #1e293b;
+      border-top-left-radius: 16px;
+      border-top-right-radius: 16px;
+      box-shadow: 0 -4px 18px #0008;
+      z-index: 99999;
+      padding: 16px 18px 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: #fff;
+      font-family: 'Poppins', Arial, sans-serif;
+      border-top: 2px solid #38bdf8;
+      min-height: 70px;
+    }
+    #mini-reproductor-footer.hide { display: none !important; }
+    #mini-reproductor-footer .mini-cover-img {
+      width: 52px; height: 52px; border-radius: 8px; object-fit: cover; background: #222; box-shadow: 0 1px 6px #0006; flex-shrink: 0;
+    }
+    .mini-play-btn {
+      background: #22d3ee; border: none; border-radius: 50%; width: 44px; height: 44px; color: #1e293b; font-size: 1.5rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.25); transition: background-color 0.3s, transform 0.2s;
+      flex-shrink: 0; margin-left: 4px; margin-right: 4px;
+    }
+    .mini-play-btn:hover { background: #0dd; }
+    .mini-info-and-volume { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; overflow: hidden; min-width: 0; }
+    .mini-song-title { font-weight: 600; font-size: 1.08rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; color: #f8fafc;}
+    .mini-artist-name { font-size: 0.93rem; color: #38bdf8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px;}
+    .mini-volume-control-container { display: flex; align-items: center; gap: 7px; margin-top: 5px;}
+    .mini-volume-control-container .material-icons { font-size: 1.2rem; color: #94a3b8;}
+    .mini-volume-control { -webkit-appearance: none; width: 100px; height: 4px; background: #475569; border-radius: 2px; outline: none; cursor: pointer;}
+    .mini-volume-control::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none; width: 13px; height: 13px; border-radius: 50%; background: #22d3ee; cursor: pointer; box-shadow: 0 0 4px rgba(0,0,0,0.22);
+    }
+    .mini-volume-control::-moz-range-thumb {
+      width: 13px; height: 13px; border-radius: 50%; background: #22d3ee; cursor: pointer; box-shadow: 0 0 4px rgba(0,0,0,0.22);
+    }
+    .audio-loader {
+      position: absolute; left: 0; bottom: 0; width: 100%; height: 3px; background-color: #06b6d4;
+      transform-origin: left; transform: scaleX(0); transition: transform 0.1s linear; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;
+    }
+    .audio-loader.loading { animation: loading-pulse 1.5s infinite ease-in-out;}
+    @keyframes loading-pulse { 0%{transform:scaleX(0);opacity:0.5;} 50%{transform:scaleX(0.8);opacity:1;} 100%{transform:scaleX(0);opacity:0.5;} }
+    .close-mini-player-btn {
+      border: none; background: none; color: #fff; font-size: 1.5rem; margin-left: 10px; cursor: pointer; transition: color 0.2s;
+    }
+    .close-mini-player-btn:hover { color: #38bdf8; }
   </style>
 </head>
 <body>
@@ -181,8 +262,8 @@
       <i class="fas fa-arrow-left"></i> Volver
     </a>
   </div>
-  <div class="novedades-container" style="max-width:950px;margin:0 auto;padding:22px 8px 0 8px;">
-    <h1 class="page-title" style="color:#38bdf8;text-align:center;margin-bottom:30px;">Novedades</h1>
+  <div class="novedades-container">
+    <h1 class="page-title">Novedades</h1>
     <div class="tab-menu">
       <button class="tab-link active" data-tab="programas">
         <span class="material-icons" style="vertical-align: middle;">mic</span> Programas
@@ -200,7 +281,7 @@
         <img src="https://images.pexels.com/photos/3082341/pexels-photo-3082341.jpeg" alt="Programas">
       </div>
       <div class="content-section">
-        <h2 style="text-align:center;color:#22d3ee">Nuestros Programas</h2>
+        <h2>Nuestros Programas</h2>
         <div class="cards-grid">
           <div class="card"><div class="card-content">
             <h3>Mañanas con Energía</h3>
@@ -236,7 +317,7 @@
         <img src="https://images.pexels.com/photos/2263436/pexels-photo-2263436.jpeg" alt="Eventos">
       </div>
       <div class="content-section">
-        <h2 style="text-align:center;color:#22d3ee">Próximos Eventos</h2>
+        <h2>Próximos Eventos</h2>
         <div class="events-list">
           <div class="event-card">
             <span class="event-title">Festival de Verano EKUSFM</span>
@@ -262,7 +343,7 @@
         <img src="https://images.pexels.com/photos/2698519/pexels-photo-2698519.jpeg" alt="Concursos">
       </div>
       <div class="content-section">
-        <h2 style="text-align:center;color:#22d3ee">Concursos Activos</h2>
+        <h2>Concursos Activos</h2>
         <div class="contests-grid">
           <div class="contest-card">
             <span class="contest-title">Selfie EKUS</span>
