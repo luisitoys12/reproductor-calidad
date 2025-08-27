@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Noticias y Contenido - EKUSFM</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="icon.png">
@@ -18,6 +16,7 @@
             background-color: #0f172a;
             color: #f8fafc;
             margin: 0;
+            padding-bottom: 120px; /* espacio para el reproductor */
             padding-top: 70px;
             line-height: 1.6;
         }
@@ -53,143 +52,6 @@
         }
         .header .back-btn:hover {
             background-color: #06b6d4;
-        }
-        #mini-reproductor {
-            position: fixed;
-            top: 15px;
-            left: 15px;
-            width: 320px;
-            background: #1e293b;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
-            z-index: 10000;
-            padding: 12px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #fff;
-            font-family: 'Poppins', Arial, sans-serif;
-            border: 1px solid #38bdf8;
-            transition: all 0.3s ease;
-        }
-        #mini-reproductor:hover {
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8);
-            transform: translateY(-2px);
-        }
-        #mini-reproductor.playing {
-            background: linear-gradient(135deg, #1e293b, #334155);
-        }
-        .player-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .mini-play-btn {
-            background: #22d3ee;
-            border: none;
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            color: #1e293b;
-            font-size: 1.5rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-        .mini-play-btn:hover {
-            background-color: #06b6d4;
-            transform: scale(1.05);
-        }
-        .mini-play-btn:active {
-            transform: scale(0.95);
-        }
-        .mini-info-and-volume {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            overflow: hidden;
-        }
-        .mini-song-title {
-            font-weight: 600;
-            font-size: 1rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-bottom: 2px;
-            color: #f8fafc;
-        }
-        .mini-artist-name {
-            font-size: 0.85rem;
-            color: #94a3b8;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .mini-artist-name.program-info {
-            color: #38bdf8;
-            font-weight: 500;
-        }
-        .mini-volume-control-container {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin-top: 8px;
-        }
-        .mini-volume-control-container .material-icons {
-            font-size: 1.2rem;
-            color: #94a3b8;
-        }
-        .mini-volume-control {
-            -webkit-appearance: none;
-            width: 100%;
-            height: 4px;
-            background: #475569;
-            border-radius: 2px;
-            outline: none;
-            cursor: pointer;
-        }
-        .mini-volume-control::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: #22d3ee;
-            cursor: pointer;
-            box-shadow: 0 0 5px rgba(0,0,0,0.3);
-        }
-        .mini-volume-control::-moz-range-thumb {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: #22d3ee;
-            cursor: pointer;
-            box-shadow: 0 0 5px rgba(0,0,0,0.3);
-        }
-        .audio-loader {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background-color: #06b6d4;
-            transform-origin: left;
-            transform: scaleX(0);
-            transition: transform 0.1s linear;
-            border-bottom-left-radius: 15px;
-            border-bottom-right-radius: 15px;
-        }
-        .audio-loader.loading {
-            animation: loading-pulse 1.5s infinite ease-in-out;
-        }
-        @keyframes loading-pulse {
-            0% { transform: scaleX(0); opacity: 0.5; }
-            50% { transform: scaleX(0.7); opacity: 1; }
-            100% { transform: scaleX(0); opacity: 0.5; }
         }
         .content-wrapper {
             max-width: 1000px;
@@ -404,29 +266,58 @@
             50% { opacity: 1; }
             100% { opacity: 0.6; }
         }
+
+        /* MINI REPRODUCTOR FOOTER */
+        #mini-reproductor-footer {
+            position: fixed;
+            left: 0; right: 0; bottom: 0;
+            width: 100%;
+            background: #1e293b;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            box-shadow: 0 -4px 18px #0008;
+            z-index: 99999;
+            padding: 16px 18px 16px 18px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            color: #fff;
+            font-family: 'Poppins', Arial, sans-serif;
+            border-top: 2px solid #38bdf8;
+            min-height: 70px;
+        }
+        #mini-reproductor-footer .mini-cover-img {
+            width: 52px; height: 52px; border-radius: 8px; object-fit: cover; background: #222; box-shadow: 0 1px 6px #0006; flex-shrink: 0;
+        }
+        .mini-play-btn {
+            background: #22d3ee; border: none; border-radius: 50%; width: 44px; height: 44px; color: #1e293b; font-size: 1.5rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.25); transition: background-color 0.3s, transform 0.2s;
+            flex-shrink: 0; margin-left: 4px; margin-right: 4px;
+        }
+        .mini-play-btn:hover { background: #0dd; }
+        .mini-info-and-volume { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; overflow: hidden; min-width: 0; }
+        .mini-song-title { font-weight: 600; font-size: 1.08rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; color: #f8fafc;}
+        .mini-artist-name { font-size: 0.93rem; color: #38bdf8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px;}
+        .mini-volume-control-container { display: flex; align-items: center; gap: 7px; margin-top: 5px;}
+        .mini-volume-control-container .material-icons { font-size: 1.2rem; color: #94a3b8;}
+        .mini-volume-control { -webkit-appearance: none; width: 100px; height: 4px; background: #475569; border-radius: 2px; outline: none; cursor: pointer;}
+        .mini-volume-control::-webkit-slider-thumb {
+          -webkit-appearance: none; appearance: none; width: 13px; height: 13px; border-radius: 50%; background: #22d3ee; cursor: pointer; box-shadow: 0 0 4px rgba(0,0,0,0.22);
+        }
+        .mini-volume-control::-moz-range-thumb {
+          width: 13px; height: 13px; border-radius: 50%; background: #22d3ee; cursor: pointer; box-shadow: 0 0 4px rgba(0,0,0,0.22);
+        }
+        .audio-loader {
+          position: absolute; left: 0; bottom: 0; width: 100%; height: 3px; background-color: #06b6d4;
+          transform-origin: left; transform: scaleX(0); transition: transform 0.1s linear; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;
+        }
+        .audio-loader.loading { animation: loading-pulse 1.5s infinite ease-in-out;}
+        @keyframes loading-pulse { 0%{transform:scaleX(0);opacity:0.5;} 50%{transform:scaleX(0.8);opacity:1;} 100%{transform:scaleX(0);opacity:0.5;} }
     </style>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 </head>
 <body>
-    <div id="mini-reproductor">
-        <div class="player-controls">
-            <button id="playPauseMiniBtn" class="mini-play-btn" title="Reproducir/Pausar">
-                <i id="miniPlayIcon" class="fa-solid fa-play"></i>
-            </button>
-        </div>
-        <div class="mini-info-and-volume">
-            <div id="miniSongTitle" class="mini-song-title">Cargando...</div>
-            <div id="miniArtistName" class="mini-artist-name"></div>
-            <div class="mini-volume-control-container">
-                <i class="material-icons">volume_down</i>
-                <input type="range" id="miniVolumeControl" class="mini-volume-control" min="0" max="1" step="0.01" value="1" title="Volumen" />
-                <i class="material-icons">volume_up</i>
-            </div>
-        </div>
-        <audio id="audio-mini" preload="auto" crossorigin="anonymous"></audio>
-        <div id="audioLoader" class="audio-loader"></div>
-    </div>
     <div class="header">
         <div class="logo">
             EKUSMEDIOS
@@ -471,14 +362,32 @@
             </ul>
         </div>
     </div>
+    <!-- MINI REPRODUCTOR FOOTER -->
+    <div id="mini-reproductor-footer">
+        <img id="miniCoverImg" class="mini-cover-img" src="https://radioaventura-web.vercel.app/img/default.jpg" alt="Carátula">
+        <button id="playPauseMiniBtn" class="mini-play-btn" title="Play/Pause">
+          <i id="miniPlayIcon" class="fa-solid fa-play"></i>
+        </button>
+        <div class="mini-info-and-volume">
+          <div id="miniSongTitle" class="mini-song-title">Cargando...</div>
+          <div id="miniArtistName" class="mini-artist-name"></div>
+          <div class="mini-volume-control-container">
+            <i class="material-icons">volume_down</i>
+            <input type="range" id="miniVolumeControl" class="mini-volume-control" min="0" max="1" step="0.01" value="1" title="Volumen" />
+            <i class="material-icons">volume_up</i>
+          </div>
+          <div id="audioLoader" class="audio-loader"></div>
+        </div>
+        <audio id="audio-mini" preload="auto" crossorigin="anonymous"></audio>
+    </div>
     <script>
-        // --- CONFIGURACIÓN DE FIREBASE ---
+        // --- FIREBASE ---
         const firebaseConfig = {
             apiKey: "AIzaSyBHlQ6WQauQLTbvp_iHbkWZ8Bhv3fntSpM",
             authDomain: "ekusfm-d1a9d.firebaseapp.com",
             databaseURL: "https://ekusfm-d1a9d-default-rtdb.firebaseio.com",
             projectId: "ekusfm-d1a9d",
-            storageBucket: "ekusfm-d1a9d.firebasestorage.app",
+            storageBucket: "ekusfm-d1a9d.appspot.com",
             messagingSenderId: "849619346647",
             appId: "1:849619346647:web:06559451c66950d9b03c92",
             measurementId: "G-X59DPNG6N4"
@@ -488,7 +397,7 @@
         }
         const database = firebase.database();
 
-        // --- Funciones de carga de contenido ---
+        // --- CARGA DE CONTENIDOS ---
         const newsListDiv = document.getElementById('news-list');
         const videosListDiv = document.getElementById('videos-list');
         const programsListDiv = document.getElementById('programs-list');
@@ -665,33 +574,76 @@
             loadFeatures();
         });
 
-        // Mini reproductor JS ejemplo básico (ajusta según tu script.js real)
-        const audioMini = document.getElementById('audio-mini');
-        const miniPlayIcon = document.getElementById('miniPlayIcon');
-        const miniVolumeControl = document.getElementById('miniVolumeControl');
-        const audioLoader = document.getElementById('audioLoader');
-        const miniReproductorDiv = document.getElementById('mini-reproductor');
-        audioMini.src = "https://stream.zeno.fm/i6yeiqilxkvuv"; // tu stream
-
-        document.getElementById('playPauseMiniBtn').onclick = function() {
-            if (audioMini.paused) audioMini.play();
-            else audioMini.pause();
-        };
-        audioMini.onplay = function() {
-            miniPlayIcon.classList.replace('fa-play', 'fa-pause');
-            miniReproductorDiv.classList.add('playing');
-            audioLoader.classList.remove('loading');
-        };
-        audioMini.onpause = function() {
-            miniPlayIcon.classList.replace('fa-pause', 'fa-play');
-            miniReproductorDiv.classList.remove('playing');
-            audioLoader.style.transform = 'scaleX(0)';
-        };
-        miniVolumeControl.oninput = function() {
-            audioMini.volume = parseFloat(this.value);
-        };
-        audioMini.onwaiting = function() { audioLoader.classList.add('loading'); };
-        audioMini.onplaying = function() { audioLoader.classList.remove('loading'); };
+        // MINI REPRODUCTOR FOOTER MODERNO
+        (function(){
+            const config = {
+                nombreRadio: "EKUSFM",
+                streamURL: "https://stream.zeno.fm/i6yeiqilxkvuv",
+                idzeno: "i6yeiqilxkvuv",
+                albumCover: "https://radioaventura-web.vercel.app/img/default.jpg"
+            };
+            const audio = document.getElementById('audio-mini');
+            const playBtn = document.getElementById('playPauseMiniBtn');
+            const playIcon = document.getElementById('miniPlayIcon');
+            const songTitle = document.getElementById('miniSongTitle');
+            const artistName = document.getElementById('miniArtistName');
+            const coverImg = document.getElementById('miniCoverImg');
+            const volumeSlider = document.getElementById('miniVolumeControl');
+            const loader = document.getElementById('audioLoader');
+            audio.src = config.streamURL;
+            audio.crossOrigin = "anonymous";
+            audio.volume = volumeSlider ? (volumeSlider.valueAsNumber || 1) : 1;
+            playBtn.onclick = function() {
+                if (audio.paused) audio.play();
+                else audio.pause();
+            };
+            audio.onplay = function() {
+                playIcon.classList.remove("fa-play");
+                playIcon.classList.add("fa-pause");
+                loader.classList.add('loading');
+            };
+            audio.onpause = function() {
+                playIcon.classList.remove("fa-pause");
+                playIcon.classList.add("fa-play");
+                loader.classList.remove('loading');
+            };
+            volumeSlider.oninput = function() {
+                audio.volume = volumeSlider.valueAsNumber;
+            };
+            audio.onwaiting = function() { loader.classList.add('loading'); };
+            audio.oncanplay = function() { loader.classList.remove('loading'); };
+            // METADATOS ZENO + carátula iTunes
+            let lastSong = "";
+            async function updateMetadata() {
+                try {
+                    const res = await fetch(`https://zenoplay.zenomedia.com/api/zenofm/nowplaying/${config.idzeno}?ra=${Math.random()}`);
+                    const data = await res.json();
+                    const currentSong = data.title || config.nombreRadio;
+                    if (currentSong === lastSong) return;
+                    lastSong = currentSong;
+                    let [artist, title] = currentSong.split(" - ");
+                    title = title ? title.trim() : currentSong;
+                    artist = artist ? artist.trim() : config.nombreRadio;
+                    songTitle.textContent = title;
+                    artistName.textContent = artist;
+                    let coverUrl = config.albumCover;
+                    try {
+                        const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(artist + " " + title)}&media=music&limit=1`);
+                        const cdata = await r.json();
+                        if (cdata.results && cdata.results[0]?.artworkUrl100) {
+                            coverUrl = cdata.results[0].artworkUrl100.replace("100x100bb", "600x600bb");
+                        }
+                    } catch {}
+                    coverImg.src = coverUrl;
+                } catch {
+                    songTitle.textContent = config.nombreRadio;
+                    artistName.textContent = "En Vivo";
+                    coverImg.src = config.albumCover;
+                }
+            }
+            setInterval(updateMetadata, 10000);
+            updateMetadata();
+        })();
     </script>
 </body>
 </html>
