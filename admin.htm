@@ -274,47 +274,47 @@
     </style>
     <!-- BLOQUEO DE DOMINIO SEGURO Y MENSAJE PERSONALIZADO -->
     <script>
-(function() {
-    // Agrega aquí los dominios permitidos (sin https://, solo el dominio o subdominio)
-    var dominiosPermitidos = [
-        "luisitoys12.github.io",
-        "reproductor-calidad.vercel.app",
-        "localhost"
-    ];
-    var host = window.location.hostname;
-    // Permite dominios exactos y subdominios (como subdominio.luisitoys12.github.io)
-    var autorizado = dominiosPermitidos.some(d => host === d || host.endsWith("." + d));
-    if (!autorizado) {
-        document.documentElement.innerHTML = `
-            <head>
-                <meta charset="UTF-8">
-                <title>No autorizado</title>
-                <style>
-                    body {
-                        font-family: 'Poppins', Arial, sans-serif;
-                        background: #181e2a; color: #fff;
-                        text-align: center;
-                        margin: 0; padding: 0;
-                        display: flex; flex-direction: column; justify-content: center; min-height: 100vh;
-                    }
-                    h1 { font-size: 2.4em; margin-top: 2em; color: #ef4444;}
-                    p { color: #ddd; font-size: 1.15em; margin-top: 1em;}
-                    .icon { font-size: 4em; color: #ef4444; margin-bottom: 0.2em; }
-                </style>
-                <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-            </head>
-            <body>
-                <div class="icon"><i class="fas fa-ban"></i></div>
-                <h1>Acceso no autorizado</h1>
-                <p>No tienes autorización para acceder a este contenido.<br>
-                Si crees que se trata de un error, contacta al administrador.</p>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"></script>
-            </body>
-        `;
-        throw new Error('Unauthorized access');
-    }
-})();
-</script>
+    (function() {
+        // Actualiza aquí los dominios permitidos
+        var dominiosPermitidos = [
+            "luisitoys12.github.io",
+            "reproductor-calidad.vercel.app",
+            "localhost"
+        ];
+        var host = window.location.hostname;
+        // Permite exactos y subdominios
+        var autorizado = dominiosPermitidos.some(d => host === d || host.endsWith("." + d));
+        if (!autorizado) {
+            document.documentElement.innerHTML = `
+                <head>
+                    <meta charset="UTF-8">
+                    <title>No autorizado</title>
+                    <style>
+                        body {
+                            font-family: 'Poppins', Arial, sans-serif;
+                            background: #181e2a; color: #fff;
+                            text-align: center;
+                            margin: 0; padding: 0;
+                            display: flex; flex-direction: column; justify-content: center; min-height: 100vh;
+                        }
+                        h1 { font-size: 2.4em; margin-top: 2em; color: #ef4444;}
+                        p { color: #ddd; font-size: 1.15em; margin-top: 1em;}
+                        .icon { font-size: 4em; color: #ef4444; margin-bottom: 0.2em; }
+                    </style>
+                    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+                </head>
+                <body>
+                    <div class="icon"><i class="fas fa-ban"></i></div>
+                    <h1>Acceso no autorizado</h1>
+                    <p>No tienes autorización para acceder a este contenido.<br>
+                    Si crees que se trata de un error, contacta al administrador.</p>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"></script>
+                </body>
+            `;
+            throw new Error('Unauthorized access');
+        }
+    })();
+    </script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 </head>
@@ -520,18 +520,17 @@
                             <button class="delete-btn" data-id="${newsItem.id}">Eliminar</button>
                         </div>
                     `;
-                    newsList.appendChild(li);
-                });
-                document.querySelectorAll('#newsList .edit-btn').forEach(button => {
-                    button.addEventListener('click', (e) => {
-                        document.getElementById('newsId').value = e.target.dataset.id;
-                        document.getElementById('newsTitle').value = e.target.dataset.title;
-                        document.getElementById('newsContent').value = e.target.dataset.content;
-                        document.getElementById('newsImageUrl').value = e.target.dataset.imageurl;
+                    // AGREGA EVENTOS JUSTO DESPUÉS DE CREAR EL ELEMENTO
+                    li.querySelector('.edit-btn').addEventListener('click', function(e) {
+                        document.getElementById('newsId').value = newsItem.id;
+                        document.getElementById('newsTitle').value = newsItem.title;
+                        document.getElementById('newsContent').value = newsItem.content;
+                        document.getElementById('newsImageUrl').value = newsItem.imageUrl || '';
                     });
-                });
-                document.querySelectorAll('#newsList .delete-btn').forEach(button => {
-                    button.addEventListener('click', (e) => deleteItem('noticias', e.target.dataset.id));
+                    li.querySelector('.delete-btn').addEventListener('click', function(e) {
+                        deleteItem('noticias', newsItem.id);
+                    });
+                    newsList.appendChild(li);
                 });
             });
         }
@@ -597,30 +596,31 @@
                         <span class="rank-display">#${videoItem.rank}</span>
                         <span><strong>${videoItem.title}</strong> (Votos: ${videoItem.votes || 0})</span>
                         <div class="item-buttons">
-                            <button class="move-btn move-up" data-id="${videoItem.id}" data-current-rank="${videoItem.rank}" ${index === 0 ? 'disabled' : ''}><i class="fas fa-arrow-up"></i></button>
-                            <button class="move-btn move-down" data-id="${videoItem.id}" data-current-rank="${videoItem.rank}" ${index === currentVideosData.length - 1 ? 'disabled' : ''}><i class="fas fa-arrow-down"></i></button>
-                            <button class="edit-btn" data-id="${videoItem.id}" data-title="${videoItem.title}" data-videoid="${videoItem.videoId}" data-votes="${videoItem.votes || 0}">Editar</button>
-                            <button class="delete-btn" data-id="${videoItem.id}">Eliminar</button>
+                            <button class="move-btn move-up" ${index === 0 ? 'disabled' : ''}><i class="fas fa-arrow-up"></i></button>
+                            <button class="move-btn move-down" ${index === currentVideosData.length - 1 ? 'disabled' : ''}><i class="fas fa-arrow-down"></i></button>
+                            <button class="edit-btn">Editar</button>
+                            <button class="delete-btn">Eliminar</button>
                         </div>
                     `;
-                    videosList.appendChild(li);
-                });
-                document.querySelectorAll('#videosList .edit-btn').forEach(button => {
-                    button.addEventListener('click', (e) => {
-                        document.getElementById('videoId').value = e.target.dataset.id;
-                        document.getElementById('videoTitle').value = e.target.dataset.title;
-                        document.getElementById('youtubeId').value = e.target.dataset.videoid;
-                        document.getElementById('videoVotes').value = e.target.dataset.votes;
+                    // EVENTOS
+                    li.querySelector('.edit-btn').addEventListener('click', function(e) {
+                        document.getElementById('videoId').value = videoItem.id;
+                        document.getElementById('videoTitle').value = videoItem.title;
+                        document.getElementById('youtubeId').value = videoItem.videoId;
+                        document.getElementById('videoVotes').value = videoItem.votes || 0;
                     });
-                });
-                document.querySelectorAll('#videosList .delete-btn').forEach(button => {
-                    button.addEventListener('click', (e) => deleteItem('top10videos', e.target.dataset.id));
-                });
-                document.querySelectorAll('#videosList .move-up').forEach(button => {
-                    button.addEventListener('click', (e) => moveVideoRank(e.target.dataset.id, 'up'));
-                });
-                document.querySelectorAll('#videosList .move-down').forEach(button => {
-                    button.addEventListener('click', (e) => moveVideoRank(e.target.dataset.id, 'down'));
+                    li.querySelector('.delete-btn').addEventListener('click', function(e) {
+                        deleteItem('top10videos', videoItem.id);
+                    });
+                    // MOVER ARRIBA
+                    li.querySelector('.move-up').addEventListener('click', function(e) {
+                        moveVideoRank(videoItem.id, 'up');
+                    });
+                    // MOVER ABAJO
+                    li.querySelector('.move-down').addEventListener('click', function(e) {
+                        moveVideoRank(videoItem.id, 'down');
+                    });
+                    videosList.appendChild(li);
                 });
                 if (rankChanged) showMessage('Ranks actualizados automáticamente para mantener la secuencia.');
             });
@@ -695,27 +695,20 @@
                     li.innerHTML = `
                         <span><strong>${programItem.name}</strong> (${programItem.schedule})</span>
                         <div class="item-buttons">
-                            <button class="edit-btn"
-                                     data-id="${programItem.id}"
-                                     data-name="${programItem.name}"
-                                     data-schedule="${programItem.schedule}"
-                                     data-description="${programItem.description || ''}"
-                            >Editar</button>
-                            <button class="delete-btn" data-id="${programItem.id}">Eliminar</button>
+                            <button class="edit-btn">Editar</button>
+                            <button class="delete-btn">Eliminar</button>
                         </div>
                     `;
-                    programsList.appendChild(li);
-                });
-                document.querySelectorAll('#programsList .edit-btn').forEach(button => {
-                    button.addEventListener('click', (e) => {
-                        document.getElementById('programId').value = e.target.dataset.id;
-                        document.getElementById('programName').value = e.target.dataset.name;
-                        document.getElementById('programSchedule').value = e.target.dataset.schedule;
-                        document.getElementById('programDescription').value = e.target.dataset.description;
+                    li.querySelector('.edit-btn').addEventListener('click', function(e) {
+                        document.getElementById('programId').value = programItem.id;
+                        document.getElementById('programName').value = programItem.name;
+                        document.getElementById('programSchedule').value = programItem.schedule;
+                        document.getElementById('programDescription').value = programItem.description || '';
                     });
-                });
-                document.querySelectorAll('#programsList .delete-btn').forEach(button => {
-                    button.addEventListener('click', (e) => deleteItem('programas', e.target.dataset.id));
+                    li.querySelector('.delete-btn').addEventListener('click', function(e) {
+                        deleteItem('programas', programItem.id);
+                    });
+                    programsList.appendChild(li);
                 });
             });
         }
@@ -758,34 +751,25 @@
                     featuresList.innerHTML = '<p class="no-data-message">No hay funciones destacadas para administrar.</p>';
                     return;
                 }
-                const featuresData = [];
                 snapshot.forEach(childSnapshot => {
-                    featuresData.push({ id: childSnapshot.key, ...childSnapshot.val() });
-                });
-                featuresData.forEach(featureItem => {
+                    const featureItem = { id: childSnapshot.key, ...childSnapshot.val() };
                     const li = document.createElement('li');
                     li.innerHTML = `
                         <span><strong>${featureItem.name}</strong> (Orden: ${featureItem.order})</span>
                         <div class="item-buttons">
-                            <button class="edit-btn"
-                                     data-id="${featureItem.id}"
-                                     data-name="${featureItem.name}"
-                                     data-order="${featureItem.order}"
-                            >Editar</button>
-                            <button class="delete-btn" data-id="${featureItem.id}">Eliminar</button>
+                            <button class="edit-btn">Editar</button>
+                            <button class="delete-btn">Eliminar</button>
                         </div>
                     `;
-                    featuresList.appendChild(li);
-                });
-                document.querySelectorAll('#featuresList .edit-btn').forEach(button => {
-                    button.addEventListener('click', (e) => {
-                        document.getElementById('featureId').value = e.target.dataset.id;
-                        document.getElementById('featureName').value = e.target.dataset.name;
-                        document.getElementById('featureOrder').value = e.target.dataset.order;
+                    li.querySelector('.edit-btn').addEventListener('click', function(e) {
+                        document.getElementById('featureId').value = featureItem.id;
+                        document.getElementById('featureName').value = featureItem.name;
+                        document.getElementById('featureOrder').value = featureItem.order;
                     });
-                });
-                document.querySelectorAll('#featuresList .delete-btn').forEach(button => {
-                    button.addEventListener('click', (e) => deleteItem('funcionesDestacadas', e.target.dataset.id));
+                    li.querySelector('.delete-btn').addEventListener('click', function(e) {
+                        deleteItem('funcionesDestacadas', featureItem.id);
+                    });
+                    featuresList.appendChild(li);
                 });
             });
         }
