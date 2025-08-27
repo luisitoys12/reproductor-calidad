@@ -406,3 +406,39 @@ const btnFix = document.getElementById('btnFix');
 btnFix.addEventListener('click', () => {
   alert('Funcionalidad de reparación aún no implementada.');
 });
+};
+
+// MINI REPRODUCTOR FOOTER
+const audio = document.getElementById('audio-mini');
+const playBtn = document.getElementById('playPauseMiniBtn');
+const playIcon = document.getElementById('miniPlayIcon');
+const songTitle = document.getElementById('miniSongTitle');
+const artistName = document.getElementById('miniArtistName');
+const coverImg = document.getElementById('miniCoverImg');
+const volumeSlider = document.getElementById('miniVolumeControl');
+const loader = document.getElementById('audioLoader');
+
+audio.src = config.streamURL;
+audio.crossOrigin = "anonymous";
+audio.volume = volumeSlider.valueAsNumber || 1;
+
+// PLAY/PAUSE TOGGLE
+playBtn.onclick = function() {
+  if (audio.paused) audio.play();
+  else audio.pause();
+};
+audio.onplay = function() {
+  playIcon.classList.remove("fa-play");
+  playIcon.classList.add("fa-pause");
+  loader.classList.add('loading');
+};
+audio.onpause = function() {
+  playIcon.classList.remove("fa-pause");
+  playIcon.classList.add("fa-play");
+  loader.classList.remove('loading');
+};
+
+// VOLUME CONTROL
+volumeSlider.oninput = function() {
+  audio.volume = volumeSlider.valueAsNumber;
+};
