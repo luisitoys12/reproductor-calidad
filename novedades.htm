@@ -14,150 +14,155 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     body { padding-bottom: 120px; padding-top: 60px; }
-    /* --- Mini Reproductor tipo footer --- */
-    #mini-reproductor-footer {
+    .header {
+      background-color: #1e293b;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
       position: fixed;
-      left: 0; right: 0; bottom: 0;
-      width: 100%;
-      background: #1e293b;
-      border-top-left-radius: 16px;
-      border-top-right-radius: 16px;
-      box-shadow: 0 -4px 18px #0008;
-      z-index: 99999;
-      padding: 16px 18px 16px 18px;
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      color: #fff;
-      font-family: 'Poppins', Arial, sans-serif;
-      border-top: 2px solid #38bdf8;
-      transition: all 0.3s;
-      min-height: 70px;
-    }
-    #mini-reproductor-footer.hide {
-      display: none !important;
-    }
-    #mini-reproductor-footer .mini-cover-img {
-      width: 52px;
-      height: 52px;
-      border-radius: 8px;
-      object-fit: cover;
-      background: #222;
-      box-shadow: 0 1px 6px #0006;
-      flex-shrink: 0;
-    }
-    .mini-play-btn {
-      background: #22d3ee;
-      border: none;
-      border-radius: 50%;
-      width: 44px;
-      height: 44px;
-      color: #1e293b;
-      font-size: 1.5rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.25);
-      transition: background-color 0.3s, transform 0.2s;
-      flex-shrink: 0;
-      margin-left: 4px;
-      margin-right: 4px;
-    }
-    .mini-play-btn:hover { background: #0dd; }
-    .mini-info-and-volume {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      overflow: hidden;
-      min-width: 0;
-    }
-    .mini-song-title {
-      font-weight: 600;
-      font-size: 1.08rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-bottom: 2px;
-      color: #f8fafc;
-    }
-    .mini-artist-name {
-      font-size: 0.93rem;
-      color: #38bdf8;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-bottom: 2px;
-    }
-    .mini-volume-control-container {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      margin-top: 5px;
-    }
-    .mini-volume-control-container .material-icons {
-      font-size: 1.2rem;
-      color: #94a3b8;
-    }
-    .mini-volume-control {
-      -webkit-appearance: none;
-      width: 100px;
-      height: 4px;
-      background: #475569;
-      border-radius: 2px;
-      outline: none;
-      cursor: pointer;
-    }
-    .mini-volume-control::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 13px;
-      height: 13px;
-      border-radius: 50%;
-      background: #22d3ee;
-      cursor: pointer;
-      box-shadow: 0 0 4px rgba(0,0,0,0.22);
-    }
-    .mini-volume-control::-moz-range-thumb {
-      width: 13px;
-      height: 13px;
-      border-radius: 50%;
-      background: #22d3ee;
-      cursor: pointer;
-      box-shadow: 0 0 4px rgba(0,0,0,0.22);
-    }
-    .audio-loader {
-      position: absolute;
+      top: 0;
       left: 0;
-      bottom: 0;
-      width: 100%;
-      height: 3px;
-      background-color: #06b6d4;
-      transform-origin: left;
-      transform: scaleX(0);
-      transition: transform 0.1s linear;
-      border-bottom-left-radius: 12px;
-      border-bottom-right-radius: 12px;
+      right: 0;
+      z-index: 9000;
     }
-    .audio-loader.loading {
-      animation: loading-pulse 1.5s infinite ease-in-out;
-    }
-    @keyframes loading-pulse {
-      0% { transform: scaleX(0); opacity: 0.5; }
-      50% { transform: scaleX(0.8); opacity: 1; }
-      100% { transform: scaleX(0); opacity: 0.5; }
-    }
-    .close-mini-player-btn {
-      border: none;
-      background: none;
-      color: #fff;
+    .header .logo {
       font-size: 1.5rem;
-      margin-left: 10px;
-      cursor: pointer;
-      transition: color 0.2s;
+      font-weight: 700;
+      color: #38bdf8;
     }
-    .close-mini-player-btn:hover { color: #38bdf8; }
+    .header .back-btn {
+      background-color: #22d3ee;
+      color: #1e293b;
+      padding: 8px 15px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: background-color 0.3s ease;
+    }
+    .header .back-btn:hover {
+      background-color: #06b6d4;
+    }
+    /* Tabs */
+    .tab-menu {
+      display: flex;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 30px;
+      background: #222;
+      box-shadow: 0 2px 8px #0003;
+    }
+    .tab-link {
+      flex: 1;
+      background: #1e293b;
+      color: #38bdf8;
+      border: none;
+      padding: 15px 0;
+      font-family: inherit;
+      font-size: 1.1rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s, color 0.2s;
+      outline: none;
+      border-right: 1px solid #222c;
+    }
+    .tab-link:last-child {
+      border-right: none;
+    }
+    .tab-link.active {
+      background: #38bdf8;
+      color: #1e293b;
+    }
+    .tab-content {
+      display: none;
+      background: #1e293b;
+      border-radius: 12px;
+      padding: 25px 20px 30px 20px;
+      box-shadow: 0 4px 16px #0005;
+      margin-bottom: 40px;
+      animation: fadeIn 0.4s;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px);}
+      to { opacity: 1; transform: none;}
+    }
+    .section-banner img {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 25px;
+      max-height: 210px;
+      object-fit: cover;
+      box-shadow: 0 4px 18px #0003;
+    }
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 18px;
+    }
+    .card {
+      background: #222e;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px #0002;
+      padding: 20px;
+      transition: transform 0.18s;
+      position: relative;
+    }
+    .card:hover { transform: translateY(-2px) scale(1.015);}
+    .card-content h3 {
+      color: #38bdf8;
+      margin-top: 0;
+      margin-bottom: 6px;
+      font-size: 1.22em;
+    }
+    .card-content .schedule {
+      color: #0ff;
+      font-size: 0.99em;
+      margin-bottom: 7px;
+    }
+    .card-content .description {
+      color: #cbd5e1;
+      font-size: 1em;
+    }
+    /* Eventos y Concursos */
+    .events-list, .contests-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 18px;
+    }
+    .event-card, .contest-card {
+      background: #222e;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px #0002;
+      padding: 18px 18px 15px 18px;
+      margin-bottom: 7px;
+      position: relative;
+      transition: transform 0.16s;
+    }
+    .event-card:hover, .contest-card:hover { transform: translateY(-2px) scale(1.016);}
+    .event-title, .contest-title {
+      color: #22d3ee;
+      font-size: 1.09em;
+      font-weight: 500;
+      margin-bottom: 4px;
+      margin-top: 0;
+    }
+    .event-date, .contest-date {
+      color: #94a3b8;
+      font-size: 0.98em;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .event-desc, .contest-desc {
+      color: #cbd5e1;
+      font-size: 1em;
+    }
     footer {
       margin-top: 50px;
       background: #222;
@@ -171,22 +176,112 @@
 </head>
 <body>
   <div class="header">
-    <div class="logo">
-      EKUSMEDIOS
-    </div>
+    <div class="logo">EKUSMEDIOS</div>
     <a href="index.htm" class="back-btn">
       <i class="fas fa-arrow-left"></i> Volver
     </a>
   </div>
-  <div class="novedades-container">
-    <!--
-      Todo tu contenido de tabs y secciones va aquí,
-      NO SE TOCA tu contenido original,
-      solo agrego el reproductor como footer flotante abajo
-    -->
-    <h1 class="page-title">Novedades</h1>
-    <!-- ... resto de tus tabs ... -->
-    <!-- ... PROGRAMAS, EVENTOS, CONCURSOS, ETC ... -->
+  <div class="novedades-container" style="max-width:950px;margin:0 auto;padding:22px 8px 0 8px;">
+    <h1 class="page-title" style="color:#38bdf8;text-align:center;margin-bottom:30px;">Novedades</h1>
+    <div class="tab-menu">
+      <button class="tab-link active" data-tab="programas">
+        <span class="material-icons" style="vertical-align: middle;">mic</span> Programas
+      </button>
+      <button class="tab-link" data-tab="eventos">
+        <span class="material-icons" style="vertical-align: middle;">event</span> Eventos
+      </button>
+      <button class="tab-link" data-tab="concursos">
+        <span class="material-icons" style="vertical-align: middle;">emoji_events</span> Concursos
+      </button>
+    </div>
+    <!-- PROGRAMAS -->
+    <div class="tab-content active" id="programas">
+      <div class="section-banner">
+        <img src="https://images.pexels.com/photos/3082341/pexels-photo-3082341.jpeg" alt="Programas">
+      </div>
+      <div class="content-section">
+        <h2 style="text-align:center;color:#22d3ee">Nuestros Programas</h2>
+        <div class="cards-grid">
+          <div class="card"><div class="card-content">
+            <h3>Mañanas con Energía</h3>
+            <p class="schedule"><span class="material-icons" style="vertical-align: middle;">schedule</span> Lunes a Viernes 6:00 - 9:00</p>
+            <p class="description">Comienza tu día con la mejor música y las noticias más relevantes.</p>
+          </div></div>
+          <div class="card"><div class="card-content">
+            <h3>Zona Retro</h3>
+            <p class="schedule"><span class="material-icons" style="vertical-align: middle;">schedule</span> Sábados 18:00 - 21:00</p>
+            <p class="description">Los clásicos que marcaron época, ¡revívelos con nosotros!</p>
+          </div></div>
+          <div class="card"><div class="card-content">
+            <h3>Conexión Urbana</h3>
+            <p class="schedule"><span class="material-icons" style="vertical-align: middle;">schedule</span> Viernes 20:00 - 23:00</p>
+            <p class="description">Lo mejor del reggaetón, trap y música urbana.</p>
+          </div></div>
+          <div class="card"><div class="card-content">
+            <h3>Top 10 EKUSFM</h3>
+            <p class="schedule"><span class="material-icons" style="vertical-align: middle;">schedule</span> Domingo 16:00 - 18:00</p>
+            <p class="description">Nuestro conteo semanal con lo más escuchado.</p>
+          </div></div>
+          <div class="card"><div class="card-content">
+            <h3>EKUSFM Mix</h3>
+            <p class="schedule"><span class="material-icons" style="vertical-align: middle;">schedule</span> Todos los días 12:00 - 13:00</p>
+            <p class="description">Una hora non-stop con el mejor mix del momento.</p>
+          </div></div>
+        </div>
+      </div>
+    </div>
+    <!-- EVENTOS -->
+    <div class="tab-content" id="eventos">
+      <div class="section-banner">
+        <img src="https://images.pexels.com/photos/2263436/pexels-photo-2263436.jpeg" alt="Eventos">
+      </div>
+      <div class="content-section">
+        <h2 style="text-align:center;color:#22d3ee">Próximos Eventos</h2>
+        <div class="events-list">
+          <div class="event-card">
+            <span class="event-title">Festival de Verano EKUSFM</span>
+            <span class="event-date"><span class="material-icons" style="font-size:1em;">event</span> 15 de Julio, 2024</span>
+            <p class="event-desc">Un día lleno de música, concursos en vivo y sorpresas en el parque central de la ciudad.</p>
+          </div>
+          <div class="event-card">
+            <span class="event-title">Transmisión Especial: Aniversario</span>
+            <span class="event-date"><span class="material-icons" style="font-size:1em;">event</span> 29 de Agosto, 2024</span>
+            <p class="event-desc">Celebramos un año más al aire con entrevistas, invitados y regalos para nuestra audiencia.</p>
+          </div>
+          <div class="event-card">
+            <span class="event-title">Noche Retro</span>
+            <span class="event-date"><span class="material-icons" style="font-size:1em;">event</span> 2 de Septiembre, 2024</span>
+            <p class="event-desc">Ven disfrazado de los 80s y disfruta la mejor música de la época, premios a los mejores looks.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- CONCURSOS -->
+    <div class="tab-content" id="concursos">
+      <div class="section-banner">
+        <img src="https://images.pexels.com/photos/2698519/pexels-photo-2698519.jpeg" alt="Concursos">
+      </div>
+      <div class="content-section">
+        <h2 style="text-align:center;color:#22d3ee">Concursos Activos</h2>
+        <div class="contests-grid">
+          <div class="contest-card">
+            <span class="contest-title">Selfie EKUS</span>
+            <span class="contest-date"><span class="material-icons" style="font-size:1em;">event</span> Hasta 28 de Julio, 2024</span>
+            <p class="contest-desc">Sube tu mejor selfie escuchando la radio y participa por fabulosos premios.</p>
+          </div>
+          <div class="contest-card">
+            <span class="contest-title">Trivia Musical</span>
+            <span class="contest-date"><span class="material-icons" style="font-size:1em;">event</span> Todos los viernes</span>
+            <p class="contest-desc">Demuestra tus conocimientos musicales y gana entradas a conciertos exclusivos.</p>
+          </div>
+          <div class="contest-card">
+            <span class="contest-title">Sorteo Oyente Fiel</span>
+            <span class="contest-date"><span class="material-icons" style="font-size:1em;">event</span> Último día de cada mes</span>
+            <p class="contest-desc">Cuantos más días escuches, ¡más chances de ganar gadgets y premios sorpresa!</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <footer>
     <div>EKUSFM &copy; 2025 &middot; Todos los derechos reservados</div>
@@ -216,13 +311,16 @@
   <script>
     document.getElementById('closeMiniPlayerBtn').onclick = function() {
       document.getElementById('mini-reproductor-footer').classList.add('hide');
-      // Si quieres guardar la preferencia, usa localStorage
-      // localStorage.setItem('miniPlayerClosed', '1');
     };
-    // Si quieres recordar que se cerró, descomenta lo siguiente:
-    // if (localStorage.getItem('miniPlayerClosed') === '1') {
-    //   document.getElementById('mini-reproductor-footer').classList.add('hide');
-    // }
+    // Tabs
+    document.querySelectorAll('.tab-link').forEach(btn => {
+      btn.onclick = function() {
+        document.querySelectorAll('.tab-link').forEach(b=>b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(tc=>tc.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.tab).classList.add('active');
+      };
+    });
   </script>
 </body>
 </html>
