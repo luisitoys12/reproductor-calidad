@@ -13,277 +13,162 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-        /* --- Estilos Generales para la Página de Contenido --- */
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #0f172a;
-            color: #f8fafc;
-            margin: 0;
-            padding-top: 70px;
-            line-height: 1.6;
+        body { padding-bottom: 120px; }
+        #mini-reproductor-footer {
+          position: fixed;
+          left: 0; right: 0; bottom: 0;
+          width: 100%;
+          background: #1e293b;
+          border-top-left-radius: 16px;
+          border-top-right-radius: 16px;
+          box-shadow: 0 -4px 18px #0008;
+          z-index: 99999;
+          padding: 16px 18px 16px 18px;
+          display: flex;
+          align-items: center;
+          gap: 18px;
+          color: #fff;
+          font-family: 'Poppins', Arial, sans-serif;
+          border-top: 2px solid #38bdf8;
+          transition: all 0.3s;
+          min-height: 70px;
         }
-        .header {
-            background-color: #1e293b;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 9000;
-        }
-        .header .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #38bdf8;
-        }
-        .header .back-btn {
-            background-color: #22d3ee;
-            color: #1e293b;
-            padding: 8px 15px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: background-color 0.3s ease;
-        }
-        .header .back-btn:hover {
-            background-color: #06b6d4;
-        }
-        #mini-reproductor {
-            position: fixed;
-            top: 15px;
-            left: 15px;
-            width: 320px;
-            background: #1e293b;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
-            z-index: 10000;
-            padding: 12px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #fff;
-            font-family: 'Poppins', Arial, sans-serif;
-            border: 1px solid #38bdf8;
-            transition: all 0.3s ease;
-        }
-        #mini-reproductor:hover {
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8);
-            transform: translateY(-2px);
-        }
-        #mini-reproductor.playing {
-            background: linear-gradient(135deg, #1e293b, #334155);
-        }
-        .player-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        #mini-reproductor-footer.hide { display: none !important; }
+        #mini-reproductor-footer .mini-cover-img {
+          width: 52px;
+          height: 52px;
+          border-radius: 8px;
+          object-fit: cover;
+          background: #222;
+          box-shadow: 0 1px 6px #0006;
+          flex-shrink: 0;
         }
         .mini-play-btn {
-            background: #22d3ee;
-            border: none;
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            color: #1e293b;
-            font-size: 1.5rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
-            transition: background-color 0.3s ease, transform 0.2s ease;
+          background: #22d3ee;
+          border: none;
+          border-radius: 50%;
+          width: 44px;
+          height: 44px;
+          color: #1e293b;
+          font-size: 1.5rem;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 2px 5px rgba(0,0,0,0.25);
+          transition: background-color 0.3s, transform 0.2s;
+          flex-shrink: 0;
+          margin-left: 4px;
+          margin-right: 4px;
         }
-        .mini-play-btn:hover {
-            background-color: #06b6d4;
-            transform: scale(1.05);
-        }
-        .mini-play-btn:active {
-            transform: scale(0.95);
-        }
+        .mini-play-btn:hover { background: #0dd; }
         .mini-info-and-volume {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            overflow: hidden;
+          flex-grow: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          overflow: hidden;
+          min-width: 0;
         }
         .mini-song-title {
-            font-weight: 600;
-            font-size: 1rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-bottom: 2px;
-            color: #f8fafc;
+          font-weight: 600;
+          font-size: 1.08rem;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          margin-bottom: 2px;
+          color: #f8fafc;
         }
         .mini-artist-name {
-            font-size: 0.85rem;
-            color: #94a3b8;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+          font-size: 0.93rem;
+          color: #38bdf8;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          margin-bottom: 2px;
         }
         .mini-volume-control-container {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin-top: 8px;
+          display: flex;
+          align-items: center;
+          gap: 7px;
+          margin-top: 5px;
         }
         .mini-volume-control-container .material-icons {
-            font-size: 1.2rem;
-            color: #94a3b8;
+          font-size: 1.2rem;
+          color: #94a3b8;
         }
         .mini-volume-control {
-            -webkit-appearance: none;
-            width: 100%;
-            height: 4px;
-            background: #475569;
-            border-radius: 2px;
-            outline: none;
-            cursor: pointer;
+          -webkit-appearance: none;
+          width: 100px;
+          height: 4px;
+          background: #475569;
+          border-radius: 2px;
+          outline: none;
+          cursor: pointer;
         }
         .mini-volume-control::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: #22d3ee;
-            cursor: pointer;
-            box-shadow: 0 0 5px rgba(0,0,0,0.3);
+          -webkit-appearance: none;
+          appearance: none;
+          width: 13px;
+          height: 13px;
+          border-radius: 50%;
+          background: #22d3ee;
+          cursor: pointer;
+          box-shadow: 0 0 4px rgba(0,0,0,0.22);
         }
         .mini-volume-control::-moz-range-thumb {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: #22d3ee;
-            cursor: pointer;
-            box-shadow: 0 0 5px rgba(0,0,0,0.3);
+          width: 13px;
+          height: 13px;
+          border-radius: 50%;
+          background: #22d3ee;
+          cursor: pointer;
+          box-shadow: 0 0 4px rgba(0,0,0,0.22);
         }
         .audio-loader {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background-color: #06b6d4;
-            transform-origin: left;
-            transform: scaleX(0);
-            transition: transform 0.1s linear;
-            border-bottom-left-radius: 15px;
-            border-bottom-right-radius: 15px;
+          position: absolute;
+          left: 0;
+          bottom: 0;
+          width: 100%;
+          height: 3px;
+          background-color: #06b6d4;
+          transform-origin: left;
+          transform: scaleX(0);
+          transition: transform 0.1s linear;
+          border-bottom-left-radius: 12px;
+          border-bottom-right-radius: 12px;
         }
         .audio-loader.loading {
-            animation: loading-pulse 1.5s infinite ease-in-out;
+          animation: loading-pulse 1.5s infinite ease-in-out;
         }
         @keyframes loading-pulse {
-            0% { transform: scaleX(0); opacity: 0.5; }
-            50% { transform: scaleX(0.7); opacity: 1; }
-            100% { transform: scaleX(0); opacity: 0.5; }
+          0% { transform: scaleX(0); opacity: 0.5; }
+          50% { transform: scaleX(0.8); opacity: 1; }
+          100% { transform: scaleX(0); opacity: 0.5; }
         }
-        .content-wrapper {
-            max-width: 1000px;
-            margin: 20px auto;
-            padding: 0 20px;
+        .close-mini-player-btn {
+          border: none;
+          background: none;
+          color: #fff;
+          font-size: 1.5rem;
+          margin-left: 10px;
+          cursor: pointer;
+          transition: color 0.2s;
         }
-        .page-title {
-            color: #22d3ee;
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 2.5rem;
+        .close-mini-player-btn:hover { color: #38bdf8; }
+        footer {
+          margin-top: 50px;
+          background: #222;
+          color: #ccc;
+          text-align: center;
+          padding: 30px 0 15px 0;
+          font-size: 1.1em;
+          border-top: 1px solid #333;
         }
-        .section-container {
-            background-color: #1e293b;
-            border-radius: 12px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            position: relative;
-        }
-        .section-container h2 {
-            color: #38bdf8;
-            margin-top: 0;
-            margin-bottom: 25px;
-            text-align: center;
-            font-size: 2rem;
-        }
-        /* ...otros estilos de la página... */
     </style>
-    <script>
-        // Protección de dominio (puedes actualizar el mensaje según tus reglas)
-        (function() {
-            var host = window.location.hostname;
-            var dominiosPermitidos = [
-                "luisitoys12.github.io",
-                "repro-ekusmedios.vercel.app",
-                "reproductor-calidad.vercel.app"
-            ];
-            var esDominioValido = dominiosPermitidos.includes(host);
-            if (!esDominioValido) {
-                document.documentElement.innerHTML = `
-                    <head>
-                        <meta charset="UTF-8">
-                        <title>Acceso no autorizado</title>
-                        <style>
-                            body { 
-                                font-family: 'Poppins', Arial, sans-serif; 
-                                background: #181e2a; color: #fff; 
-                                text-align: center; 
-                                margin: 0; 
-                                padding: 0;
-                                display: flex;
-                                flex-direction: column;
-                                justify-content: center;
-                                min-height: 100vh;
-                            }
-                            h1 { font-size: 2.4em; margin-top: 2em; color: #38bdf8;}
-                            p { color: #ddd; }
-                            a { color: #0ff; }
-                        </style>
-                    </head>
-                    <body>
-                        <h1>Acceso no autorizado</h1>
-                        <p>
-                            El reproductor y su contenido no están autorizados para el dominio desde el que intentas acceder.<br>
-                            Por razones de control y seguridad, solo ciertos dominios pueden acceder a este contenido.<br><br>
-                            Si eres el propietario del sitio y necesitas autorización para un nuevo dominio,<br>
-                            por favor envía un correo a <a href="mailto:estacionkusmedios@hotmail.com">estacionkusmedios@hotmail.com</a>.<br>
-                            Gracias por tu comprensión.
-                        </p>
-                    </body>
-                `;
-                throw new Error('Unauthorized access');
-            }
-        })();
-    </script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 </head>
 <body>
-    <div id="mini-reproductor">
-        <div class="player-controls">
-            <button id="playPauseMiniBtn" class="mini-play-btn" title="Reproducir/Pausar">
-                <i id="miniPlayIcon" class="fa-solid fa-play"></i>
-            </button>
-        </div>
-        <div class="mini-info-and-volume">
-            <div id="miniSongTitle" class="mini-song-title">Cargando...</div>
-            <div id="miniArtistName" class="mini-artist-name"></div>
-            <div class="mini-volume-control-container">
-                <i class="material-icons">volume_down</i>
-                <input type="range" id="miniVolumeControl" class="mini-volume-control" min="0" max="1" step="0.01" value="1" title="Volumen" />
-                <i class="material-icons">volume_up</i>
-            </div>
-        </div>
-        <audio id="audio-mini" preload="auto" crossorigin="anonymous"></audio>
-        <div id="audioLoader" class="audio-loader"></div>
-    </div>
-
     <div class="header">
         <div class="logo">
             EKUSMEDIOS
@@ -292,98 +177,77 @@
             <i class="fas fa-arrow-left"></i> Volver
         </a>
     </div>
-
     <div class="content-wrapper">
         <h1 class="page-title">Contenido de EKUSFM</h1>
-        <!-- Aquí tus secciones de contenido (noticias, videos, programas, etc.) -->
+        <!-- Sección de Noticias -->
+        <div class="section-container">
+            <h2>Últimas Noticias</h2>
+            <div id="news-list">
+                <div class="loader-spinner"></div>
+                <div class="skeleton-loader title"></div>
+                <div class="skeleton-loader text-line"></div>
+                <div class="skeleton-loader text-line" style="width: 80%;"></div>
+            </div>
+        </div>
+        <!-- Sección Top 10 -->
+        <div class="section-container">
+            <h2>Top 10 Canciones</h2>
+            <div id="videos-list" class="videos-grid">
+                <div class="loader-spinner"></div>
+                <div class="skeleton-loader image"></div>
+                <div class="skeleton-loader title"></div>
+            </div>
+        </div>
+        <!-- Sección Programas -->
+        <div class="section-container">
+            <h2>Nuestros Programas</h2>
+            <div id="programs-list" class="programs-grid">
+                <div class="loader-spinner"></div>
+                <div class="skeleton-loader title"></div>
+                <div class="skeleton-loader text-line"></div>
+            </div>
+        </div>
+        <!-- Sección Features -->
+        <div class="section-container">
+            <h2>Funciones Destacadas</h2>
+            <ul id="features-list" class="features-list">
+                <div class="loader-spinner"></div>
+                <div class="skeleton-loader text-line"></div>
+                <div class="skeleton-loader text-line" style="width: 70%;"></div>
+            </ul>
+        </div>
     </div>
-
+    <footer>
+      <div>EKUSFM &copy; 2025 &middot; Todos los derechos reservados</div>
+    </footer>
+    <!-- MINI REPRODUCTOR FOOTER -->
+    <div id="mini-reproductor-footer">
+        <img id="miniCoverImg" class="mini-cover-img" src="https://radioaventura-web.vercel.app/img/default.jpg" alt="Carátula">
+        <button id="playPauseMiniBtn" class="mini-play-btn" title="Play/Pause">
+            <i id="miniPlayIcon" class="fa-solid fa-play"></i>
+        </button>
+        <div class="mini-info-and-volume">
+            <div id="miniSongTitle" class="mini-song-title">Cargando...</div>
+            <div id="miniArtistName" class="mini-artist-name"></div>
+            <div class="mini-volume-control-container">
+                <i class="material-icons">volume_down</i>
+                <input type="range" id="miniVolumeControl" class="mini-volume-control" min="0" max="1" step="0.01" value="1" title="Volumen" />
+                <i class="material-icons">volume_up</i>
+            </div>
+            <div id="audioLoader" class="audio-loader"></div>
+        </div>
+        <button class="close-mini-player-btn" id="closeMiniPlayerBtn" title="Cerrar reproductor">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <audio id="audio-mini" preload="auto" crossorigin="anonymous"></audio>
+    </div>
+    <script src="script.js"></script>
     <script>
-        // === CONFIG ZENO ===
-        const config = {
-            idzeno: "i6yeiqilxkvuv",
-            albumCover: "https://radioaventura-web.vercel.app/img/default.jpg",
-            streamURL: "https://stream.zeno.fm/i6yeiqilxkvuv"
-        };
-
-        const audioMini = document.getElementById('audio-mini');
-        const miniReproductorDiv = document.getElementById('mini-reproductor');
-        const miniPlayIcon = document.getElementById('miniPlayIcon');
-        const miniSongTitle = document.getElementById('miniSongTitle');
-        const miniArtistName = document.getElementById('miniArtistName');
-        const miniVolumeControl = document.getElementById('miniVolumeControl');
-        const audioLoader = document.getElementById('audioLoader');
-
-        audioMini.src = config.streamURL;
-        audioMini.crossOrigin = "anonymous";
-        audioMini.volume = 0.7;
-        miniVolumeControl.value = 0.7;
-
-        // --- Controles de reproducción ---
-        document.getElementById('playPauseMiniBtn').addEventListener('click', function() {
-            if (audioMini.paused) {
-                audioMini.play();
-            } else {
-                audioMini.pause();
-            }
-        });
-
-        audioMini.addEventListener('play', () => {
-            miniPlayIcon.classList.replace('fa-play', 'fa-pause');
-            miniReproductorDiv.classList.add('playing');
-            audioLoader.classList.remove('loading');
-        });
-
-        audioMini.addEventListener('pause', () => {
-            miniPlayIcon.classList.replace('fa-pause', 'fa-play');
-            miniReproductorDiv.classList.remove('playing');
-            audioLoader.style.transform = 'scaleX(0)';
-        });
-
-        miniVolumeControl.addEventListener('input', function() {
-            audioMini.volume = parseFloat(this.value);
-        });
-
-        audioMini.addEventListener('waiting', () => {
-            audioLoader.classList.add('loading');
-        });
-        audioMini.addEventListener('playing', () => {
-            audioLoader.classList.remove('loading');
-        });
-        audioMini.addEventListener('progress', () => {
-            if (audioMini.duration > 0) {
-                const buffered = audioMini.buffered.end(audioMini.buffered.length - 1);
-                const percentage = (buffered / audioMini.duration) * 100;
-                audioLoader.style.transform = `scaleX(${percentage / 100})`;
-                audioLoader.classList.remove('loading');
-            }
-        });
-        audioMini.addEventListener('stalled', () => {
-            audioLoader.classList.add('loading');
-        });
-
-        // === METADATOS ZENO.FM ===
-        let lastSong = "";
-        async function updateMetadataMini() {
-            try {
-                const res = await fetch(`https://zenoplay.zenomedia.com/api/zenofm/nowplaying/${config.idzeno}?ra=${Math.random()}`);
-                const data = await res.json();
-                const currentSong = data.title || "Sin datos";
-                if (currentSong === lastSong) return;
-                lastSong = currentSong;
-
-                let [artist, title] = currentSong.split(" - ");
-                title = title || currentSong;
-                artist = artist || "EKUSFM";
-                miniSongTitle.textContent = title;
-                miniArtistName.textContent = artist;
-            } catch (e) {
-                miniSongTitle.textContent = "Sin datos";
-                miniArtistName.textContent = "";
-            }
-        }
-        setInterval(updateMetadataMini, 10000);
-        updateMetadataMini();
+      document.getElementById('closeMiniPlayerBtn').onclick = function() {
+        document.getElementById('mini-reproductor-footer').classList.add('hide');
+      };
     </script>
+    <!-- Tu código de carga de Firebase (noticias, videos, programas, features)... -->
+    <script src="noticias.js"></script>
 </body>
 </html>
