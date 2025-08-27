@@ -17,6 +17,7 @@ const config = {
     const hostname = location.hostname;
     const permitido = (
         hostname === "reproductor-calidad.vercel.app" ||
+hostname === "luisitoys12.github.io/reproductor-calidad" ||
         hostname === "estacionkusmedios.com" ||
         hostname.endsWith(".estacionkusmedios.com")
     );
