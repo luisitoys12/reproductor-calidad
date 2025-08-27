@@ -272,21 +272,23 @@
             .instructions { padding: 10px 7px; }
         }
     </style>
+    <!-- BLOQUEO DE DOMINIO SEGURO Y MENSAJE PERSONALIZADO -->
     <script>
         (function() {
-            var host = window.location.hostname;
+            // Actualiza aquí los dominios permitidos
             var dominiosPermitidos = [
                 "luisitoys12.github.io",
                 "reproductor-calidad.vercel.app",
                 "localhost"
             ];
-            var esSubdominioEKUS = host.endsWith(".estacionkusmedios.com");
-            var esDominioValido = dominiosPermitidos.includes(host) || esSubdominioEKUS;
-            if (!esDominioValido) {
+            var host = window.location.hostname;
+            // Permite exactos y subdominios
+            var autorizado = dominiosPermitidos.some(d => host === d || host.endsWith('.' + d));
+            if (!autorizado) {
                 document.documentElement.innerHTML = `
                     <head>
                         <meta charset="UTF-8">
-                        <title>Acceso no autorizado</title>
+                        <title>No autorizado</title>
                         <style>
                             body {
                                 font-family: 'Poppins', Arial, sans-serif;
@@ -295,15 +297,18 @@
                                 margin: 0; padding: 0;
                                 display: flex; flex-direction: column; justify-content: center; min-height: 100vh;
                             }
-                            h1 { font-size: 2.4em; margin-top: 2em; color: #38bdf8;}
-                            p { color: #ddd; }
+                            h1 { font-size: 2.4em; margin-top: 2em; color: #ef4444;}
+                            p { color: #ddd; font-size: 1.15em; margin-top: 1em;}
+                            .icon { font-size: 4em; color: #ef4444; margin-bottom: 0.2em; }
                         </style>
+                        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
                     </head>
                     <body>
+                        <div class="icon"><i class="fas fa-ban"></i></div>
                         <h1>Acceso no autorizado</h1>
                         <p>No tienes autorización para acceder a este contenido.<br>
-    Si crees que se trata de un error, contacta al administrador.</p>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"></script>
+                        Si crees que se trata de un error, contacta al administrador.</p>
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"></script>
                     </body>
                 `;
                 throw new Error('Unauthorized access');
