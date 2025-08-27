@@ -274,47 +274,47 @@
     </style>
     <!-- BLOQUEO DE DOMINIO SEGURO Y MENSAJE PERSONALIZADO -->
     <script>
-        (function() {
-            // Actualiza aquí los dominios permitidos
-            var dominiosPermitidos = [
-                "luisitoys12.github.io",
-                "reproductor-calidad.vercel.app",
-                "localhost"
-            ];
-            var host = window.location.hostname;
-            // Permite exactos y subdominios
-            var autorizado = dominiosPermitidos.some(d => host === d || host.endsWith('.' + d));
-            if (!autorizado) {
-                document.documentElement.innerHTML = `
-                    <head>
-                        <meta charset="UTF-8">
-                        <title>No autorizado</title>
-                        <style>
-                            body {
-                                font-family: 'Poppins', Arial, sans-serif;
-                                background: #181e2a; color: #fff;
-                                text-align: center;
-                                margin: 0; padding: 0;
-                                display: flex; flex-direction: column; justify-content: center; min-height: 100vh;
-                            }
-                            h1 { font-size: 2.4em; margin-top: 2em; color: #ef4444;}
-                            p { color: #ddd; font-size: 1.15em; margin-top: 1em;}
-                            .icon { font-size: 4em; color: #ef4444; margin-bottom: 0.2em; }
-                        </style>
-                        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-                    </head>
-                    <body>
-                        <div class="icon"><i class="fas fa-ban"></i></div>
-                        <h1>Acceso no autorizado</h1>
-                        <p>No tienes autorización para acceder a este contenido.<br>
-                        Si crees que se trata de un error, contacta al administrador.</p>
-                        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"></script>
-                    </body>
-                `;
-                throw new Error('Unauthorized access');
-            }
-        })();
-    </script>
+(function() {
+    // Agrega aquí los dominios permitidos (sin https://, solo el dominio o subdominio)
+    var dominiosPermitidos = [
+        "luisitoys12.github.io",
+        "reproductor-calidad.vercel.app",
+        "localhost"
+    ];
+    var host = window.location.hostname;
+    // Permite dominios exactos y subdominios (como subdominio.luisitoys12.github.io)
+    var autorizado = dominiosPermitidos.some(d => host === d || host.endsWith("." + d));
+    if (!autorizado) {
+        document.documentElement.innerHTML = `
+            <head>
+                <meta charset="UTF-8">
+                <title>No autorizado</title>
+                <style>
+                    body {
+                        font-family: 'Poppins', Arial, sans-serif;
+                        background: #181e2a; color: #fff;
+                        text-align: center;
+                        margin: 0; padding: 0;
+                        display: flex; flex-direction: column; justify-content: center; min-height: 100vh;
+                    }
+                    h1 { font-size: 2.4em; margin-top: 2em; color: #ef4444;}
+                    p { color: #ddd; font-size: 1.15em; margin-top: 1em;}
+                    .icon { font-size: 4em; color: #ef4444; margin-bottom: 0.2em; }
+                </style>
+                <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+            </head>
+            <body>
+                <div class="icon"><i class="fas fa-ban"></i></div>
+                <h1>Acceso no autorizado</h1>
+                <p>No tienes autorización para acceder a este contenido.<br>
+                Si crees que se trata de un error, contacta al administrador.</p>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"></script>
+            </body>
+        `;
+        throw new Error('Unauthorized access');
+    }
+})();
+</script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 </head>
