@@ -14,10 +14,10 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #0f172a; /* Fondo oscuro */
-            color: #f8fafc; /* Texto claro */
+            background-color: #0f172a;
+            color: #f8fafc;
             margin: 0;
-            padding-top: 70px; /* Espacio para el header */
+            padding-top: 70px;
             line-height: 1.6;
         }
         .header {
@@ -27,7 +27,7 @@
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-            position: fixed; /* Header fijo */
+            position: fixed;
             top: 0;
             left: 0;
             right: 0;
@@ -53,20 +53,17 @@
         .header .back-btn:hover {
             background-color: #06b6d4;
         }
-
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 20px auto;
             padding: 0 20px;
         }
-
         h1 {
             color: #22d3ee;
             text-align: center;
             margin-bottom: 30px;
             font-size: 2.5rem;
         }
-
         .section-admin {
             background-color: #1e293b;
             border-radius: 12px;
@@ -74,7 +71,6 @@
             margin-bottom: 30px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
-
         .section-admin h2 {
             color: #38bdf8;
             margin-top: 0;
@@ -82,167 +78,10 @@
             text-align: center;
             font-size: 2rem;
         }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #cbd5e1;
-            font-weight: 500;
-        }
-
-        .form-group input[type="text"],
-        .form-group input[type="url"],
-        .form-group input[type="number"],
-        .form-group textarea {
-            width: calc(100% - 20px);
-            padding: 12px;
-            border: 1px solid #475569;
-            border-radius: 8px;
-            background-color: #2d3748;
-            color: #f8fafc;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
-        .form-group input[type="text"]:focus,
-        .form-group input[type="url"]:focus,
-        .form-group input[type="number"]:focus,
-        .form-group textarea:focus {
-            border-color: #38bdf8;
-            outline: none;
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .btn-primary {
-            background-color: #22d3ee;
-            color: #1e293b;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 1.1rem;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            display: block; /* Para que ocupe todo el ancho */
-            width: 100%;
-            text-align: center;
-        }
-        .btn-primary:hover {
-            background-color: #06b6d4;
-            transform: translateY(-2px);
-        }
-        .btn-primary:active {
-            transform: translateY(0);
-        }
-
-        .data-list {
-            list-style: none;
-            padding: 0;
-            margin-top: 30px;
-        }
-
-        .data-list li {
-            background-color: #2d3748;
-            padding: 15px 20px;
-            margin-bottom: 10px;
-            border-radius: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-            flex-wrap: wrap; /* Para que los elementos se ajusten en pantallas pequeñas */
-        }
-
-        .data-list li span {
-            flex: 1; /* Permite que el texto ocupe espacio */
-            min-width: 150px; /* Asegura un ancho mínimo para cada elemento de texto */
-            margin-right: 10px; /* Espacio entre el texto y los botones */
-            word-wrap: break-word; /* Rompe palabras largas */
-        }
-        .data-list li span.rank-display {
-            font-weight: bold;
-            color: #38bdf8;
-            min-width: 50px; /* Para el rank */
-        }
-        .data-list li .item-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px; /* Espacio si los botones bajan de línea */
-            align-items: center; /* Alinea los botones verticalmente */
-        }
-
-        .data-list .edit-btn,
-        .data-list .delete-btn,
-        .data-list .move-btn {
-            padding: 8px 12px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background-color 0.3s ease;
-        }
-
-        .data-list .edit-btn {
-            background-color: #38bdf8;
-            color: #1e293b;
-        }
-        .data-list .edit-btn:hover {
-            background-color: #22d3ee;
-        }
-
-        .data-list .delete-btn {
-            background-color: #ef4444;
-            color: #fff;
-        }
-        .data-list .delete-btn:hover {
-            background-color: #dc2626;
-        }
-        .data-list .move-btn {
-            background-color: #607d8b; /* Color para los botones de mover */
-            color: #fff;
-            padding: 8px 10px; /* Ligeramente más pequeño para las flechas */
-        }
-        .data-list .move-btn:hover {
-            background-color: #546a78;
-        }
-        .data-list .move-btn i {
-            font-size: 1.1em; /* Ajusta el tamaño del icono */
-        }
-
-        .message {
-            text-align: center;
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 8px;
-            font-weight: 600;
-        }
-        .message.success {
-            background-color: #10b981;
-            color: #1e293b;
-        }
-        .message.error {
-            background-color: #ef4444;
-            color: #fff;
-        }
-        .no-data-message {
-            text-align: center;
-            color: #94a3b8;
-            font-style: italic;
-            padding: 20px;
-        }
-
-        /* Estilos para las instrucciones */
         .instructions {
             background-color: #2d3748;
             border-left: 5px solid #38bdf8;
-            padding: 20px;
+            padding: 16px 20px;
             margin-bottom: 25px;
             border-radius: 8px;
             font-size: 0.95rem;
@@ -252,7 +91,7 @@
             color: #22d3ee;
             margin-top: 0;
             margin-bottom: 15px;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
         }
         .instructions ul {
             list-style: none;
@@ -272,15 +111,174 @@
             font-family: 'Courier New', Courier, monospace;
             color: #a78bfa;
         }
+        form {
+            margin-bottom: 25px;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            color: #cbd5e1;
+            font-weight: 500;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="url"],
+        .form-group input[type="number"],
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #475569;
+            border-radius: 8px;
+            background-color: #2d3748;
+            color: #f8fafc;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #38bdf8;
+            outline: none;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+        .btn-primary {
+            background-color: #22d3ee;
+            color: #1e293b;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: background-color 0.3s, transform 0.2s;
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+        .btn-primary:hover {
+            background-color: #06b6d4;
+            transform: translateY(-2px);
+        }
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        .data-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+        .data-list li {
+            background-color: #2d3748;
+            padding: 13px 16px;
+            margin-bottom: 13px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            flex-wrap: wrap;
+        }
+        .data-list li span {
+            flex: 1;
+            min-width: 120px;
+            margin-right: 10px;
+            word-wrap: break-word;
+        }
+        .data-list li span.rank-display {
+            font-weight: bold;
+            color: #38bdf8;
+            min-width: 45px;
+        }
+        .data-list li .item-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 0;
+            align-items: center;
+        }
+        .data-list .edit-btn,
+        .data-list .delete-btn,
+        .data-list .move-btn {
+            padding: 7px 11px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            font-size: 1em;
+        }
+        .data-list .edit-btn {
+            background-color: #38bdf8;
+            color: #1e293b;
+        }
+        .data-list .edit-btn:hover {
+            background-color: #22d3ee;
+        }
+        .data-list .delete-btn {
+            background-color: #ef4444;
+            color: #fff;
+        }
+        .data-list .delete-btn:hover {
+            background-color: #dc2626;
+        }
+        .data-list .move-btn {
+            background-color: #607d8b;
+            color: #fff;
+            padding: 7px 8px;
+        }
+        .data-list .move-btn:hover {
+            background-color: #546a78;
+        }
+        .data-list .move-btn i {
+            font-size: 1.1em;
+        }
+        .message {
+            text-align: center;
+            padding: 12px;
+            margin-top: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .message.success {
+            background-color: #10b981;
+            color: #1e293b;
+        }
+        .message.error {
+            background-color: #ef4444;
+            color: #fff;
+        }
+        .no-data-message {
+            text-align: center;
+            color: #94a3b8;
+            font-style: italic;
+            padding: 18px 0;
+        }
+        @media (max-width: 700px) {
+            .container {
+                padding: 0 7px;
+            }
+            .section-admin {
+                padding: 11px;
+            }
+            .section-admin h2 {
+                font-size: 1.3rem;
+            }
+            h1 {
+                font-size: 1.3rem;
+            }
+            .instructions { padding: 10px 7px; }
+        }
     </style>
-
     <script>
         (function() {
             var host = window.location.hostname;
             var dominiosPermitidos = [
                 "estacionkusmedios.com",
                 "reproductor-calidad.vercel.app",
-                "localhost" // Para desarrollo local
+                "localhost"
             ];
             var esSubdominioEKUS = host.endsWith(".estacionkusmedios.com");
             var esDominioValido = dominiosPermitidos.includes(host) || esSubdominioEKUS;
@@ -310,23 +308,19 @@
             }
         })();
     </script>
-
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 </head>
 <body>
     <div class="header">
-        <div class="logo">
-            ADMIN EKUSFM
-        </div>
+        <div class="logo">ADMIN EKUSFM</div>
         <a href="index.htm" class="back-btn">
             <i class="fas fa-arrow-left"></i> Volver al Inicio
         </a>
     </div>
-
     <div class="container">
         <h1>Panel de Administración de Contenido</h1>
-
+        <!-- Noticias -->
         <div class="section-admin">
             <h2>Administrar Noticias</h2>
             <div class="instructions">
@@ -360,19 +354,18 @@
                 <p class="no-data-message">Cargando noticias...</p>
             </ul>
         </div>
-
+        <!-- Top 10 Videos -->
         <div class="section-admin">
             <h2>Administrar Top 10 Canciones (Videos)</h2>
             <div class="instructions">
                 <h3>Instrucciones de Uso - Top 10 Videos</h3>
                 <ul>
                     <li><strong>Título:</strong> Nombre de la canción y/o artista.</li>
-                    <li><strong>ID de Video (YouTube):</strong> Pega SOLO el identificador único del video de YouTube (la parte después de <code>v=</code> y antes de cualquier <code>&</code> o <code>?</code>). Por ejemplo, si la URL es `https://www.youtube.com/watch?v=ABC123XYZ`, el ID es `ABC123XYZ`.</li>
-                    <li><strong>Votos:</strong> Valor numérico de los votos. Se incrementa automáticamente con los votos de los usuarios y se puede ajustar manualmente aquí.</li>
-                    <li><strong>Orden (Flechas):</strong> Usa las flechas <i class="fas fa-arrow-up"></i> y <i class="fas fa-arrow-down"></i> para **cambiar el rank** de las canciones. Las canciones con más votos o rank más bajo aparecen más arriba en el Top 10.</li>
-                    <li>Al <strong>guardar</strong>, el video se añadirá o actualizará. El campo `Rank` se autogenera y se ajusta automáticamente al mover con las flechas.</li>
+                    <li><strong>ID de Video (YouTube):</strong> Pega SOLO el identificador único del video de YouTube (la parte después de <code>v=</code> y antes de cualquier <code>&</code> o <code>?</code>).</li>
+                    <li><strong>Votos:</strong> Valor numérico de los votos. Se puede ajustar manualmente aquí.</li>
+                    <li><strong>Orden (Flechas):</strong> Usa las flechas <i class="fas fa-arrow-up"></i> y <i class="fas fa-arrow-down"></i> para cambiar el rank de las canciones.</li>
+                    <li>Al <strong>guardar</strong>, el video se añadirá o actualizará. El campo <strong>Rank</strong> se autogenera y se ajusta automáticamente al mover con las flechas.</li>
                     <li>Usa los botones <strong>"Editar"</strong> y <strong>"Eliminar"</strong> para gestionar las canciones existentes.</li>
-                    <li>En la página principal solo se muestran las primeras 3, pero un botón "Ver Más" revela el resto.</li>
                 </ul>
             </div>
             <form id="videosForm">
@@ -395,22 +388,14 @@
                 <p class="no-data-message">Cargando videos...</p>
             </ul>
         </div>
-
+        <!-- Programas -->
         <div class="section-admin">
             <h2>Administrar Programas</h2>
             <div class="instructions">
                 <h3>Instrucciones de Uso - Programas</h3>
                 <ul>
                     <li><strong>Nombre:</strong> Título del programa (ej. "Mañanas con EKUS").</li>
-                    <li><strong>Horario:</strong> Define el día y la hora. Ejemplos:
-                        <ul>
-                            <li><code>Lunes a Viernes 7:00 AM - 10:00 AM</code></li>
-                            <li><code>Jueves 9:00 PM - 11:00 PM</code></li>
-                            <li><code>Sábados y Domingos 6:00 PM - 8:00 PM</code></li>
-                            <li><code>Lunes a Miércoles 5:00 PM - 7:00 PM</code></li>
-                        </ul>
-                        Este formato es crucial para que el mini-reproductor detecte qué programa está al aire.
-                    </li>
+                    <li><strong>Horario:</strong> Define el día y la hora. Ejemplo: <code>Lunes a Viernes 7:00 AM - 10:00 AM</code></li>
                     <li><strong>Descripción:</strong> Un breve resumen de lo que trata el programa.</li>
                     <li>Al <strong>guardar</strong>, el programa se añadirá o actualizará.</li>
                     <li>Usa los botones <strong>"Editar"</strong> y <strong>"Eliminar"</strong> para gestionar los programas existentes.</li>
@@ -436,7 +421,7 @@
                 <p class="no-data-message">Cargando programas...</p>
             </ul>
         </div>
-
+        <!-- Funciones Destacadas -->
         <div class="section-admin">
             <h2>Administrar Funciones Destacadas</h2>
             <div class="instructions">
@@ -464,9 +449,7 @@
                 <p class="no-data-message">Cargando funciones...</p>
             </ul>
         </div>
-
     </div>
-
     <script>
         // *** TU CONFIGURACIÓN DE FIREBASE (¡CÓPIALA EXACTAMENTE DE TU CONSOLA!) ***
         const firebaseConfig = {
@@ -474,15 +457,12 @@
             authDomain: "ekusfm-d1a9d.firebaseapp.com",
             databaseURL: "https://ekusfm-d1a9d-default-rtdb.firebaseio.com",
             projectId: "ekusfm-d1a9d",
-            storageBucket: "ekusfm-d1a9d.firebasestorage.app",
+            storageBucket: "ekusfm-d1a9d.appspot.com",
             messagingSenderId: "849619346647",
             appId: "1:849619346647:web:06559451c66950d9b03c92",
             measurementId: "G-X59DPNG6N4"
         };
-
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
         // --- FUNCIONES GENERALES PARA CRUD ---
@@ -495,7 +475,6 @@
                 messageDiv.remove();
             }, 3000);
         }
-
         function deleteItem(path, id) {
             if (confirm('¿Estás seguro de que quieres eliminar este elemento?')) {
                 database.ref(path + '/' + id).remove()
@@ -503,11 +482,9 @@
                     .catch(error => showMessage('Error al eliminar elemento: ' + error.message, 'error'));
             }
         }
-
         // --- Noticias ---
         const newsForm = document.getElementById('newsForm');
         const newsList = document.getElementById('newsList');
-
         function loadNewsAdmin() {
             newsList.innerHTML = '<p class="no-data-message">Cargando noticias...</p>';
             database.ref('noticias').orderByChild('date').on('value', (snapshot) => {
@@ -520,8 +497,7 @@
                 snapshot.forEach(childSnapshot => {
                     newsData.push({ id: childSnapshot.key, ...childSnapshot.val() });
                 });
-                newsData.sort((a, b) => b.date - a.date); // Ordenar por fecha descendente
-
+                newsData.sort((a, b) => b.date - a.date);
                 newsData.forEach(newsItem => {
                     const li = document.createElement('li');
                     const formattedDate = new Date(newsItem.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' });
@@ -539,8 +515,6 @@
                     `;
                     newsList.appendChild(li);
                 });
-
-                // Añadir event listeners después de renderizar
                 document.querySelectorAll('#newsList .edit-btn').forEach(button => {
                     button.addEventListener('click', (e) => {
                         document.getElementById('newsId').value = e.target.dataset.id;
@@ -554,7 +528,6 @@
                 });
             });
         }
-
         newsForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const id = document.getElementById('newsId').value;
@@ -564,12 +537,10 @@
             const newsItem = {
                 title: title,
                 content: content,
-                date: firebase.database.ServerValue.TIMESTAMP, // Fecha actual del servidor
-                imageUrl: imageUrl || null // Guarda null si está vacío
+                date: firebase.database.ServerValue.TIMESTAMP,
+                imageUrl: imageUrl || null
             };
-
             if (id) {
-                // Editar existente
                 database.ref('noticias/' + id).update(newsItem)
                     .then(() => {
                         showMessage('Noticia actualizada con éxito.');
@@ -578,7 +549,6 @@
                     })
                     .catch(error => showMessage('Error al actualizar noticia: ' + error.message, 'error'));
             } else {
-                // Añadir nuevo
                 database.ref('noticias').push(newsItem)
                     .then(() => {
                         showMessage('Noticia añadida con éxito.');
@@ -591,8 +561,7 @@
         // --- Top 10 Videos ---
         const videosForm = document.getElementById('videosForm');
         const videosList = document.getElementById('videosList');
-        let currentVideosData = []; // Para almacenar los videos y sus IDs
-
+        let currentVideosData = [];
         function loadVideosAdmin() {
             videosList.innerHTML = '<p class="no-data-message">Cargando videos...</p>';
             database.ref('top10videos').orderByChild('rank').on('value', (snapshot) => {
@@ -605,23 +574,16 @@
                 snapshot.forEach(childSnapshot => {
                     currentVideosData.push({ id: childSnapshot.key, ...childSnapshot.val() });
                 });
-
-                // Ordenar por rank
                 currentVideosData.sort((a, b) => a.rank - b.rank);
-                
-                // Asignar ranks consecutivos y actualizarlos en DB si es necesario
-                // Esto asegura que los ranks siempre sean 1, 2, 3... sin huecos
                 let rankChanged = false;
                 currentVideosData.forEach((item, index) => {
                     const newRank = index + 1;
                     if (item.rank !== newRank) {
                         item.rank = newRank;
-                        // Solo actualizamos en DB si el rank realmente cambió para evitar escrituras innecesarias
                         database.ref(`top10videos/${item.id}/rank`).set(newRank);
                         rankChanged = true;
                     }
                 });
-
                 currentVideosData.forEach((videoItem, index) => {
                     const li = document.createElement('li');
                     li.innerHTML = `
@@ -636,8 +598,6 @@
                     `;
                     videosList.appendChild(li);
                 });
-
-                // Event Listeners para Editar y Eliminar
                 document.querySelectorAll('#videosList .edit-btn').forEach(button => {
                     button.addEventListener('click', (e) => {
                         document.getElementById('videoId').value = e.target.dataset.id;
@@ -649,44 +609,33 @@
                 document.querySelectorAll('#videosList .delete-btn').forEach(button => {
                     button.addEventListener('click', (e) => deleteItem('top10videos', e.target.dataset.id));
                 });
-
-                // Event Listeners para Mover
                 document.querySelectorAll('#videosList .move-up').forEach(button => {
                     button.addEventListener('click', (e) => moveVideoRank(e.target.dataset.id, 'up'));
                 });
                 document.querySelectorAll('#videosList .move-down').forEach(button => {
                     button.addEventListener('click', (e) => moveVideoRank(e.target.dataset.id, 'down'));
                 });
-
-                if (rankChanged) {
-                    showMessage('Ranks actualizados automáticamente para mantener la secuencia.');
-                }
+                if (rankChanged) showMessage('Ranks actualizados automáticamente para mantener la secuencia.');
             });
         }
-
         videosForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const id = document.getElementById('videoId').value;
             const title = document.getElementById('videoTitle').value;
             const videoId = document.getElementById('youtubeId').value;
             const votes = parseInt(document.getElementById('videoVotes').value);
-
             let newRank;
             if (id) {
-                // Si es una edición, mantener el rank actual del video
                 newRank = currentVideosData.find(v => v.id === id)?.rank;
             } else {
-                // Si es un nuevo video, asignarle el siguiente rank disponible
                 newRank = currentVideosData.length > 0 ? Math.max(...currentVideosData.map(v => v.rank)) + 1 : 1;
             }
-
             const videoItem = {
                 title: title,
                 videoId: videoId,
                 votes: votes,
-                rank: newRank 
+                rank: newRank
             };
-
             if (id) {
                 database.ref('top10videos/' + id).update(videoItem)
                     .then(() => {
@@ -704,37 +653,27 @@
                     .catch(error => showMessage('Error al añadir video: ' + error.message, 'error'));
             }
         });
-
         function moveVideoRank(videoId, direction) {
             const videoIndex = currentVideosData.findIndex(v => v.id === videoId);
             if (videoIndex === -1) return;
-
             const targetIndex = direction === 'up' ? videoIndex - 1 : videoIndex + 1;
-
             if (targetIndex >= 0 && targetIndex < currentVideosData.length) {
                 const currentVideo = currentVideosData[videoIndex];
                 const targetVideo = currentVideosData[targetIndex];
-
-                // Intercambiar ranks
                 const tempRank = currentVideo.rank;
                 currentVideo.rank = targetVideo.rank;
                 targetVideo.rank = tempRank;
-
-                // Actualizar en Firebase
                 const updates = {};
                 updates[`top10videos/${currentVideo.id}/rank`] = currentVideo.rank;
                 updates[`top10videos/${targetVideo.id}/rank`] = targetVideo.rank;
-
                 database.ref().update(updates)
                     .then(() => showMessage('Rank del video actualizado.'))
                     .catch(error => showMessage('Error al mover el video: ' + error.message, 'error'));
             }
         }
-
         // --- Programas ---
         const programsForm = document.getElementById('programsForm');
         const programsList = document.getElementById('programsList');
-
         function loadProgramsAdmin() {
             programsList.innerHTML = '<p class="no-data-message">Cargando programas...</p>';
             database.ref('programas').on('value', (snapshot) => {
@@ -760,7 +699,6 @@
                     `;
                     programsList.appendChild(li);
                 });
-
                 document.querySelectorAll('#programsList .edit-btn').forEach(button => {
                     button.addEventListener('click', (e) => {
                         document.getElementById('programId').value = e.target.dataset.id;
@@ -774,20 +712,17 @@
                 });
             });
         }
-
         programsForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const id = document.getElementById('programId').value;
             const name = document.getElementById('programName').value;
             const schedule = document.getElementById('programSchedule').value;
             const description = document.getElementById('programDescription').value;
-
             const programItem = {
                 name: name,
                 schedule: schedule,
                 description: description || null
             };
-
             if (id) {
                 database.ref('programas/' + id).update(programItem)
                     .then(() => {
@@ -805,11 +740,9 @@
                     .catch(error => showMessage('Error al añadir programa: ' + error.message, 'error'));
             }
         });
-
         // --- Funciones Destacadas ---
         const featuresForm = document.getElementById('featuresForm');
         const featuresList = document.getElementById('featuresList');
-
         function loadFeaturesAdmin() {
             featuresList.innerHTML = '<p class="no-data-message">Cargando funciones...</p>';
             database.ref('funcionesDestacadas').orderByChild('order').on('value', (snapshot) => {
@@ -822,9 +755,6 @@
                 snapshot.forEach(childSnapshot => {
                     featuresData.push({ id: childSnapshot.key, ...childSnapshot.val() });
                 });
-                // Aunque se ordena por 'order' en la consulta, la re-renderización local mantiene el orden visual.
-                // Si la "orden" puede cambiar a menudo, se podría re-ordenar aquí también.
-
                 featuresData.forEach(featureItem => {
                     const li = document.createElement('li');
                     li.innerHTML = `
@@ -840,7 +770,6 @@
                     `;
                     featuresList.appendChild(li);
                 });
-
                 document.querySelectorAll('#featuresList .edit-btn').forEach(button => {
                     button.addEventListener('click', (e) => {
                         document.getElementById('featureId').value = e.target.dataset.id;
@@ -853,18 +782,15 @@
                 });
             });
         }
-
         featuresForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const id = document.getElementById('featureId').value;
             const name = document.getElementById('featureName').value;
             const order = parseInt(document.getElementById('featureOrder').value);
-
             const featureItem = {
                 name: name,
                 order: order
             };
-
             if (id) {
                 database.ref('funcionesDestacadas/' + id).update(featureItem)
                     .then(() => {
@@ -882,8 +808,6 @@
                     .catch(error => showMessage('Error al añadir función: ' + error.message, 'error'));
             }
         });
-
-        // --- Cargar todos los datos al iniciar ---
         document.addEventListener('DOMContentLoaded', () => {
             loadNewsAdmin();
             loadVideosAdmin();
