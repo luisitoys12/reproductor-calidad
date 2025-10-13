@@ -1,8 +1,8 @@
 // === CONFIGURACIÓN ===
 const config = {
     nombreRadio: "EKUSFM",
-    streamURL: "https://stream.zeno.fm/i6yeiqilxkvuv",
-    idzeno: "i6yeiqilxkvuv",
+    streamURL: "https://stream.zeno.fm/7mk2bzwy5x8uv",
+    idzeno: "7mk2bzwy5x8uv",
     albumCover: "https://radioaventura-web.vercel.app/img/default.jpg",
     redesSociales: [
         { url: "https://web.facebook.com/ekusfm", icon: "fab fa-facebook" },
