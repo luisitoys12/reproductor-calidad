@@ -1,289 +1,227 @@
-// === CONFIGURACIÓN ===
-const config = {
-    nombreRadio: "EKUSFM",
-    streamURL: "https://stream.zeno.fm/7mk2bzwy5x8uv",
-    idzeno: "7mk2bzwy5x8uv",
-    albumCover: "https://radioaventura-web.vercel.app/img/default.jpg",
-    redesSociales: [
-        { url: "https://web.facebook.com/ekusfm", icon: "fab fa-facebook" },
-        { url: "https://www.instagram.com/estacionkusfm/", icon: "fab fa-instagram" },
-        { url: "https://www.youtube.com/estacionkusfm", icon: "fab fa-youtube" },
-        { url: "https://chat.whatsapp.com/JSk9LFoclGrFxY7rb4TFWu", icon: "fab fa-whatsapp" }
-    ]
+const STATION = {
+  name: "EKUSFM",
+  streamUrl: "https://stream.zeno.fm/7mk2bzwy5x8uv",
+  zenoId: "7mk2bzwy5x8uv",
+  fallbackCover: "https://radioaventura-web.vercel.app/img/default.jpg",
+  social: [
+    { name: "Facebook", icon: "fa-brands fa-facebook", url: "https://web.facebook.com/ekusfm" },
+    { name: "Instagram", icon: "fa-brands fa-instagram", url: "https://www.instagram.com/estacionkusfm/" },
+    { name: "YouTube", icon: "fa-brands fa-youtube", url: "https://www.youtube.com/estacionkusfm" },
+    { name: "WhatsApp", icon: "fa-brands fa-whatsapp", url: "https://chat.whatsapp.com/JSk9LFoclGrFxY7rb4TFWu" }
+  ]
 };
 
-// === BLOQUEO COPIA ===
-(function() {
-    const hostname = location.hostname;
-    const permitido = (
-        hostname === "reproductor-calidad.estacionkusmedios.com" ||
-        hostname === "luisitoys12.github.io" ||
-        hostname === "repro-ekusmedios.vercel.app" ||
-        hostname === "reproductor-calidad.vercel.app"
+const ui = {
+  audio: document.querySelector("#audio"),
+  playPauseBtn: document.querySelector("#playPauseBtn"),
+  volumeControl: document.querySelector("#volumeControl"),
+  volumeIcon: document.querySelector("#volumeIcon"),
+  songTitle: document.querySelector("#songTitle"),
+  artistName: document.querySelector("#artistName"),
+  coverImage: document.querySelector("#coverImage"),
+  listenersCount: document.querySelector("#listenersCount"),
+  musicLinks: document.querySelector("#musicLinks"),
+  historyList: document.querySelector("#historyList"),
+  refreshHistoryBtn: document.querySelector("#refreshHistoryBtn"),
+  clockTime: document.querySelector("#clockTime"),
+  themeToggle: document.querySelector("#themeToggle"),
+  socialLinks: document.querySelector("#socialLinks")
+};
+
+let isFetchingMeta = false;
+let currentSongKey = "";
+
+function setTheme() {
+  const preferredTheme = localStorage.getItem("ekus-theme");
+  const shouldUseLight = preferredTheme === "light";
+  document.body.classList.toggle("light", shouldUseLight);
+  ui.themeToggle.innerHTML = shouldUseLight
+    ? '<i class="fa-solid fa-sun"></i>'
+    : '<i class="fa-solid fa-moon"></i>';
+}
+
+function updateVolumeIcon(volumeValue) {
+  if (volumeValue === 0) {
+    ui.volumeIcon.className = "fa-solid fa-volume-xmark";
+    return;
+  }
+  if (volumeValue < 0.55) {
+    ui.volumeIcon.className = "fa-solid fa-volume-low";
+    return;
+  }
+  ui.volumeIcon.className = "fa-solid fa-volume-high";
+}
+
+function parseSong(song = "") {
+  const [artistRaw, titleRaw] = song.split(" - ");
+  return {
+    artist: artistRaw?.trim() || STATION.name,
+    title: titleRaw?.trim() || song || "Transmitiendo en vivo"
+  };
+}
+
+function renderStreamingLinks({ artist, title }) {
+  const query = encodeURIComponent(`${artist} ${title}`);
+  ui.musicLinks.innerHTML = `
+    <a class="btn btn--small" target="_blank" rel="noopener" href="https://open.spotify.com/search/${query}">
+      <i class="fa-brands fa-spotify"></i> Spotify
+    </a>
+    <a class="btn btn--small" target="_blank" rel="noopener" href="https://music.apple.com/search?term=${query}">
+      <i class="fa-brands fa-apple"></i> Apple Music
+    </a>
+  `;
+}
+
+async function findCover(artist, title) {
+  const response = await fetch(
+    `https://itunes.apple.com/search?term=${encodeURIComponent(`${artist} ${title}`)}&media=music&limit=1`
+  );
+  if (!response.ok) {
+    return STATION.fallbackCover;
+  }
+  const payload = await response.json();
+  return payload.results?.[0]?.artworkUrl100?.replace("100x100bb", "600x600bb") || STATION.fallbackCover;
+}
+
+async function refreshMetadata() {
+  if (isFetchingMeta) {
+    return;
+  }
+
+  isFetchingMeta = true;
+  try {
+    const response = await fetch(
+      `https://zenoplay.zenomedia.com/api/zenofm/nowplaying/${STATION.zenoId}?_=${Date.now()}`
     );
-    if (!permitido) {
-        document.body.innerHTML = `
-        <div style="text-align:center;padding:40px;color:#fff;background:#1e293b;height:100vh">
-            <h1 style="color:#ff4444;font-size:2.5rem;">Página NO Autorizada</h1>
-            <p style="font-size:1.2rem;">
-                El reproductor no está autorizado para usarse en este dominio.<br>
-                Si ves este mensaje es porque el dominio en el que intentas acceder no cuenta con autorización para utilizar este reproductor por motivos de control y seguridad.<br><br>
-                Si eres el propietario del sitio y necesitas solicitar autorización para un nuevo dominio, por favor envía un correo a <a href="mailto:estacionkusmedios@hotmail.com" style="color:#0ff;">estacionkusmedios@hotmail.com</a>.<br>
-                Gracias por tu comprensión.
-            </p>
-        </div>`;
-        document.title = "No autorizado";
-        throw new Error("Sitio no autorizado.");
-    }
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    document.addEventListener('keydown', function(e) {
-        if ((e.ctrlKey && ['u','s','c','a'].includes(e.key.toLowerCase())) ||
-            (e.metaKey && ['u','s','c','a'].includes(e.key.toLowerCase())) ||
-            e.key === 'F12') e.preventDefault();
-    });
-})();
 
-// === MINI REPRODUCTOR FOOTER ===
-(function(){
-    const audio = document.getElementById('audio-mini');
-    if (!audio) return;
-    const playBtn = document.getElementById('playPauseMiniBtn');
-    const playIcon = document.getElementById('miniPlayIcon');
-    const songTitle = document.getElementById('miniSongTitle');
-    const artistName = document.getElementById('miniArtistName');
-    const coverImg = document.getElementById('miniCoverImg');
-    const volumeSlider = document.getElementById('miniVolumeControl');
-    const loader = document.getElementById('audioLoader');
-
-    audio.src = config.streamURL;
-    audio.crossOrigin = "anonymous";
-    audio.volume = volumeSlider ? (volumeSlider.valueAsNumber || 1) : 1;
-
-    if(playBtn) {
-        playBtn.onclick = function() {
-            if (audio.paused) audio.play();
-            else audio.pause();
-        };
-    }
-    audio.onplay = function() {
-        if(playIcon) {
-            playIcon.classList.remove("fa-play");
-            playIcon.classList.add("fa-pause");
-        }
-        if(loader) loader.classList.add('loading');
-    };
-    audio.onpause = function() {
-        if(playIcon) {
-            playIcon.classList.remove("fa-pause");
-            playIcon.classList.add("fa-play");
-        }
-        if(loader) loader.classList.remove('loading');
-    };
-
-    if(volumeSlider) {
-        volumeSlider.oninput = function() {
-            audio.volume = volumeSlider.valueAsNumber;
-        };
-    }
-    if(loader) {
-        audio.onwaiting = function() { loader.classList.add('loading'); };
-        audio.oncanplay = function() { loader.classList.remove('loading'); };
+    if (!response.ok) {
+      throw new Error("No fue posible obtener metadata");
     }
 
-    // METADATOS ZENO.FM + carátula iTunes
-    let lastSong = "";
-    async function updateMetadata() {
-        try {
-            const res = await fetch(`https://zenoplay.zenomedia.com/api/zenofm/nowplaying/${config.idzeno}?ra=${Math.random()}`);
-            const data = await res.json();
-            const currentSong = data.title || config.nombreRadio;
-            if (currentSong === lastSong) return;
-            lastSong = currentSong;
-            let [artist, title] = currentSong.split(" - ");
-            title = title ? title.trim() : currentSong;
-            artist = artist ? artist.trim() : config.nombreRadio;
-            if(songTitle) songTitle.textContent = title;
-            if(artistName) artistName.textContent = artist;
-            // Carátula
-            let coverUrl = config.albumCover;
-            try {
-                const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(artist + " " + title)}&media=music&limit=1`);
-                const cdata = await r.json();
-                if (cdata.results && cdata.results[0]?.artworkUrl100) {
-                    coverUrl = cdata.results[0].artworkUrl100.replace("100x100bb", "600x600bb");
-                }
-            } catch {}
-            if(coverImg) coverImg.src = coverUrl;
-        } catch {
-            if(songTitle) songTitle.textContent = config.nombreRadio;
-            if(artistName) artistName.textContent = "En Vivo";
-            if(coverImg) coverImg.src = config.albumCover;
-        }
-    }
-    setInterval(updateMetadata, 10000);
-    updateMetadata();
-})();
+    const payload = await response.json();
+    const nowPlaying = payload?.title || "";
+    const listeners = payload?.listeners ?? "--";
+    const { artist, title } = parseSong(nowPlaying);
+    const songKey = `${artist}|${title}`;
 
-// === REPRODUCTOR CLÁSICO (opcional, si existe en la página) ===
-(function(){
-    const audio = document.getElementById('audio');
-    if (!audio) return;
-    const playPauseBtn = document.getElementById('playPauseBtn');
-    const volumeControl = document.getElementById('volumeControl');
-    const songTitle = document.getElementById('song-title');
-    const artistName = document.getElementById('artist-name');
-    const coverImg = document.getElementById('cover-img');
-    const serviceBtns = document.getElementById('service-btns');
-    audio.src = config.streamURL;
-    audio.crossOrigin = "anonymous";
-    audio.volume = volumeControl ? (volumeControl.valueAsNumber || 1) : 1;
+    ui.listenersCount.textContent = listeners;
+    ui.songTitle.textContent = title;
+    ui.artistName.textContent = artist;
 
-    if(playPauseBtn) {
-        playPauseBtn.addEventListener('click', () => {
-            if (audio.paused) audio.play();
-            else audio.pause();
-        });
+    if (songKey !== currentSongKey) {
+      currentSongKey = songKey;
+      ui.coverImage.src = await findCover(artist, title);
+      renderStreamingLinks({ artist, title });
     }
-    if(audio && playPauseBtn){
-        audio.addEventListener('play', () => playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>');
-        audio.addEventListener('pause', () => playPauseBtn.innerHTML = '<i class="fas fa-play"></i>');
-    }
-    if(volumeControl){
-        volumeControl.addEventListener('input', (e) => audio.volume = e.target.valueAsNumber);
-    }
-    // METADATOS
-    let lastSong = "";
-    async function updateMetadata() {
-        try {
-            const res = await fetch(`https://zenoplay.zenomedia.com/api/zenofm/nowplaying/${config.idzeno}?ra=${Math.random()}`);
-            const data = await res.json();
-            const currentSong = data.title || config.nombreRadio;
-            if (currentSong === lastSong) return;
-            lastSong = currentSong;
-            let [artist, title] = currentSong.split(" - ");
-            title = title ? title.trim() : currentSong;
-            artist = artist ? artist.trim() : config.nombreRadio;
-            if(songTitle) songTitle.textContent = title;
-            if(artistName) artistName.textContent = artist;
-            // Carátula
-            let coverUrl = config.albumCover;
-            try {
-                const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(artist + " " + title)}&media=music&limit=1`);
-                const cdata = await r.json();
-                if (cdata.results && cdata.results[0]?.artworkUrl100) {
-                    coverUrl = cdata.results[0].artworkUrl100.replace("100x100bb", "600x600bb");
-                }
-            } catch {}
-            if(coverImg) coverImg.src = coverUrl;
-            if(serviceBtns) serviceBtns.innerHTML = makeSpotifyAppleBtns(title, artist);
-        } catch (e) {
-            if(songTitle) songTitle.textContent = "Sin datos";
-            if(artistName) artistName.textContent = "";
-            if(coverImg) coverImg.src = config.albumCover;
-            if(serviceBtns) serviceBtns.innerHTML = "";
-        }
-    }
-    setInterval(updateMetadata, 10000);
-    updateMetadata();
+  } catch (error) {
+    ui.songTitle.textContent = "Sin datos disponibles";
+    ui.artistName.textContent = "Verifica conexión";
+    ui.coverImage.src = STATION.fallbackCover;
+  } finally {
+    isFetchingMeta = false;
+  }
+}
 
-    function makeSpotifyAppleBtns(title, artist) {
-        if (!title || !artist) return "";
-        const query = encodeURIComponent(`${title} ${artist}`);
-        return `
-          <button class="service-btn spotify" onclick="window.open('https://open.spotify.com/search/${query}','_blank')">
-            <i class="fab fa-spotify"></i> Spotify
-          </button>
-          <button class="service-btn apple" onclick="window.open('https://music.apple.com/search?term=${query}','_blank')">
-            <i class="fab fa-apple"></i> Apple Music
-          </button>
-        `;
+async function refreshHistory() {
+  ui.historyList.innerHTML = "<li>Cargando historial...</li>";
+  try {
+    const response = await fetch(`https://zenoplay.zenomedia.com/api/zenofm/recent/${STATION.zenoId}`);
+    if (!response.ok) {
+      throw new Error("No se pudo cargar historial");
     }
-})();
+    const payload = await response.json();
+    const recentSongs = Array.isArray(payload) ? payload.slice(0, 7) : [];
 
-// === RELOJ CDMX ===
-(function(){
-    function updateRadioClock() {
-        const clock = document.getElementById('radio-clock');
-        const date = document.getElementById('radio-clock-date');
-        if (!clock || !date) return;
-        try {
-            const now = new Date();
-            const options = {
-                timeZone: 'America/Mexico_City',
-                hour: '2-digit', minute: '2-digit', second: '2-digit'
-            };
-            const optionsDate = {
-                timeZone: 'America/Mexico_City',
-                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-            };
-            clock.textContent = now.toLocaleTimeString('es-MX', options);
-            date.textContent = now.toLocaleDateString('es-MX', optionsDate);
-        } catch (e) {
-            clock.textContent = '--:--:--';
-            date.textContent = 'Fecha no disponible';
-        }
-    }
-    setInterval(updateRadioClock, 1000);
-    updateRadioClock();
-})();
-
-// === MENÚS Y BOTONES (solo si existen) ===
-(function(){
-    // Menú lateral
-    const menu = document.getElementById('menu');
-    const menuBtn = document.getElementById('menuBtn');
-    const closeMenuBtn = document.getElementById('close-menu');
-    if (menu && menuBtn) menuBtn.addEventListener('click', () => menu.classList.add('open'));
-    if (menu && closeMenuBtn) closeMenuBtn.addEventListener('click', () => menu.classList.remove('open'));
-
-    // Redes sociales menú
-    const menuSocialLinks = document.getElementById('menu-social-links');
-    if (menuSocialLinks) {
-        config.redesSociales.forEach(({ url, icon }) => {
-            const a = document.createElement('a');
-            a.href = url;
-            a.target = '_blank';
-            a.rel = 'noopener noreferrer';
-            a.className = 'menu-link';
-            let displayName = '';
-            if (url.includes('facebook.com')) displayName = 'Síguenos en Facebook';
-            else if (url.includes('instagram.com')) displayName = 'Síguenos en Instagram';
-            else if (url.includes('youtube.com')) displayName = 'Síguenos en YouTube';
-            else if (url.includes('whatsapp.com')) displayName = 'Únete a WhatsApp';
-            else displayName = 'Síguenos';
-            a.innerHTML = `<i class="${icon}"></i> ${displayName}`;
-            menuSocialLinks.appendChild(a);
-        });
+    if (!recentSongs.length) {
+      ui.historyList.innerHTML = "<li>No hay canciones recientes por el momento.</li>";
+      return;
     }
 
-    // Botón fix (clásico)
-    const fixBtn = document.getElementById('fixBtn');
-    if(fixBtn){
-        fixBtn.onclick = function() {
-            const audio = document.getElementById('audio');
-            if(audio){
-                audio.pause();
-                audio.currentTime = 0;
-                audio.load();
-                audio.play();
-            }
-        };
+    ui.historyList.innerHTML = recentSongs
+      .map((song) => {
+        const parsed = parseSong(song?.song || song?.title || "");
+        return `<li><strong>${parsed.title}</strong> · ${parsed.artist}</li>`;
+      })
+      .join("");
+  } catch (error) {
+    ui.historyList.innerHTML = "<li>No se pudo obtener el historial.</li>";
+  }
+}
+
+function initClock() {
+  const formatter = new Intl.DateTimeFormat("es-MX", {
+    timeZone: "America/Mexico_City",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit"
+  });
+
+  setInterval(() => {
+    ui.clockTime.textContent = formatter.format(new Date());
+  }, 1000);
+}
+
+function bootstrapPlayer() {
+  ui.audio.src = STATION.streamUrl;
+  ui.audio.volume = Number(ui.volumeControl.value);
+  updateVolumeIcon(ui.audio.volume);
+
+  ui.playPauseBtn.addEventListener("click", async () => {
+    try {
+      if (ui.audio.paused) {
+        await ui.audio.play();
+      } else {
+        ui.audio.pause();
+      }
+    } catch (error) {
+      ui.songTitle.textContent = "No se pudo iniciar el audio";
+      ui.artistName.textContent = "Interacción requerida por el navegador";
     }
+  });
 
-    // Botón recargar
-    const btnRecargar = document.getElementById('btnRecargar');
-    if(btnRecargar){ btnRecargar.addEventListener('click', () => location.reload()); }
+  ui.audio.addEventListener("play", () => {
+    ui.playPauseBtn.innerHTML = '<i class="fa-solid fa-pause"></i><span>Pausar</span>';
+  });
 
-    // Botón peticiones
-    const btnPeticiones = document.getElementById('btnPeticiones');
-    if(btnPeticiones){ btnPeticiones.addEventListener('click', () => alert('Funcionalidad de peticiones aún no implementada.')); }
+  ui.audio.addEventListener("pause", () => {
+    ui.playPauseBtn.innerHTML = '<i class="fa-solid fa-play"></i><span>Escuchar ahora</span>';
+  });
 
-    // Botón dark mode
-    const btnDarkMode = document.getElementById('btnDarkMode');
-    if(btnDarkMode){
-        btnDarkMode.addEventListener('click', () => {
-            document.body.classList.toggle('light-mode');
-            btnDarkMode.textContent = document.body.classList.contains('light-mode') ? 'Modo Claro' : 'Modo Oscuro';
-        });
-    }
-})();
+  ui.volumeControl.addEventListener("input", (event) => {
+    const value = Number(event.target.value);
+    ui.audio.volume = value;
+    updateVolumeIcon(value);
+  });
+}
+
+function mountSocialLinks() {
+  ui.socialLinks.innerHTML = STATION.social
+    .map(
+      ({ url, icon, name }) =>
+        `<a href="${url}" target="_blank" rel="noopener"><i class="${icon}"></i> ${name}</a>`
+    )
+    .join("");
+}
+
+function registerEvents() {
+  ui.refreshHistoryBtn.addEventListener("click", refreshHistory);
+  ui.themeToggle.addEventListener("click", () => {
+    const nextTheme = document.body.classList.contains("light") ? "dark" : "light";
+    localStorage.setItem("ekus-theme", nextTheme);
+    setTheme();
+  });
+}
+
+function init() {
+  setTheme();
+  bootstrapPlayer();
+  mountSocialLinks();
+  initClock();
+  registerEvents();
+  refreshMetadata();
+  refreshHistory();
+
+  setInterval(refreshMetadata, 12000);
+}
+
+init();
