@@ -1,649 +1,327 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Noticias y Contenido - EKUSFM</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="icon.png">
-    <link rel="stylesheet" href="style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Noticias y Contenido | EKUSFM</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" type="image/png" href="icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #0f172a;
-            color: #f8fafc;
-            margin: 0;
-            padding-bottom: 120px; /* espacio para el reproductor */
-            padding-top: 70px;
-            line-height: 1.6;
-        }
-        .header {
-            background-color: #1e293b;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 9000;
-        }
-        .header .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #38bdf8;
-        }
-        .header .back-btn {
-            background-color: #22d3ee;
-            color: #1e293b;
-            padding: 8px 15px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: background-color 0.3s ease;
-        }
-        .header .back-btn:hover {
-            background-color: #06b6d4;
-        }
-        .content-wrapper {
-            max-width: 1000px;
-            margin: 20px auto;
-            padding: 0 20px;
-        }
-        .page-title {
-            color: #22d3ee;
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 2.5rem;
-        }
-        .section-container {
-            background-color: #1e293b;
-            border-radius: 12px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            position: relative;
-        }
-        .section-container h2 {
-            color: #38bdf8;
-            margin-top: 0;
-            margin-bottom: 25px;
-            text-align: center;
-            font-size: 2rem;
-        }
-        #news-list .news-article {
-            background-color: #2d3748;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-            display: flex;
-            flex-direction: column;
-        }
-        #news-list .news-article h3 {
-            color: #22d3ee;
-            margin-top: 0;
-            font-size: 1.6rem;
-            margin-bottom: 10px;
-        }
-        #news-list .news-date {
-            font-size: 0.9rem;
-            color: #94a3b8;
-            margin-bottom: 15px;
-            display: block;
-        }
-        #news-list .news-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        #news-list .news-content {
-            white-space: pre-wrap;
-            font-size: 1rem;
-            color: #cbd5e1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 4;
-            -webkit-box-orient: vertical;
-            margin-bottom: 15px;
-        }
-        #news-list .news-content.expanded {
-            -webkit-line-clamp: unset;
-            white-space: normal;
-        }
-        #news-list .read-more-btn {
-            background-color: #38bdf8;
-            color: #1e293b;
-            padding: 8px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background-color 0.3s ease;
-            align-self: flex-start;
-            margin-top: 10px;
-        }
-        #news-list .read-more-btn:hover {
-            background-color: #0ea5e9;
-        }
-        .videos-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-        }
-        .video-card {
-            background-color: #2d3748;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .video-card iframe {
-            width: 100%;
-            height: 180px;
-            border: none;
-        }
-        .video-card-info {
-            padding: 15px;
-        }
-        .video-card h3 {
-            color: #22d3ee;
-            font-size: 1.3rem;
-            margin-top: 0;
-            margin-bottom: 5px;
-        }
-        .video-card p {
-            font-size: 0.9rem;
-            color: #94a3b8;
-            margin-bottom: 0;
-        }
-        .programs-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-        }
-        .program-card {
-            background-color: #2d3748;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .program-card h3 {
-            color: #22d3ee;
-            font-size: 1.5rem;
-            margin-top: 0;
-            margin-bottom: 10px;
-        }
-        .program-card .schedule {
-            font-size: 0.95rem;
-            color: #38bdf8;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .program-card .description {
-            font-size: 0.9rem;
-            color: #cbd5e1;
-        }
-        .features-list {
-            list-style: none;
-            padding: 0;
-        }
-        .features-list li {
-            background-color: #2d3748;
-            padding: 15px 20px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .features-list li .material-icons {
-            color: #22d3ee;
-            font-size: 28px;
-        }
-        .features-list li strong {
-            color: #38bdf8;
-            font-size: 1.1rem;
-        }
-        .loader-spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #38bdf8;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-            display: block;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .skeleton-loader {
-            background-color: #334155;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            height: 20px;
-            animation: pulse 1.5s infinite ease-in-out;
-        }
-        .skeleton-loader.text-line {
-            width: 90%;
-            height: 16px;
-            margin-bottom: 8px;
-        }
-        .skeleton-loader.title {
-            width: 70%;
-            height: 24px;
-            margin-bottom: 10px;
-        }
-        .skeleton-loader.image {
-            width: 100%;
-            height: 200px;
-        }
-        @keyframes pulse {
-            0% { opacity: 0.6; }
-            50% { opacity: 1; }
-            100% { opacity: 0.6; }
-        }
-
-        /* MINI REPRODUCTOR FOOTER */
-        #mini-reproductor-footer {
-            position: fixed;
-            left: 0; right: 0; bottom: 0;
-            width: 100%;
-            background: #1e293b;
-            border-top-left-radius: 16px;
-            border-top-right-radius: 16px;
-            box-shadow: 0 -4px 18px #0008;
-            z-index: 99999;
-            padding: 16px 18px 16px 18px;
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            color: #fff;
-            font-family: 'Poppins', Arial, sans-serif;
-            border-top: 2px solid #38bdf8;
-            min-height: 70px;
-        }
-        #mini-reproductor-footer .mini-cover-img {
-            width: 52px; height: 52px; border-radius: 8px; object-fit: cover; background: #222; box-shadow: 0 1px 6px #0006; flex-shrink: 0;
-        }
-        .mini-play-btn {
-            background: #22d3ee; border: none; border-radius: 50%; width: 44px; height: 44px; color: #1e293b; font-size: 1.5rem; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.25); transition: background-color 0.3s, transform 0.2s;
-            flex-shrink: 0; margin-left: 4px; margin-right: 4px;
-        }
-        .mini-play-btn:hover { background: #0dd; }
-        .mini-info-and-volume { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; overflow: hidden; min-width: 0; }
-        .mini-song-title { font-weight: 600; font-size: 1.08rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; color: #f8fafc;}
-        .mini-artist-name { font-size: 0.93rem; color: #38bdf8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px;}
-        .mini-volume-control-container { display: flex; align-items: center; gap: 7px; margin-top: 5px;}
-        .mini-volume-control-container .material-icons { font-size: 1.2rem; color: #94a3b8;}
-        .mini-volume-control { -webkit-appearance: none; width: 100px; height: 4px; background: #475569; border-radius: 2px; outline: none; cursor: pointer;}
-        .mini-volume-control::-webkit-slider-thumb {
-          -webkit-appearance: none; appearance: none; width: 13px; height: 13px; border-radius: 50%; background: #22d3ee; cursor: pointer; box-shadow: 0 0 4px rgba(0,0,0,0.22);
-        }
-        .mini-volume-control::-moz-range-thumb {
-          width: 13px; height: 13px; border-radius: 50%; background: #22d3ee; cursor: pointer; box-shadow: 0 0 4px rgba(0,0,0,0.22);
-        }
-        .audio-loader {
-          position: absolute; left: 0; bottom: 0; width: 100%; height: 3px; background-color: #06b6d4;
-          transform-origin: left; transform: scaleX(0); transition: transform 0.1s linear; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;
-        }
-        .audio-loader.loading { animation: loading-pulse 1.5s infinite ease-in-out;}
-        @keyframes loading-pulse { 0%{transform:scaleX(0);opacity:0.5;} 50%{transform:scaleX(0.8);opacity:1;} 100%{transform:scaleX(0);opacity:0.5;} }
-    </style>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-</head>
-<body>
-    <div class="header">
-        <div class="logo">
-            EKUSMEDIOS
-        </div>
-        <a href="index.htm" class="back-btn">
-            <i class="fas fa-arrow-left"></i> Volver
-        </a>
-    </div>
-    <div class="content-wrapper">
-        <h1 class="page-title">Contenido de EKUSFM</h1>
-        <div class="section-container">
-            <h2>Últimas Noticias</h2>
-            <div id="news-list">
-                <div class="loader-spinner"></div>
-                <div class="skeleton-loader title"></div>
-                <div class="skeleton-loader text-line"></div>
-                <div class="skeleton-loader text-line" style="width: 80%;"></div>
-            </div>
-        </div>
-        <div class="section-container">
-            <h2>Top 10 Canciones</h2>
-            <div id="videos-list" class="videos-grid">
-                <div class="loader-spinner"></div>
-                <div class="skeleton-loader image"></div>
-                <div class="skeleton-loader title"></div>
-            </div>
-        </div>
-        <div class="section-container">
-            <h2>Nuestros Programas</h2>
-            <div id="programs-list" class="programs-grid">
-                <div class="loader-spinner"></div>
-                <div class="skeleton-loader title"></div>
-                <div class="skeleton-loader text-line"></div>
-            </div>
-        </div>
-        <div class="section-container">
-            <h2>Funciones Destacadas</h2>
-            <ul id="features-list" class="features-list">
-                <div class="loader-spinner"></div>
-                <div class="skeleton-loader text-line"></div>
-                <div class="skeleton-loader text-line" style="width: 70%;"></div>
-            </ul>
-        </div>
-    </div>
-    <!-- MINI REPRODUCTOR FOOTER -->
+    <style>
+      :root {
+        --bg: #070b16;
+        --panel: rgba(16, 25, 54, 0.78);
+        --text: #f7f8ff;
+        --muted: #9da5c6;
+        --accent: #65d6ff;
+        --accent-strong: #2cb6ff;
+        --border: rgba(255, 255, 255, 0.1);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        color: var(--text);
+        font-family: "Inter", system-ui, sans-serif;
+        background: radial-gradient(circle at 20% 0%, #162753 0, var(--bg) 40%);
+        padding: 1rem 0 120px;
+      }
+      .container { width: min(1120px, 92vw); margin: 0 auto; }
+      .topbar {
+        display:flex; justify-content:space-between; align-items:center;
+        border:1px solid var(--border); background:var(--panel); border-radius:16px;
+        padding:.85rem 1rem; margin-bottom:1rem;
+      }
+      .brand { display:flex; align-items:center; gap:.8rem; font-weight:700; }
+      .brand__mark { width:40px; height:40px; display:grid; place-items:center; border-radius:10px; background:linear-gradient(145deg, var(--accent), #8b5cf6); }
+      .btn { border:1px solid var(--border); color:var(--text); text-decoration:none; padding:.55rem .9rem; border-radius:999px; }
+      .hero { border:1px solid var(--border); background:var(--panel); border-radius:20px; padding:1.3rem; margin-bottom:1rem; }
+      .hero h1 { margin:.3rem 0 .4rem; font-size: clamp(1.5rem,2.7vw,2.3rem); }
+      .hero p { margin:0; color: var(--muted); }
+      .section {
+        border: 1px solid var(--border); background: var(--panel); border-radius:18px; padding: 1rem; margin-bottom: .9rem;
+      }
+      .section h2 { margin: .1rem 0 .8rem; }
+      .grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(250px,1fr)); gap:.75rem; }
+      .card { border:1px solid var(--border); background:rgba(0,0,0,.16); border-radius:12px; padding:.85rem; }
+      .news-image { width:100%; height:180px; object-fit:cover; border-radius:10px; margin-bottom:.55rem; }
+      .meta { color:var(--muted); font-size:.85rem; margin-bottom:.45rem; }
+      .news-content { color: var(--muted); white-space: pre-wrap; display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden; }
+      .news-content.expanded { -webkit-line-clamp: initial; }
+      .read-more-btn { margin-top:.55rem; border:none; background:linear-gradient(120deg,var(--accent),var(--accent-strong)); color:#fff; padding:.5rem .7rem; border-radius:10px; cursor:pointer; }
+      .no-data-message { color:var(--muted); }
+      .loader-spinner { border:3px solid #ffffff20; border-top-color: var(--accent); border-radius: 50%; width: 32px; height: 32px; animation: spin 1s linear infinite; margin: .5rem auto; }
+      @keyframes spin { to { transform: rotate(360deg);} }
+
+      #mini-reproductor-footer {
+        position: fixed; left: 0; right: 0; bottom: 0; width: 100%; z-index: 99999;
+        display: flex; align-items: center; gap: 14px; padding: 14px 16px;
+        background: #101936; border-top: 1px solid var(--border);
+      }
+      .mini-cover-img { width: 50px; height: 50px; border-radius: 10px; object-fit: cover; }
+      .mini-play-btn { width:42px; height:42px; border:none; border-radius:50%; background:var(--accent); color:#0d1430; font-size:1.1rem; cursor:pointer; }
+      .mini-info-and-volume { flex:1; min-width:0; }
+      .mini-song-title { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .mini-artist-name { color: var(--muted); font-size: .9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .mini-volume-control-container { display:flex; align-items:center; gap:.4rem; margin-top:.3rem; }
+      .mini-volume-control { width:100%; }
+      .audio-loader { height:2px; width:100%; background:var(--accent); transform-origin:left; transform:scaleX(0); }
+      .audio-loader.loading { animation: loading-pulse 1.3s infinite; }
+      @keyframes loading-pulse { 50% { transform: scaleX(.85);} }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <header class="topbar">
+        <div class="brand"><span class="brand__mark">EK</span> Noticias y contenido</div>
+        <a href="index.htm" class="btn"><i class="fas fa-arrow-left"></i> Volver</a>
+      </header>
+
+      <section class="hero">
+        <p>ACTUALIZADO DESDE FIREBASE</p>
+        <h1>Cobertura completa de EKUSFM en formato renovado.</h1>
+        <p>Noticias, Top 10, programas y funciones destacadas con carga dinámica.</p>
+      </section>
+
+      <section class="section">
+        <h2>Últimas Noticias</h2>
+        <div id="news-list"><div class="loader-spinner"></div></div>
+      </section>
+
+      <section class="section">
+        <h2>Top 10 Canciones</h2>
+        <div id="videos-list" class="grid"><div class="loader-spinner"></div></div>
+      </section>
+
+      <section class="section">
+        <h2>Nuestros Programas</h2>
+        <div id="programs-list" class="grid"><div class="loader-spinner"></div></div>
+      </section>
+
+      <section class="section">
+        <h2>Funciones Destacadas</h2>
+        <ul id="features-list"><div class="loader-spinner"></div></ul>
+      </section>
+    </main>
+
     <div id="mini-reproductor-footer">
-        <img id="miniCoverImg" class="mini-cover-img" src="https://radioaventura-web.vercel.app/img/default.jpg" alt="Carátula">
-        <button id="playPauseMiniBtn" class="mini-play-btn" title="Play/Pause">
-          <i id="miniPlayIcon" class="fa-solid fa-play"></i>
-        </button>
-        <div class="mini-info-and-volume">
-          <div id="miniSongTitle" class="mini-song-title">Cargando...</div>
-          <div id="miniArtistName" class="mini-artist-name"></div>
-          <div class="mini-volume-control-container">
-            <i class="material-icons">volume_down</i>
-            <input type="range" id="miniVolumeControl" class="mini-volume-control" min="0" max="1" step="0.01" value="1" title="Volumen" />
-            <i class="material-icons">volume_up</i>
-          </div>
-          <div id="audioLoader" class="audio-loader"></div>
+      <img id="miniCoverImg" class="mini-cover-img" src="https://radioaventura-web.vercel.app/img/default.jpg" alt="Carátula" />
+      <button id="playPauseMiniBtn" class="mini-play-btn" title="Play/Pause"><i id="miniPlayIcon" class="fa-solid fa-play"></i></button>
+      <div class="mini-info-and-volume">
+        <div id="miniSongTitle" class="mini-song-title">Cargando...</div>
+        <div id="miniArtistName" class="mini-artist-name"></div>
+        <div class="mini-volume-control-container">
+          <i class="material-icons">volume_down</i>
+          <input type="range" id="miniVolumeControl" class="mini-volume-control" min="0" max="1" step="0.01" value="1" title="Volumen" />
+          <i class="material-icons">volume_up</i>
         </div>
-        <audio id="audio-mini" preload="auto" crossorigin="anonymous"></audio>
+        <div id="audioLoader" class="audio-loader"></div>
+      </div>
+      <audio id="audio-mini" preload="auto" crossorigin="anonymous"></audio>
     </div>
+
     <script>
-        // --- FIREBASE ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyBHlQ6WQauQLTbvp_iHbkWZ8Bhv3fntSpM",
-            authDomain: "ekusfm-d1a9d.firebaseapp.com",
-            databaseURL: "https://ekusfm-d1a9d-default-rtdb.firebaseio.com",
-            projectId: "ekusfm-d1a9d",
-            storageBucket: "ekusfm-d1a9d.appspot.com",
-            messagingSenderId: "849619346647",
-            appId: "1:849619346647:web:06559451c66950d9b03c92",
-            measurementId: "G-X59DPNG6N4"
+      const firebaseConfig = {
+        apiKey: "AIzaSyBHlQ6WQauQLTbvp_iHbkWZ8Bhv3fntSpM",
+        authDomain: "ekusfm-d1a9d.firebaseapp.com",
+        databaseURL: "https://ekusfm-d1a9d-default-rtdb.firebaseio.com",
+        projectId: "ekusfm-d1a9d",
+        storageBucket: "ekusfm-d1a9d.appspot.com",
+        messagingSenderId: "849619346647",
+        appId: "1:849619346647:web:06559451c66950d9b03c92",
+        measurementId: "G-X59DPNG6N4"
+      };
+
+      if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+      const database = firebase.database();
+
+      const newsList = document.getElementById("news-list");
+      const videosList = document.getElementById("videos-list");
+      const programsList = document.getElementById("programs-list");
+      const featuresList = document.getElementById("features-list");
+
+      const escapeHtml = (value = "") =>
+        String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#39;");
+
+      function emptyMessage(target, message) {
+        target.innerHTML = `<p class="no-data-message">${message}</p>`;
+      }
+
+      function attachReadMore(button) {
+        button.addEventListener("click", () => {
+          const content = button.previousElementSibling;
+          content.classList.toggle("expanded");
+          button.textContent = content.classList.contains("expanded") ? "Ver Menos" : "Ver Más";
+        });
+      }
+
+      async function loadNews() {
+        newsList.innerHTML = '<div class="loader-spinner"></div>';
+        try {
+          const snapshot = await database.ref("noticias").orderByChild("date").once("value");
+          if (!snapshot.exists()) return emptyMessage(newsList, "No hay noticias disponibles en este momento.");
+
+          const items = Object.entries(snapshot.val()).map(([id, value]) => ({ id, ...value }));
+          items.sort((a, b) => Number(b.date || 0) - Number(a.date || 0));
+
+          newsList.innerHTML = items
+            .map((item) => {
+              const date = item.date ? new Date(item.date).toLocaleDateString("es-MX", { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "Fecha no disponible";
+              const imageHtml = item.imageUrl ? `<img class="news-image" src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(item.title || "Noticia")}" loading="lazy"/>` : "";
+              return `
+                <article class="card">
+                  ${imageHtml}
+                  <h3>${escapeHtml(item.title || "Sin título")}</h3>
+                  <p class="meta">${date}</p>
+                  <p class="news-content">${escapeHtml(item.content || "Sin contenido")}</p>
+                  <button class="read-more-btn">Ver Más</button>
+                </article>`;
+            })
+            .join("");
+
+          newsList.querySelectorAll(".read-more-btn").forEach(attachReadMore);
+        } catch {
+          emptyMessage(newsList, "Error al cargar las noticias.");
+        }
+      }
+
+      async function loadVideos() {
+        videosList.innerHTML = '<div class="loader-spinner"></div>';
+        try {
+          const snapshot = await database.ref("videos").orderByChild("order").once("value");
+          if (!snapshot.exists()) return emptyMessage(videosList, "No hay videos disponibles.");
+
+          const items = Object.entries(snapshot.val()).map(([id, value]) => ({ id, ...value })).sort((a, b) => Number(a.order || 0) - Number(b.order || 0));
+          videosList.innerHTML = items
+            .map(
+              (item) => `<article class="card">
+                  <h3>${escapeHtml(item.title || "Video")}</h3>
+                  <p class="meta">${escapeHtml(item.description || "Sin descripción")}</p>
+                  <p><a class="btn" href="${escapeHtml(item.youtubeUrl || item.url || "#")}" target="_blank" rel="noopener">Ver video</a></p>
+                </article>`
+            )
+            .join("");
+        } catch {
+          emptyMessage(videosList, "Error al cargar los videos.");
+        }
+      }
+
+      async function loadPrograms() {
+        programsList.innerHTML = '<div class="loader-spinner"></div>';
+        try {
+          const snapshot = await database.ref("programs").once("value");
+          if (!snapshot.exists()) return emptyMessage(programsList, "No hay programas disponibles.");
+
+          const items = Object.entries(snapshot.val()).map(([id, value]) => ({ id, ...value })).sort((a, b) => String(a.name || "").localeCompare(String(b.name || "")));
+          programsList.innerHTML = items
+            .map(
+              (item) => `<article class="card"><h3>${escapeHtml(item.name || "Programa")}</h3><p class="meta"><span class="material-icons" style="font-size:14px;vertical-align:middle">schedule</span> ${escapeHtml(item.schedule || "Horario no disponible")}</p><p>${escapeHtml(item.description || "Sin descripción")}</p></article>`
+            )
+            .join("");
+        } catch {
+          emptyMessage(programsList, "Error al cargar los programas.");
+        }
+      }
+
+      async function loadFeatures() {
+        featuresList.innerHTML = '<div class="loader-spinner"></div>';
+        try {
+          const snapshot = await database.ref("features").orderByChild("order").once("value");
+          if (!snapshot.exists()) return emptyMessage(featuresList, "No hay funciones destacadas disponibles.");
+
+          const items = Object.entries(snapshot.val()).map(([id, value]) => ({ id, ...value })).sort((a, b) => Number(a.order || 0) - Number(b.order || 0));
+          featuresList.innerHTML = items
+            .map((item) => `<li class="card" style="list-style:none;margin-bottom:.55rem;"><span class="material-icons" style="vertical-align:middle">${escapeHtml(item.icon || "star")}</span> <strong>${escapeHtml(item.title || "Función")}</strong>: ${escapeHtml(item.description || "Sin descripción")}</li>`)
+            .join("");
+        } catch {
+          emptyMessage(featuresList, "Error al cargar las funciones destacadas.");
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        await Promise.all([loadNews(), loadVideos(), loadPrograms(), loadFeatures()]);
+      });
+
+      (function bootstrapMiniPlayer() {
+        const config = {
+          radioName: "EKUSFM",
+          streamURL: "https://stream.zeno.fm/7mk2bzwy5x8uv",
+          zenoId: "7mk2bzwy5x8uv",
+          fallbackCover: "https://radioaventura-web.vercel.app/img/default.jpg"
         };
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        const database = firebase.database();
 
-        // --- CARGA DE CONTENIDOS ---
-        const newsListDiv = document.getElementById('news-list');
-        const videosListDiv = document.getElementById('videos-list');
-        const programsListDiv = document.getElementById('programs-list');
-        const featuresListUl = document.getElementById('features-list');
+        const audio = document.getElementById("audio-mini");
+        const playBtn = document.getElementById("playPauseMiniBtn");
+        const playIcon = document.getElementById("miniPlayIcon");
+        const songTitle = document.getElementById("miniSongTitle");
+        const artistName = document.getElementById("miniArtistName");
+        const coverImg = document.getElementById("miniCoverImg");
+        const volumeSlider = document.getElementById("miniVolumeControl");
+        const loader = document.getElementById("audioLoader");
 
-        function toggleNewsContent(button) {
-            const contentDiv = button.previousElementSibling;
-            contentDiv.classList.toggle('expanded');
-            button.textContent = contentDiv.classList.contains('expanded') ? 'Ver Menos' : 'Ver Más';
-        }
-        function loadNews() {
-            newsListDiv.innerHTML = `
-                <div class="loader-spinner"></div>
-                <div class="skeleton-loader title"></div>
-                <div class="skeleton-loader text-line"></div>
-                <div class="skeleton-loader text-line" style="width: 80%;"></div>
-            `;
-            database.ref('noticias').orderByChild('date').once('value')
-                .then(snapshot => {
-                    newsListDiv.innerHTML = '';
-                    if (!snapshot.exists() || snapshot.val() === null) {
-                        newsListDiv.innerHTML = '<p class="no-data-message">No hay noticias disponibles en este momento.</p>';
-                        return;
-                    }
-                    const newsData = snapshot.val();
-                    const sortedNews = [];
-                    for (let key in newsData) {
-                        if (newsData.hasOwnProperty(key)) {
-                            sortedNews.push({ id: key, ...newsData[key] });
-                        }
-                    }
-                    sortedNews.sort((a, b) => b.date - a.date);
-                    sortedNews.forEach(newsItem => {
-                        const articleDiv = document.createElement('div');
-                        articleDiv.className = 'news-article';
-                        let imageHtml = '';
-                        if (newsItem.imageUrl) {
-                            imageHtml = `<img src="${newsItem.imageUrl}" alt="${newsItem.title}" class="news-image" loading="lazy">`;
-                        }
-                        articleDiv.innerHTML = `
-                            ${imageHtml}
-                            <h3>${newsItem.title}</h3>
-                            <span class="news-date">${new Date(newsItem.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
-                            <p class="news-content">${newsItem.content}</p>
-                            <button class="read-more-btn">Ver Más</button>
-                        `;
-                        newsListDiv.appendChild(articleDiv);
-                        const readMoreButton = articleDiv.querySelector('.read-more-btn');
-                        if (readMoreButton) {
-                            readMoreButton.addEventListener('click', () => toggleNewsContent(readMoreButton));
-                            const contentElement = articleDiv.querySelector('.news-content');
-                            if (contentElement.scrollHeight <= contentElement.clientHeight + 5) {
-                                readMoreButton.style.display = 'none';
-                            }
-                        }
-                    });
-                })
-                .catch(error => {
-                    newsListDiv.innerHTML = '<p class="no-data-message">Error al cargar las noticias.</p>';
-                });
-        }
-        function loadVideos() {
-            videosListDiv.innerHTML = `
-                <div class="loader-spinner"></div>
-                <div class="skeleton-loader image"></div>
-                <div class="skeleton-loader title"></div>
-            `;
-            database.ref('top10videos').orderByChild('rank').once('value')
-                .then(snapshot => {
-                    videosListDiv.innerHTML = '';
-                    if (!snapshot.exists() || snapshot.val() === null) {
-                        videosListDiv.innerHTML = '<p class="no-data-message">No hay videos en el Top 10 disponibles.</p>';
-                        return;
-                    }
-                    const videosData = snapshot.val();
-                    const sortedVideos = [];
-                    for (let key in videosData) {
-                        if (videosData.hasOwnProperty(key)) {
-                            sortedVideos.push({ id: key, ...videosData[key] });
-                        }
-                    }
-                    sortedVideos.sort((a, b) => a.rank - b.rank);
-                    sortedVideos.forEach(videoItem => {
-                        const videoCard = document.createElement('div');
-                        videoCard.className = 'video-card';
-                        videoCard.innerHTML = `
-                            <iframe src="https://www.youtube.com/embed/${videoItem.videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
-                            <div class="video-card-info">
-                                <h3>#${videoItem.rank} - ${videoItem.title}</h3>
-                                <p>ID: ${videoItem.videoId}</p>
-                            </div>
-                        `;
-                        videosListDiv.appendChild(videoCard);
-                    });
-                })
-                .catch(error => {
-                    videosListDiv.innerHTML = '<p class="no-data-message">Error al cargar los videos del Top 10.</p>';
-                });
-        }
-        function loadPrograms() {
-            programsListDiv.innerHTML = `
-                <div class="loader-spinner"></div>
-                <div class="skeleton-loader title"></div>
-                <div class="skeleton-loader text-line"></div>
-            `;
-            database.ref('programas').orderByChild('name').once('value')
-                .then(snapshot => {
-                    programsListDiv.innerHTML = '';
-                    if (!snapshot.exists() || snapshot.val() === null) {
-                        programsListDiv.innerHTML = '<p class="no-data-message">No hay programas disponibles en este momento.</p>';
-                        return;
-                    }
-                    const programsData = snapshot.val();
-                    const sortedPrograms = [];
-                    for (let key in programsData) {
-                        if (programsData.hasOwnProperty(key)) {
-                            sortedPrograms.push({ id: key, ...programsData[key] });
-                        }
-                    }
-                    sortedPrograms.sort((a, b) => a.name.localeCompare(b.name));
-                    sortedPrograms.forEach(programItem => {
-                        const programCard = document.createElement('div');
-                        programCard.className = 'program-card';
-                        programCard.innerHTML = `
-                            <h3>${programItem.name}</h3>
-                            <p class="schedule"><span class="material-icons">schedule</span> ${programItem.schedule}</p>
-                            <p class="description">${programItem.description || 'Sin descripción.'}</p>
-                        `;
-                        programsListDiv.appendChild(programCard);
-                    });
-                })
-                .catch(error => {
-                    programsListDiv.innerHTML = '<p class="no-data-message">Error al cargar los programas.</p>';
-                });
-        }
-        function loadFeatures() {
-            featuresListUl.innerHTML = `
-                <div class="loader-spinner"></div>
-                <div class="skeleton-loader text-line"></div>
-                <div class="skeleton-loader text-line" style="width: 70%;"></div>
-            `;
-            database.ref('features').orderByChild('order').once('value')
-                .then(snapshot => {
-                    featuresListUl.innerHTML = '';
-                    if (!snapshot.exists() || snapshot.val() === null) {
-                        featuresListUl.innerHTML = '<p class="no-data-message">No hay funciones destacadas disponibles.</p>';
-                        return;
-                    }
-                    const featuresData = snapshot.val();
-                    const sortedFeatures = [];
-                    for (let key in featuresData) {
-                        if (featuresData.hasOwnProperty(key)) {
-                            sortedFeatures.push({ id: key, ...featuresData[key] });
-                        }
-                    }
-                    sortedFeatures.sort((a, b) => a.order - b.order);
-                    sortedFeatures.forEach(featureItem => {
-                        const featureLi = document.createElement('li');
-                        featureLi.innerHTML = `
-                            <span class="material-icons">${featureItem.icon}</span>
-                            <strong>${featureItem.title}</strong>: ${featureItem.description}
-                        `;
-                        featuresListUl.appendChild(featureLi);
-                    });
-                })
-                .catch(error => {
-                    featuresListUl.innerHTML = '<p class="no-data-message">Error al cargar las funciones destacadas.</p>';
-                });
-        }
-        document.addEventListener('DOMContentLoaded', function() {
-            loadNews();
-            loadVideos();
-            loadPrograms();
-            loadFeatures();
+        audio.src = config.streamURL;
+        audio.volume = volumeSlider.valueAsNumber || 1;
+
+        playBtn.addEventListener("click", async () => {
+          try {
+            if (audio.paused) await audio.play();
+            else audio.pause();
+          } catch {
+            songTitle.textContent = "No se pudo iniciar el audio";
+          }
         });
 
-        // MINI REPRODUCTOR FOOTER MODERNO
-        (function(){
-            const config = {
-                nombreRadio: "EKUSFM",
-                streamURL: "https://stream.zeno.fm/i6yeiqilxkvuv",
-                idzeno: "i6yeiqilxkvuv",
-                albumCover: "https://radioaventura-web.vercel.app/img/default.jpg"
-            };
-            const audio = document.getElementById('audio-mini');
-            const playBtn = document.getElementById('playPauseMiniBtn');
-            const playIcon = document.getElementById('miniPlayIcon');
-            const songTitle = document.getElementById('miniSongTitle');
-            const artistName = document.getElementById('miniArtistName');
-            const coverImg = document.getElementById('miniCoverImg');
-            const volumeSlider = document.getElementById('miniVolumeControl');
-            const loader = document.getElementById('audioLoader');
-            audio.src = config.streamURL;
-            audio.crossOrigin = "anonymous";
-            audio.volume = volumeSlider ? (volumeSlider.valueAsNumber || 1) : 1;
-            playBtn.onclick = function() {
-                if (audio.paused) audio.play();
-                else audio.pause();
-            };
-            audio.onplay = function() {
-                playIcon.classList.remove("fa-play");
-                playIcon.classList.add("fa-pause");
-                loader.classList.add('loading');
-            };
-            audio.onpause = function() {
-                playIcon.classList.remove("fa-pause");
-                playIcon.classList.add("fa-play");
-                loader.classList.remove('loading');
-            };
-            volumeSlider.oninput = function() {
-                audio.volume = volumeSlider.valueAsNumber;
-            };
-            audio.onwaiting = function() { loader.classList.add('loading'); };
-            audio.oncanplay = function() { loader.classList.remove('loading'); };
-            // METADATOS ZENO + carátula iTunes
-            let lastSong = "";
-            async function updateMetadata() {
-                try {
-                    const res = await fetch(`https://zenoplay.zenomedia.com/api/zenofm/nowplaying/${config.idzeno}?ra=${Math.random()}`);
-                    const data = await res.json();
-                    const currentSong = data.title || config.nombreRadio;
-                    if (currentSong === lastSong) return;
-                    lastSong = currentSong;
-                    let [artist, title] = currentSong.split(" - ");
-                    title = title ? title.trim() : currentSong;
-                    artist = artist ? artist.trim() : config.nombreRadio;
-                    songTitle.textContent = title;
-                    artistName.textContent = artist;
-                    let coverUrl = config.albumCover;
-                    try {
-                        const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(artist + " " + title)}&media=music&limit=1`);
-                        const cdata = await r.json();
-                        if (cdata.results && cdata.results[0]?.artworkUrl100) {
-                            coverUrl = cdata.results[0].artworkUrl100.replace("100x100bb", "600x600bb");
-                        }
-                    } catch {}
-                    coverImg.src = coverUrl;
-                } catch {
-                    songTitle.textContent = config.nombreRadio;
-                    artistName.textContent = "En Vivo";
-                    coverImg.src = config.albumCover;
-                }
+        audio.addEventListener("play", () => {
+          playIcon.classList.replace("fa-play", "fa-pause");
+          loader.classList.add("loading");
+        });
+        audio.addEventListener("pause", () => {
+          playIcon.classList.replace("fa-pause", "fa-play");
+          loader.classList.remove("loading");
+        });
+        volumeSlider.addEventListener("input", () => {
+          audio.volume = volumeSlider.valueAsNumber;
+        });
+
+        async function updateMetadata() {
+          try {
+            const response = await fetch(`https://zenoplay.zenomedia.com/api/zenofm/nowplaying/${config.zenoId}?_=${Date.now()}`);
+            if (!response.ok) throw new Error("metadata error");
+            const payload = await response.json();
+            const currentSong = payload?.title || config.radioName;
+            const parts = currentSong.split(" - ");
+            const artist = parts[0]?.trim() || config.radioName;
+            const title = parts[1]?.trim() || currentSong;
+            songTitle.textContent = title;
+            artistName.textContent = artist;
+
+            const coverRes = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(`${artist} ${title}`)}&media=music&limit=1`);
+            if (coverRes.ok) {
+              const coverData = await coverRes.json();
+              coverImg.src = coverData.results?.[0]?.artworkUrl100?.replace("100x100bb", "600x600bb") || config.fallbackCover;
+            } else {
+              coverImg.src = config.fallbackCover;
             }
-            setInterval(updateMetadata, 10000);
-            updateMetadata();
-        })();
+          } catch {
+            songTitle.textContent = config.radioName;
+            artistName.textContent = "En Vivo";
+            coverImg.src = config.fallbackCover;
+          }
+        }
+
+        updateMetadata();
+        setInterval(updateMetadata, 12000);
+      })();
     </script>
-</body>
+  </body>
 </html>

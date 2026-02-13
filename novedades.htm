@@ -1,413 +1,263 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Novedades - EKUSFM</title>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" type="image/png" href="icon.png">
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <style>
-    body {
-      background: #182237;
-      padding-bottom: 120px;
-      padding-top: 80px;
-      font-family: 'Poppins', Arial, sans-serif;
-    }
-    .header {
-      background-color: #1e293b;
-      padding: 15px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 9000;
-    }
-    .header .logo {
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: #38bdf8;
-      letter-spacing: 1.5px;
-    }
-    .header .back-btn {
-      background-color: #22d3ee;
-      color: #1e293b;
-      padding: 8px 15px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      transition: background-color 0.3s ease;
-      font-size: 1.07em;
-    }
-    .header .back-btn:hover {
-      background-color: #06b6d4;
-    }
-    .novedades-container {
-      max-width: 900px;
-      margin: 0 auto 40px auto;
-      padding: 32px 18px 6px 18px;
-      background: #1e293b;
-      border-radius: 18px;
-      box-shadow: 0 6px 36px #0002;
-    }
-    .page-title {
-      color: #38bdf8;
-      text-align: center;
-      margin-bottom: 30px;
-      font-size: 2.3em;
-      font-weight: 700;
-      letter-spacing: 1px;
-      margin-top: 4px;
-    }
-    .tab-menu {
-      display: flex;
-      border-radius: 9px;
-      overflow: hidden;
-      margin-bottom: 30px;
-      background: #222c;
-      box-shadow: 0 2px 8px #0003;
-    }
-    .tab-link {
-      flex: 1;
-      background: #24304a;
-      color: #38bdf8;
-      border: none;
-      padding: 15px 0;
-      font-family: inherit;
-      font-size: 1.1rem;
-      cursor: pointer;
-      font-weight: 600;
-      transition: background 0.2s, color 0.2s;
-      outline: none;
-      border-right: 1px solid #202c;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-    .tab-link:last-child {
-      border-right: none;
-    }
-    .tab-link.active {
-      background: #38bdf8;
-      color: #1e293b;
-    }
-    .tab-content {
-      display: none;
-      background: #202e44;
-      border-radius: 12px;
-      padding: 25px 20px 30px 20px;
-      box-shadow: 0 4px 16px #0005;
-      margin-bottom: 40px;
-      animation: fadeIn 0.4s;
-    }
-    .tab-content.active {
-      display: block;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(15px);}
-      to { opacity: 1; transform: none;}
-    }
-    .section-banner img {
-      width: 100%;
-      border-radius: 10px;
-      margin-bottom: 25px;
-      max-height: 210px;
-      object-fit: cover;
-      box-shadow: 0 4px 18px #0003;
-    }
-    .content-section h2 {
-      color: #22d3ee;
-      text-align: center;
-      margin-bottom: 22px;
-      font-size: 1.6em;
-    }
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 18px;
-    }
-    .card {
-      background: #26324b;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px #0002;
-      padding: 20px;
-      transition: transform 0.18s;
-      position: relative;
-      min-height: 180px;
-    }
-    .card:hover { transform: translateY(-2px) scale(1.015);}
-    .card-content h3 {
-      color: #38bdf8;
-      margin-top: 0;
-      margin-bottom: 6px;
-      font-size: 1.18em;
-    }
-    .card-content .schedule {
-      color: #0ff;
-      font-size: 0.98em;
-      margin-bottom: 7px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .card-content .description {
-      color: #cbd5e1;
-      font-size: 1em;
-    }
-    .events-list, .contests-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 18px;
-    }
-    .event-card, .contest-card {
-      background: #26324b;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px #0002;
-      padding: 18px 18px 15px 18px;
-      margin-bottom: 7px;
-      position: relative;
-      transition: transform 0.16s;
-      min-height: 130px;
-    }
-    .event-card:hover, .contest-card:hover { transform: translateY(-2px) scale(1.016);}
-    .event-title, .contest-title {
-      color: #22d3ee;
-      font-size: 1.09em;
-      font-weight: 500;
-      margin-bottom: 4px;
-      margin-top: 0;
-      display: block;
-    }
-    .event-date, .contest-date {
-      color: #94a3b8;
-      font-size: 0.97em;
-      margin-bottom: 8px;
-      display: block;
-    }
-    .event-desc, .contest-desc {
-      color: #cbd5e1;
-      font-size: 1em;
-    }
-    footer {
-      margin-top: 50px;
-      background: #222;
-      color: #ccc;
-      text-align: center;
-      padding: 27px 0 13px 0;
-      font-size: 1.1em;
-      border-top: 1px solid #333;
-    }
-    /* MINI REPRODUCTOR FOOTER */
-    #mini-reproductor-footer {
-      position: fixed;
-      left: 0; right: 0; bottom: 0;
-      width: 100%;
-      background: #1e293b;
-      border-top-left-radius: 16px;
-      border-top-right-radius: 16px;
-      box-shadow: 0 -4px 18px #0008;
-      z-index: 99999;
-      padding: 16px 18px 16px 18px;
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      color: #fff;
-      font-family: 'Poppins', Arial, sans-serif;
-      border-top: 2px solid #38bdf8;
-      min-height: 70px;
-    }
-    #mini-reproductor-footer.hide { display: none !important; }
-    #mini-reproductor-footer .mini-cover-img {
-      width: 52px; height: 52px; border-radius: 8px; object-fit: cover; background: #222; box-shadow: 0 1px 6px #0006; flex-shrink: 0;
-    }
-    .mini-play-btn {
-      background: #22d3ee; border: none; border-radius: 50%; width: 44px; height: 44px; color: #1e293b; font-size: 1.5rem; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.25); transition: background-color 0.3s, transform 0.2s;
-      flex-shrink: 0; margin-left: 4px; margin-right: 4px;
-    }
-    .mini-play-btn:hover { background: #0dd; }
-    .mini-info-and-volume { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; overflow: hidden; min-width: 0; }
-    .mini-song-title { font-weight: 600; font-size: 1.08rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; color: #f8fafc;}
-    .mini-artist-name { font-size: 0.93rem; color: #38bdf8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px;}
-    .mini-volume-control-container { display: flex; align-items: center; gap: 7px; margin-top: 5px;}
-    .mini-volume-control-container .material-icons { font-size: 1.2rem; color: #94a3b8;}
-    .mini-volume-control { -webkit-appearance: none; width: 100px; height: 4px; background: #475569; border-radius: 2px; outline: none; cursor: pointer;}
-    .mini-volume-control::-webkit-slider-thumb {
-      -webkit-appearance: none; appearance: none; width: 13px; height: 13px; border-radius: 50%; background: #22d3ee; cursor: pointer; box-shadow: 0 0 4px rgba(0,0,0,0.22);
-    }
-    .mini-volume-control::-moz-range-thumb {
-      width: 13px; height: 13px; border-radius: 50%; background: #22d3ee; cursor: pointer; box-shadow: 0 0 4px rgba(0,0,0,0.22);
-    }
-    .audio-loader {
-      position: absolute; left: 0; bottom: 0; width: 100%; height: 3px; background-color: #06b6d4;
-      transform-origin: left; transform: scaleX(0); transition: transform 0.1s linear; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;
-    }
-    .audio-loader.loading { animation: loading-pulse 1.5s infinite ease-in-out;}
-    @keyframes loading-pulse { 0%{transform:scaleX(0);opacity:0.5;} 50%{transform:scaleX(0.8);opacity:1;} 100%{transform:scaleX(0);opacity:0.5;} }
-    .close-mini-player-btn {
-      border: none; background: none; color: #fff; font-size: 1.5rem; margin-left: 10px; cursor: pointer; transition: color 0.2s;
-    }
-    .close-mini-player-btn:hover { color: #38bdf8; }
-  </style>
-</head>
-<body>
-  <div class="header">
-    <div class="logo">EKUSMEDIOS</div>
-    <a href="index.htm" class="back-btn">
-      <i class="fas fa-arrow-left"></i> Volver
-    </a>
-  </div>
-  <div class="novedades-container">
-    <h1 class="page-title">Novedades</h1>
-    <div class="tab-menu">
-      <button class="tab-link active" data-tab="programas">
-        <span class="material-icons" style="vertical-align: middle;">mic</span> Programas
-      </button>
-      <button class="tab-link" data-tab="eventos">
-        <span class="material-icons" style="vertical-align: middle;">event</span> Eventos
-      </button>
-      <button class="tab-link" data-tab="concursos">
-        <span class="material-icons" style="vertical-align: middle;">emoji_events</span> Concursos
-      </button>
-    </div>
-    <!-- PROGRAMAS -->
-    <div class="tab-content active" id="programas">
-      <div class="section-banner">
-        <img src="https://images.pexels.com/photos/3082341/pexels-photo-3082341.jpeg" alt="Programas">
-      </div>
-      <div class="content-section">
-        <h2>Nuestros Programas</h2>
-        <div class="cards-grid">
-          <div class="card"><div class="card-content">
-            <h3>Mañanas con Energía</h3>
-            <p class="schedule"><span class="material-icons" style="vertical-align: middle;">schedule</span> Lunes a Viernes 6:00 - 9:00</p>
-            <p class="description">Comienza tu día con la mejor música y las noticias más relevantes.</p>
-          </div></div>
-          <div class="card"><div class="card-content">
-            <h3>Zona Retro</h3>
-            <p class="schedule"><span class="material-icons" style="vertical-align: middle;">schedule</span> Sábados 18:00 - 21:00</p>
-            <p class="description">Los clásicos que marcaron época, ¡revívelos con nosotros!</p>
-          </div></div>
-          <div class="card"><div class="card-content">
-            <h3>Conexión Urbana</h3>
-            <p class="schedule"><span class="material-icons" style="vertical-align: middle;">schedule</span> Viernes 20:00 - 23:00</p>
-            <p class="description">Lo mejor del reggaetón, trap y música urbana.</p>
-          </div></div>
-          <div class="card"><div class="card-content">
-            <h3>Top 10 EKUSFM</h3>
-            <p class="schedule"><span class="material-icons" style="vertical-align: middle;">schedule</span> Domingo 16:00 - 18:00</p>
-            <p class="description">Nuestro conteo semanal con lo más escuchado.</p>
-          </div></div>
-          <div class="card"><div class="card-content">
-            <h3>EKUSFM Mix</h3>
-            <p class="schedule"><span class="material-icons" style="vertical-align: middle;">schedule</span> Todos los días 12:00 - 13:00</p>
-            <p class="description">Una hora non-stop con el mejor mix del momento.</p>
-          </div></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Novedades | EKUSFM</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" type="image/png" href="icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+      :root {
+        --bg: #070b16;
+        --panel: rgba(16, 25, 54, 0.78);
+        --text: #f7f8ff;
+        --muted: #9da5c6;
+        --accent: #65d6ff;
+        --accent-strong: #2cb6ff;
+        --border: rgba(255, 255, 255, 0.1);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        color: var(--text);
+        font-family: "Inter", system-ui, sans-serif;
+        background: radial-gradient(circle at 20% 0%, #162753 0, var(--bg) 40%);
+        padding: 1rem 0 120px;
+      }
+      .container { width: min(1120px, 92vw); margin: 0 auto; }
+      .topbar {
+        display: flex; align-items: center; justify-content: space-between;
+        border: 1px solid var(--border); background: var(--panel);
+        border-radius: 16px; padding: .8rem 1rem; margin-bottom: 1rem;
+      }
+      .brand { display:flex; align-items:center; gap:.8rem; font-weight: 700; }
+      .brand__mark { width:40px; height:40px; display:grid; place-items:center; border-radius:10px; background:linear-gradient(145deg, var(--accent), #8b5cf6); }
+      .btn {
+        border: 1px solid var(--border); color: var(--text); text-decoration:none;
+        padding: .55rem .9rem; border-radius: 999px; background: transparent;
+      }
+      .hero {
+        border: 1px solid var(--border); background: var(--panel);
+        border-radius: 20px; padding: 1.4rem;
+      }
+      .hero h1 { margin:.3rem 0 .5rem; font-size: clamp(1.5rem,2.7vw,2.4rem); }
+      .hero p { margin:0; color: var(--muted); }
+      .tabs {
+        margin-top: 1rem; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem;
+      }
+      .tab-link {
+        border: 1px solid var(--border); background: rgba(0,0,0,.15); color: var(--text);
+        padding: .7rem; border-radius: 12px; cursor: pointer; font: inherit;
+        display:flex; align-items:center; justify-content:center; gap:.4rem;
+      }
+      .tab-link.active { background: linear-gradient(120deg,var(--accent),var(--accent-strong)); color:#fff; border-color: transparent; }
+      .tab-content { display:none; margin-top: 1rem; }
+      .tab-content.active { display:block; }
+      .panel {
+        border:1px solid var(--border); background: var(--panel); border-radius: 18px; overflow:hidden;
+      }
+      .panel img { width:100%; height:220px; object-fit:cover; display:block; }
+      .panel__body { padding: 1.1rem; }
+      .panel__body h2 { margin-top:0; }
+      .grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap:.8rem; }
+      .card {
+        border:1px solid var(--border); background: rgba(0,0,0,.16); border-radius: 12px; padding: .9rem;
+      }
+      .card h3 { margin:0 0 .4rem; color: var(--accent); }
+      .meta { color: var(--accent); font-size:.9rem; margin: 0 0 .45rem; display:flex; align-items:center; gap:.25rem; }
+      .card p { margin:.2rem 0 0; color: var(--muted); }
+
+      #mini-reproductor-footer {
+        position: fixed; left: 0; right: 0; bottom: 0; width: 100%; z-index: 99999;
+        display: flex; align-items: center; gap: 14px; padding: 14px 16px;
+        background: #101936; border-top: 1px solid var(--border);
+      }
+      #mini-reproductor-footer.hide { display:none !important; }
+      .mini-cover-img { width: 50px; height: 50px; border-radius: 10px; object-fit: cover; }
+      .mini-play-btn { width:42px; height:42px; border:none; border-radius:50%; background:var(--accent); color:#0d1430; font-size:1.1rem; cursor:pointer; }
+      .mini-info-and-volume { flex:1; min-width:0; }
+      .mini-song-title { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .mini-artist-name { color: var(--muted); font-size: .9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .mini-volume-control-container { display:flex; align-items:center; gap:.4rem; margin-top:.3rem; }
+      .mini-volume-control { width:100%; }
+      .audio-loader { height:2px; width:100%; background:var(--accent); transform-origin:left; transform:scaleX(0); }
+      .audio-loader.loading { animation: loading-pulse 1.3s infinite; }
+      .close-mini-player-btn { border:none; background:none; color:#fff; font-size:1.2rem; cursor:pointer; }
+      @keyframes loading-pulse { 50% { transform: scaleX(.85); } }
+      @media (max-width: 768px) { .tabs { grid-template-columns: 1fr; } }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <header class="topbar">
+        <div class="brand"><span class="brand__mark">EK</span> Novedades EKUSFM</div>
+        <a href="index.htm" class="btn"><i class="fas fa-arrow-left"></i> Volver</a>
+      </header>
+
+      <section class="hero">
+        <p>NUEVA EXPERIENCIA EDITORIAL</p>
+        <h1>Programación, eventos y concursos en formato renovado.</h1>
+        <p>Diseño visual consistente con el nuevo sitio, manteniendo navegación clara y lectura ágil.</p>
+
+        <div class="tabs">
+          <button class="tab-link active" data-tab="programas"><span class="material-icons">mic</span> Programas</button>
+          <button class="tab-link" data-tab="eventos"><span class="material-icons">event</span> Eventos</button>
+          <button class="tab-link" data-tab="concursos"><span class="material-icons">emoji_events</span> Concursos</button>
         </div>
-      </div>
-    </div>
-    <!-- EVENTOS -->
-    <div class="tab-content" id="eventos">
-      <div class="section-banner">
-        <img src="https://images.pexels.com/photos/2263436/pexels-photo-2263436.jpeg" alt="Eventos">
-      </div>
-      <div class="content-section">
-        <h2>Próximos Eventos</h2>
-        <div class="events-list">
-          <div class="event-card">
-            <span class="event-title">Festival de Verano EKUSFM</span>
-            <span class="event-date"><span class="material-icons" style="font-size:1em;">event</span> 15 de Julio, 2024</span>
-            <p class="event-desc">Un día lleno de música, concursos en vivo y sorpresas en el parque central de la ciudad.</p>
+      </section>
+
+      <section class="tab-content active" id="programas">
+        <article class="panel">
+          <img src="https://images.pexels.com/photos/3082341/pexels-photo-3082341.jpeg" alt="Programas" />
+          <div class="panel__body">
+            <h2>Nuestros Programas</h2>
+            <div class="grid">
+              <div class="card"><h3>Mañanas con Energía</h3><p class="meta"><span class="material-icons">schedule</span>Lunes a Viernes · 6:00 - 9:00</p><p>Comienza tu día con la mejor música y las noticias más relevantes.</p></div>
+              <div class="card"><h3>Zona Retro</h3><p class="meta"><span class="material-icons">schedule</span>Sábados · 18:00 - 21:00</p><p>Los clásicos que marcaron época, ¡revívelos con nosotros!</p></div>
+              <div class="card"><h3>Conexión Urbana</h3><p class="meta"><span class="material-icons">schedule</span>Viernes · 20:00 - 23:00</p><p>Lo mejor del reggaetón, trap y música urbana.</p></div>
+              <div class="card"><h3>Top 10 EKUSFM</h3><p class="meta"><span class="material-icons">schedule</span>Domingo · 16:00 - 18:00</p><p>Nuestro conteo semanal con lo más escuchado.</p></div>
+            </div>
           </div>
-          <div class="event-card">
-            <span class="event-title">Transmisión Especial: Aniversario</span>
-            <span class="event-date"><span class="material-icons" style="font-size:1em;">event</span> 29 de Agosto, 2024</span>
-            <p class="event-desc">Celebramos un año más al aire con entrevistas, invitados y regalos para nuestra audiencia.</p>
+        </article>
+      </section>
+
+      <section class="tab-content" id="eventos">
+        <article class="panel">
+          <img src="https://images.pexels.com/photos/2263436/pexels-photo-2263436.jpeg" alt="Eventos" />
+          <div class="panel__body">
+            <h2>Próximos Eventos</h2>
+            <div class="grid">
+              <div class="card"><h3>Festival de Verano EKUSFM</h3><p class="meta"><span class="material-icons">event</span>15 de Julio, 2024</p><p>Música, concursos en vivo y sorpresas para toda la comunidad.</p></div>
+              <div class="card"><h3>Transmisión Especial: Aniversario</h3><p class="meta"><span class="material-icons">event</span>29 de Agosto, 2024</p><p>Entrevistas, invitados y regalos para nuestra audiencia.</p></div>
+              <div class="card"><h3>Noche Retro</h3><p class="meta"><span class="material-icons">event</span>2 de Septiembre, 2024</p><p>Revive los 80s con premios a los mejores looks.</p></div>
+            </div>
           </div>
-          <div class="event-card">
-            <span class="event-title">Noche Retro</span>
-            <span class="event-date"><span class="material-icons" style="font-size:1em;">event</span> 2 de Septiembre, 2024</span>
-            <p class="event-desc">Ven disfrazado de los 80s y disfruta la mejor música de la época, premios a los mejores looks.</p>
+        </article>
+      </section>
+
+      <section class="tab-content" id="concursos">
+        <article class="panel">
+          <img src="https://images.pexels.com/photos/2698519/pexels-photo-2698519.jpeg" alt="Concursos" />
+          <div class="panel__body">
+            <h2>Concursos Activos</h2>
+            <div class="grid">
+              <div class="card"><h3>Selfie EKUS</h3><p class="meta"><span class="material-icons">event</span>Hasta 28 de Julio, 2024</p><p>Sube tu selfie escuchando la radio y participa por premios.</p></div>
+              <div class="card"><h3>Trivia Musical</h3><p class="meta"><span class="material-icons">event</span>Todos los viernes</p><p>Demuestra tus conocimientos y gana entradas exclusivas.</p></div>
+              <div class="card"><h3>Sorteo Oyente Fiel</h3><p class="meta"><span class="material-icons">event</span>Último día de cada mes</p><p>Más días de escucha, más oportunidades para ganar.</p></div>
+            </div>
           </div>
+        </article>
+      </section>
+    </main>
+
+    <div id="mini-reproductor-footer">
+      <img id="miniCoverImg" class="mini-cover-img" src="https://radioaventura-web.vercel.app/img/default.jpg" alt="Carátula" />
+      <button id="playPauseMiniBtn" class="mini-play-btn" title="Play/Pause"><i id="miniPlayIcon" class="fa-solid fa-play"></i></button>
+      <div class="mini-info-and-volume">
+        <div id="miniSongTitle" class="mini-song-title">Cargando...</div>
+        <div id="miniArtistName" class="mini-artist-name"></div>
+        <div class="mini-volume-control-container">
+          <i class="material-icons">volume_down</i>
+          <input type="range" id="miniVolumeControl" class="mini-volume-control" min="0" max="1" step="0.01" value="1" title="Volumen" />
+          <i class="material-icons">volume_up</i>
         </div>
+        <div id="audioLoader" class="audio-loader"></div>
       </div>
+      <button class="close-mini-player-btn" id="closeMiniPlayerBtn" title="Cerrar reproductor"><i class="fa-solid fa-xmark"></i></button>
+      <audio id="audio-mini" preload="auto" crossorigin="anonymous"></audio>
     </div>
-    <!-- CONCURSOS -->
-    <div class="tab-content" id="concursos">
-      <div class="section-banner">
-        <img src="https://images.pexels.com/photos/2698519/pexels-photo-2698519.jpeg" alt="Concursos">
-      </div>
-      <div class="content-section">
-        <h2>Concursos Activos</h2>
-        <div class="contests-grid">
-          <div class="contest-card">
-            <span class="contest-title">Selfie EKUS</span>
-            <span class="contest-date"><span class="material-icons" style="font-size:1em;">event</span> Hasta 28 de Julio, 2024</span>
-            <p class="contest-desc">Sube tu mejor selfie escuchando la radio y participa por fabulosos premios.</p>
-          </div>
-          <div class="contest-card">
-            <span class="contest-title">Trivia Musical</span>
-            <span class="contest-date"><span class="material-icons" style="font-size:1em;">event</span> Todos los viernes</span>
-            <p class="contest-desc">Demuestra tus conocimientos musicales y gana entradas a conciertos exclusivos.</p>
-          </div>
-          <div class="contest-card">
-            <span class="contest-title">Sorteo Oyente Fiel</span>
-            <span class="contest-date"><span class="material-icons" style="font-size:1em;">event</span> Último día de cada mes</span>
-            <p class="contest-desc">Cuantos más días escuches, ¡más chances de ganar gadgets y premios sorpresa!</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <footer>
-    <div>EKUSFM &copy; 2025 &middot; Todos los derechos reservados</div>
-  </footer>
-  <!-- MINI REPRODUCTOR FOOTER -->
-  <div id="mini-reproductor-footer">
-    <img id="miniCoverImg" class="mini-cover-img" src="https://radioaventura-web.vercel.app/img/default.jpg" alt="Carátula">
-    <button id="playPauseMiniBtn" class="mini-play-btn" title="Play/Pause">
-      <i id="miniPlayIcon" class="fa-solid fa-play"></i>
-    </button>
-    <div class="mini-info-and-volume">
-      <div id="miniSongTitle" class="mini-song-title">Cargando...</div>
-      <div id="miniArtistName" class="mini-artist-name"></div>
-      <div class="mini-volume-control-container">
-        <i class="material-icons">volume_down</i>
-        <input type="range" id="miniVolumeControl" class="mini-volume-control" min="0" max="1" step="0.01" value="1" title="Volumen" />
-        <i class="material-icons">volume_up</i>
-      </div>
-      <div id="audioLoader" class="audio-loader"></div>
-    </div>
-    <button class="close-mini-player-btn" id="closeMiniPlayerBtn" title="Cerrar reproductor">
-      <i class="fa-solid fa-xmark"></i>
-    </button>
-    <audio id="audio-mini" preload="auto" crossorigin="anonymous"></audio>
-  </div>
-  <script src="script.js"></script>
-  <script>
-    document.getElementById('closeMiniPlayerBtn').onclick = function() {
-      document.getElementById('mini-reproductor-footer').classList.add('hide');
-    };
-    // Tabs
-    document.querySelectorAll('.tab-link').forEach(btn => {
-      btn.onclick = function() {
-        document.querySelectorAll('.tab-link').forEach(b=>b.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(tc=>tc.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById(btn.dataset.tab).classList.add('active');
-      };
-    });
-  </script>
-</body>
+
+    <script>
+      document.getElementById("closeMiniPlayerBtn").addEventListener("click", () => {
+        document.getElementById("mini-reproductor-footer").classList.add("hide");
+      });
+
+      document.querySelectorAll(".tab-link").forEach((button) => {
+        button.addEventListener("click", () => {
+          document.querySelectorAll(".tab-link").forEach((btn) => btn.classList.remove("active"));
+          document.querySelectorAll(".tab-content").forEach((content) => content.classList.remove("active"));
+          button.classList.add("active");
+          document.getElementById(button.dataset.tab).classList.add("active");
+        });
+      });
+
+      (function bootstrapMiniPlayer() {
+        const config = {
+          radioName: "EKUSFM",
+          streamURL: "https://stream.zeno.fm/7mk2bzwy5x8uv",
+          zenoId: "7mk2bzwy5x8uv",
+          fallbackCover: "https://radioaventura-web.vercel.app/img/default.jpg"
+        };
+
+        const audio = document.getElementById("audio-mini");
+        const playBtn = document.getElementById("playPauseMiniBtn");
+        const playIcon = document.getElementById("miniPlayIcon");
+        const songTitle = document.getElementById("miniSongTitle");
+        const artistName = document.getElementById("miniArtistName");
+        const coverImg = document.getElementById("miniCoverImg");
+        const volumeSlider = document.getElementById("miniVolumeControl");
+        const loader = document.getElementById("audioLoader");
+
+        audio.src = config.streamURL;
+        audio.volume = volumeSlider.valueAsNumber || 1;
+
+        playBtn.addEventListener("click", async () => {
+          try {
+            if (audio.paused) await audio.play();
+            else audio.pause();
+          } catch {
+            songTitle.textContent = "No se pudo iniciar el audio";
+          }
+        });
+
+        audio.addEventListener("play", () => {
+          playIcon.classList.replace("fa-play", "fa-pause");
+          loader.classList.add("loading");
+        });
+
+        audio.addEventListener("pause", () => {
+          playIcon.classList.replace("fa-pause", "fa-play");
+          loader.classList.remove("loading");
+        });
+
+        volumeSlider.addEventListener("input", () => {
+          audio.volume = volumeSlider.valueAsNumber;
+        });
+
+        async function updateMetadata() {
+          try {
+            const response = await fetch(`https://zenoplay.zenomedia.com/api/zenofm/nowplaying/${config.zenoId}?_=${Date.now()}`);
+            if (!response.ok) throw new Error("metadata error");
+            const payload = await response.json();
+            const currentSong = payload?.title || config.radioName;
+            const parts = currentSong.split(" - ");
+            const artist = parts[0]?.trim() || config.radioName;
+            const title = parts[1]?.trim() || currentSong;
+            songTitle.textContent = title;
+            artistName.textContent = artist;
+
+            const coverRes = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(`${artist} ${title}`)}&media=music&limit=1`);
+            if (coverRes.ok) {
+              const coverData = await coverRes.json();
+              coverImg.src = coverData.results?.[0]?.artworkUrl100?.replace("100x100bb", "600x600bb") || config.fallbackCover;
+            } else {
+              coverImg.src = config.fallbackCover;
+            }
+          } catch {
+            songTitle.textContent = config.radioName;
+            artistName.textContent = "En Vivo";
+            coverImg.src = config.fallbackCover;
+          }
+        }
+
+        updateMetadata();
+        setInterval(updateMetadata, 12000);
+      })();
+    </script>
+  </body>
 </html>
